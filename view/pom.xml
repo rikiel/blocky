@@ -21,4 +21,17 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>blocky</groupId>
+            <artifactId>blocky-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>blocky</groupId>
+            <artifactId>blocky-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

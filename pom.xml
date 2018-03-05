@@ -18,6 +18,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <project.version>1.0-SNAPSHOT</project.version>
     </properties>
 
     <dependencies>
@@ -41,6 +42,17 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>24.0-jre</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -62,11 +74,9 @@
         </dependencies>
     </dependencyManagement>
 
-
     <modules>
         <module>model</module>
         <module>service</module>
         <module>view</module>
     </modules>
-
 </project>

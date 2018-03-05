@@ -9,6 +9,8 @@ public interface CommonView<Model, Handler extends CommonView.CommonHandler> ext
     void setModel(Model model);
 
     interface CommonHandler {
+        void onViewEnter();
+
         CommonView<?, ?> getView();
     }
 }
