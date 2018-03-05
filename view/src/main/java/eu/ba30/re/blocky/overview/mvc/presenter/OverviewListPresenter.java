@@ -1,5 +1,6 @@
 package eu.ba30.re.blocky.overview.mvc.presenter;
 
+import eu.ba30.re.blocky.Invoice;
 import eu.ba30.re.blocky.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.overview.mvc.view.OverviewListView;
 import eu.ba30.re.blocky.service.InvoiceService;
@@ -8,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Set;
 
 @Component
 @Scope("prototype")
@@ -46,5 +51,16 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     public void onBulkRemove() {
         log.debug("onBulkRemove");
 
+    }
+
+    @Nonnull
+    @Override
+    public List<Invoice> getItems() {
+        return model.getInvoices();
+    }
+
+    @Override
+    public void selectionChanged(@Nonnull final Set<Invoice> invoices) {
+        view.setBulkRemoveButtonEnabled(!invoices.isEmpty());
     }
 }

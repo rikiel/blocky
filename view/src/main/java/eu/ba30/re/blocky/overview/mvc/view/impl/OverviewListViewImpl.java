@@ -3,10 +3,9 @@ package eu.ba30.re.blocky.overview.mvc.view.impl;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import eu.ba30.re.blocky.Invoice;
 import eu.ba30.re.blocky.common.mvc.view.components.Header;
+import eu.ba30.re.blocky.common.mvc.view.components.Style;
 import eu.ba30.re.blocky.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.overview.mvc.view.OverviewListView;
 import org.slf4j.Logger;
@@ -58,10 +57,13 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
 
     private void addActions() {
         final CssLayout actionLayout = new CssLayout();
+        actionLayout.addStyleName(Style.BUTTONS.getCssClass());
+
         addButton = new Button("Pridat");
         addButton.addClickListener((Button.ClickListener) clickEvent -> handler.onAddNew());
 
         bulkRemoveButton = new Button("Odstranit vybrane");
+        bulkRemoveButton.setEnabled(false);
         bulkRemoveButton.addClickListener((Button.ClickListener) clickEvent -> handler.onBulkRemove());
 
         actionLayout.addComponents(addButton, bulkRemoveButton);
@@ -69,12 +71,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     }
 
     private void addItems() {
-        // TODO BLOCKY-3 Detaily poloziek
-        final VerticalLayout layout = new VerticalLayout();
-
-        for (Invoice invoice : model.getInvoices()) {
-            layout.addComponent(new Label(invoice.getName()));
-        }
+        final VerticalLayout layout = new VerticalLayout(new InvoiceTable(handler));
         rootLayout.addComponent(layout);
     }
 
