@@ -1,9 +1,9 @@
-package eu.ba30.re.blocky.overview.mvc.presenter;
+package eu.ba30.re.blocky.view.overview.mvc.presenter;
 
-import eu.ba30.re.blocky.Invoice;
-import eu.ba30.re.blocky.overview.mvc.model.OverviewListModel;
-import eu.ba30.re.blocky.overview.mvc.view.OverviewListView;
-import eu.ba30.re.blocky.service.InvoiceService;
+import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
+import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
+import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     private OverviewListView view;
 
     @Autowired
-    private InvoiceService invoiceService;
+    private InvoiceServiceImpl invoiceService;
 
     private OverviewListModel model;
 

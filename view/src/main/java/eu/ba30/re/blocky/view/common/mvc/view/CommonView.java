@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.common.mvc.view;
+package eu.ba30.re.blocky.view.common.mvc.view;
 
 
 import com.vaadin.navigator.View;

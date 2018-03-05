@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky;
+package eu.ba30.re.blocky.model;
 
 import com.google.common.base.MoreObjects;
 

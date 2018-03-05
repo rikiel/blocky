@@ -1,7 +1,7 @@
 package eu.ba30.re.blocky.service.impl;
 
 import com.google.common.collect.Lists;
-import eu.ba30.re.blocky.Invoice;
+import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
 import org.springframework.stereotype.Service;
 

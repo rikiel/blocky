@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky;
+package eu.ba30.re.blocky.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

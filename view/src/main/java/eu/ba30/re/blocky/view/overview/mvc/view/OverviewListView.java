@@ -1,8 +1,8 @@
-package eu.ba30.re.blocky.overview.mvc.view;
+package eu.ba30.re.blocky.view.overview.mvc.view;
 
-import eu.ba30.re.blocky.common.mvc.view.CommonView;
-import eu.ba30.re.blocky.overview.mvc.model.OverviewListModel;
-import eu.ba30.re.blocky.overview.mvc.view.impl.InvoiceTable;
+import eu.ba30.re.blocky.view.common.mvc.view.CommonView;
+import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
+import eu.ba30.re.blocky.view.overview.mvc.view.impl.InvoiceTable;
 
 public interface OverviewListView extends CommonView<OverviewListModel, OverviewListView.OverviewListHandler> {
     void setBulkRemoveButtonEnabled(boolean enabled);

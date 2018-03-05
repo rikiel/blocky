@@ -1,8 +1,8 @@
-package eu.ba30.re.blocky.overview.mvc.view.impl;
+package eu.ba30.re.blocky.view.overview.mvc.view.impl;
 
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
-import eu.ba30.re.blocky.Invoice;
+import eu.ba30.re.blocky.model.Invoice;
 
 import javax.annotation.Nonnull;
 import java.util.List;

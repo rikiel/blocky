@@ -1,6 +1,6 @@
-package eu.ba30.re.blocky.overview.mvc.model;
+package eu.ba30.re.blocky.view.overview.mvc.model;
 
-import eu.ba30.re.blocky.Invoice;
+import eu.ba30.re.blocky.model.Invoice;
 
 import java.util.List;
 

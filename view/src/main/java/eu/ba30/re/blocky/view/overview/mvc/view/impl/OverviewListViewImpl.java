@@ -1,13 +1,13 @@
-package eu.ba30.re.blocky.overview.mvc.view.impl;
+package eu.ba30.re.blocky.view.overview.mvc.view.impl;
 
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.VerticalLayout;
-import eu.ba30.re.blocky.common.mvc.view.components.Header;
-import eu.ba30.re.blocky.common.mvc.view.components.Style;
-import eu.ba30.re.blocky.overview.mvc.model.OverviewListModel;
-import eu.ba30.re.blocky.overview.mvc.view.OverviewListView;
+import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
+import eu.ba30.re.blocky.view.common.mvc.view.components.Style;
+import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
+import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;

@@ -1,6 +1,6 @@
 package eu.ba30.re.blocky.service;
 
-import eu.ba30.re.blocky.Invoice;
+import eu.ba30.re.blocky.model.Invoice;
 
 import javax.annotation.Nonnull;
 import java.util.List;

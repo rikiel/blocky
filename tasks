@@ -5,6 +5,7 @@ BLOCKY-4 Akcie: Pridat novy/upravit/zmazat
 BLOCKY-5 Obrazovka pre vytvorenie/modifikaciu
 BLOCKY-6 Obrazovka pre mazanie polozky
 BLOCKY-7 Napojenie na databazu + mocky
+BLOCKY-8 Logovanie - aspekty
 
 # DONE
 BLOCKY-1 Inicializacia projektu
