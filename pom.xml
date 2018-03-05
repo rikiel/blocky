@@ -75,6 +75,7 @@
     </dependencyManagement>
 
     <modules>
+        <module>common</module>
         <module>model</module>
         <module>service</module>
         <module>view</module>
