@@ -16,6 +16,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     private static final Logger log = LoggerFactory.getLogger(OverviewListViewImpl.class);
 
     private OverviewListHandler handler;
+    private OverviewListModel model;
 
     @Override
     public void setHandler(OverviewListHandler handler) {
@@ -24,7 +25,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
 
     @Override
     public void setModel(OverviewListModel model) {
-
+        this.model = model;
     }
 
     @Override
