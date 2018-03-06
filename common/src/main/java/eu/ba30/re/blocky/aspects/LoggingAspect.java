@@ -20,13 +20,13 @@ public class LoggingAspect {
     public Object logCalls(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             final Object result = joinPoint.proceed();
-            log.info("Call: {}({}) = {}",
+            log.info("Call {} with arguments [{}] resulted {}",
                     joinPoint.getSignature(),
                     Arrays.stream(joinPoint.getArgs()).map(Object::toString).collect(Collectors.joining("")),
                     result);
             return result;
         } catch (Throwable thr) {
-            log.error("Call: {}({}) throws exception.",
+            log.error("Call {} with arguments [{}] throws exception",
                     joinPoint.getSignature(),
                     Arrays.stream(joinPoint.getArgs()).map(Object::toString).collect(Collectors.joining("")),
                     thr);
