@@ -69,6 +69,11 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     }
 
     @Override
+    public boolean isChangingSelectionAllowed() {
+        return true;
+    }
+
+    @Override
     public void itemsSelectionChanged(@Nonnull final Set<Invoice> invoices) {
         view.setBulkRemoveButtonEnabled(!invoices.isEmpty());
         model.setSelectedInvoices(Lists.newArrayList(invoices));

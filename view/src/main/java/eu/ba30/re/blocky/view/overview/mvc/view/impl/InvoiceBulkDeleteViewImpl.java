@@ -7,6 +7,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
+import eu.ba30.re.blocky.view.common.mvc.view.components.InvoiceTable;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceBulkDeleteView;
 import org.springframework.context.annotation.Scope;
@@ -33,8 +34,10 @@ public class InvoiceBulkDeleteViewImpl extends VerticalLayout implements Invoice
     @Override
     public void buildView() {
         removeAllComponents();
+
         addHeader();
         addActions();
+        addItems();
     }
 
     private void addHeader(){
@@ -53,5 +56,9 @@ public class InvoiceBulkDeleteViewImpl extends VerticalLayout implements Invoice
 
         layout.addComponentsAndExpand(backButton, deleteButton);
         addComponent(layout);
+    }
+
+    private void addItems() {
+        addComponent(new InvoiceTable(handler));
     }
 }

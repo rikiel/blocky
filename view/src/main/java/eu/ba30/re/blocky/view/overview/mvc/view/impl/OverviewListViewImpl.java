@@ -38,6 +38,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     @Override
     public void buildView() {
         removeAllComponents();
+
         initializeLayouts();
         addActions();
         addItems();

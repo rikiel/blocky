@@ -23,8 +23,10 @@ public class InvoiceTable extends VerticalLayout {
         grid.addColumn(Invoice::getName).setCaption("Názov");
         grid.addColumn(Invoice::getCategory).setCaption("Kategória");
 
-        grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        grid.addSelectionListener(event -> handler.itemsSelectionChanged(event.getAllSelectedItems()));
+        if (handler.isChangingSelectionAllowed()) {
+            grid.setSelectionMode(Grid.SelectionMode.MULTI);
+            grid.addSelectionListener(event -> handler.itemsSelectionChanged(event.getAllSelectedItems()));
+        }
 
         addComponent(grid);
     }
@@ -36,6 +38,8 @@ public class InvoiceTable extends VerticalLayout {
     public interface SelectionHandler {
         @Nonnull
         List<Invoice> getItems();
+
+        boolean isChangingSelectionAllowed();
 
         void itemsSelectionChanged(@Nonnull final Set<Invoice> invoices);
     }

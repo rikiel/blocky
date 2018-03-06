@@ -56,6 +56,11 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
     }
 
     @Override
+    public boolean isChangingSelectionAllowed() {
+        return false;
+    }
+
+    @Override
     public void itemsSelectionChanged(@Nonnull final Set<Invoice> invoices) {
         throw new UnsupportedOperationException("Not supported for bulk delete view");
     }
