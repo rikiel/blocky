@@ -24,6 +24,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     private CssLayout rootLayout;
     private Button addButton;
     private Button bulkRemoveButton;
+    private InvoiceTable invoiceTable;
 
     @Override
     public void setHandler(OverviewListHandler handler) {
@@ -71,12 +72,17 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     }
 
     private void addItems() {
-        final VerticalLayout layout = new VerticalLayout(new InvoiceTable(handler));
-        rootLayout.addComponent(layout);
+        invoiceTable = new InvoiceTable(handler);
+        rootLayout.addComponent(invoiceTable);
     }
 
     @Override
     public void setBulkRemoveButtonEnabled(boolean enabled) {
         bulkRemoveButton.setEnabled(enabled);
+    }
+
+    @Override
+    public void refreshList() {
+        invoiceTable.refresh();
     }
 }

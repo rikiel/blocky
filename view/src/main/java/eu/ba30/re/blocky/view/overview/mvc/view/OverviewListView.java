@@ -7,6 +7,8 @@ import eu.ba30.re.blocky.view.overview.mvc.view.impl.InvoiceTable;
 public interface OverviewListView extends CommonView<OverviewListModel, OverviewListView.OverviewListHandler> {
     void setBulkRemoveButtonEnabled(boolean enabled);
 
+    void refreshList();
+
     void buildView();
 
     interface OverviewListHandler extends CommonView.CommonHandler, InvoiceTable.SelectionHandler {

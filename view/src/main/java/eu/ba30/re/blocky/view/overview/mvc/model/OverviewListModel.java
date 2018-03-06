@@ -1,11 +1,13 @@
 package eu.ba30.re.blocky.view.overview.mvc.model;
 
+import com.google.common.base.MoreObjects;
 import eu.ba30.re.blocky.model.Invoice;
 
 import java.util.List;
 
 public class OverviewListModel {
     private List<Invoice> invoices;
+    private List<Invoice> selectedInvoices;
 
     public List<Invoice> getInvoices() {
         return invoices;
@@ -15,10 +17,19 @@ public class OverviewListModel {
         this.invoices = invoices;
     }
 
+    public List<Invoice> getSelectedInvoices() {
+        return selectedInvoices;
+    }
+
+    public void setSelectedInvoices(List<Invoice> selectedInvoices) {
+        this.selectedInvoices = selectedInvoices;
+    }
+
     @Override
     public String toString() {
-        return "OverviewListModel{" +
-                "invoices=" + invoices +
-                '}';
+        return MoreObjects.toStringHelper(this)
+                .add("invoices", invoices)
+                .add("selectedInvoices", selectedInvoices)
+                .toString();
     }
 }

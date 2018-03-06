@@ -3,13 +3,13 @@ package eu.ba30.re.blocky.service.impl;
 import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
+import eu.ba30.re.blocky.utils.Validate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -37,14 +37,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void remove(@Nonnull final List<Invoice> invoices) {
-        Objects.requireNonNull(invoices);
+        Validate.notEmpty(invoices);
 
         invoiceList.removeAll(invoices);
     }
 
     @Override
     public void create(@Nonnull final Invoice invoice) {
-        Objects.requireNonNull(invoice);
+        Validate.notNull(invoice);
 
         invoiceList.add(invoice);
     }

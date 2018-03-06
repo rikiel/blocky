@@ -1,7 +1,9 @@
 package eu.ba30.re.blocky.view.overview.mvc.presenter;
 
+import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
+import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 import org.slf4j.Logger;
@@ -30,7 +32,7 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     @Override
     public void onViewEnter() {
         model = new OverviewListModel();
-        model.setInvoices(invoiceService.getInvoices());
+        fillInvoicesFromService();
 
         view.setModel(model);
         view.buildView();
@@ -49,8 +51,12 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
 
     @Override
     public void onBulkRemove() {
-        log.debug("onBulkRemove");
+        final List<Invoice> toRemove = model.getSelectedInvoices();
+        Validate.notEmpty(toRemove);
 
+        invoiceService.remove(toRemove);
+        fillInvoicesFromService();
+        view.refreshList();
     }
 
     @Nonnull
@@ -60,7 +66,12 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     }
 
     @Override
-    public void selectionChanged(@Nonnull final Set<Invoice> invoices) {
+    public void itemsSelectionChanged(@Nonnull final Set<Invoice> invoices) {
         view.setBulkRemoveButtonEnabled(!invoices.isEmpty());
+        model.setSelectedInvoices(Lists.newArrayList(invoices));
+    }
+
+    private void fillInvoicesFromService() {
+        model.setInvoices(invoiceService.getInvoices());
     }
 }
