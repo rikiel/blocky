@@ -3,14 +3,17 @@ package eu.ba30.re.blocky.view.common.mvc.view;
 
 import com.vaadin.navigator.View;
 
-public interface CommonView<Model, Handler extends CommonView.CommonHandler> extends View {
-    void setHandler(Handler handler);
+import javax.annotation.Nonnull;
 
-    void setModel(Model model);
+public interface CommonView<Model, Handler extends CommonView.CommonHandler> extends View {
+    void setHandler(@Nonnull Handler handler);
+
+    void setModel(@Nonnull Model model);
 
     interface CommonHandler {
         void onViewEnter();
 
+        @Nonnull
         CommonView<?, ?> getView();
     }
 }

@@ -38,6 +38,7 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
         view.buildView();
     }
 
+    @Nonnull
     @Override
     public OverviewListView getView() {
         return view;

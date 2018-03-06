@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
+
 @Component
 @Scope("prototype")
 public class OverviewListViewImpl extends CssLayout implements OverviewListView {
-    private static final Logger log = LoggerFactory.getLogger(OverviewListViewImpl.class);
-
     private OverviewListHandler handler;
     private OverviewListModel model;
 
@@ -27,18 +27,17 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     private InvoiceTable invoiceTable;
 
     @Override
-    public void setHandler(OverviewListHandler handler) {
+    public void setHandler(@Nonnull OverviewListHandler handler) {
         this.handler = handler;
     }
 
     @Override
-    public void setModel(OverviewListModel model) {
+    public void setModel(@Nonnull OverviewListModel model) {
         this.model = model;
     }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        log.debug("enter()");
         handler.onViewEnter();
     }
 
