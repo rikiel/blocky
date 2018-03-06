@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
 import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.view.ApplicationViewName;
+import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
+import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
 import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 import org.slf4j.Logger;
@@ -23,7 +26,6 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
 
     @Autowired
     private OverviewListView view;
-
     @Autowired
     private InvoiceServiceImpl invoiceService;
 
@@ -55,9 +57,9 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
         final List<Invoice> toRemove = model.getSelectedInvoices();
         Validate.notEmpty(toRemove);
 
-        invoiceService.remove(toRemove);
-        fillInvoicesFromService();
-        view.refreshList();
+        final InvoiceBulkDeleteModel targetModel = new InvoiceBulkDeleteModel();
+        targetModel.setToRemove(toRemove);
+        NavigationUtils.navigateTo(ApplicationViewName.BULK_DELETE.getViewName(), targetModel);
     }
 
     @Nonnull

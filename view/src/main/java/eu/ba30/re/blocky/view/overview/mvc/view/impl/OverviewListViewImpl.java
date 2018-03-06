@@ -26,22 +26,18 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     private InvoiceTable invoiceTable;
 
     @Override
-    public void setHandler(@Nonnull OverviewListHandler handler) {
+    public void setHandler(@Nonnull final OverviewListHandler handler) {
         this.handler = handler;
     }
 
     @Override
-    public void setModel(@Nonnull OverviewListModel model) {
+    public void setModel(@Nonnull final OverviewListModel model) {
         this.model = model;
     }
 
     @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
-        handler.onViewEnter();
-    }
-
-    @Override
     public void buildView() {
+        removeAllComponents();
         initializeLayouts();
         addActions();
         addItems();

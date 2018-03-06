@@ -13,16 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Theme("valo")
 public class ApplicationUI extends UI {
     @Autowired
-    private OverviewListPresenter overviewListPresenter;
+    private OverviewListVaadinView overviewListVaadinView;
+    @Autowired
+    private InvoiceBulkDeleteVaadinView invoiceBulkDeleteVaadinView;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         final Navigator navigator = new Navigator(this, this);
         setNavigator(navigator);
 
-        final OverviewListView overviewListView = overviewListPresenter.getView();
-        overviewListView.setHandler(overviewListPresenter);
-
-        navigator.addView("", overviewListView);
+        navigator.addView(ApplicationViewName.OVERVIEW.getViewName(), overviewListVaadinView);
+        navigator.addView(ApplicationViewName.BULK_DELETE.getViewName(), invoiceBulkDeleteVaadinView);
     }
 }
