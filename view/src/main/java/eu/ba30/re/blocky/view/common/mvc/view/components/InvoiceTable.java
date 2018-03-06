@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.view.overview.mvc.view.impl;
+package eu.ba30.re.blocky.view.common.mvc.view.components;
 
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
@@ -13,7 +13,7 @@ public class InvoiceTable extends VerticalLayout {
     private final Grid<Invoice> grid;
     private final SelectionHandler handler;
 
-    InvoiceTable(@Nonnull final SelectionHandler handler) {
+    public InvoiceTable(@Nonnull final SelectionHandler handler) {
         Objects.requireNonNull(handler);
         this.handler = handler;
 

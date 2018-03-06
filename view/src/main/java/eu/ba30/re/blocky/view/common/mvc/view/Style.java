@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.view.common.mvc.view.components;
+package eu.ba30.re.blocky.view.common.mvc.view;
 
 import javax.annotation.Nonnull;
 
