@@ -59,6 +59,7 @@ public class InvoiceBulkDeleteViewImpl extends VerticalLayout implements Invoice
     }
 
     private void addItems() {
+        // TODO BLOCKY-3 skontrolovat detaily poloziek
         addComponent(new InvoiceTable(handler));
     }
 }

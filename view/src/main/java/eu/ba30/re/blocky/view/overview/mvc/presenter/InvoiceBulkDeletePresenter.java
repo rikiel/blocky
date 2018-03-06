@@ -46,7 +46,7 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
     @Override
     public void onDelete() {
         invoiceService.remove(model.getToRemove());
-        // TODO BLOCKY-6 zobrazit hlasku OK/ERR
+        // TODO BLOCKY-9 zobrazit hlasku OK/ERR
     }
 
     @Nonnull
