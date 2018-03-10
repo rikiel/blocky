@@ -1,9 +1,10 @@
 package eu.ba30.re.blocky.service;
 
-import eu.ba30.re.blocky.model.cst.Category;
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import eu.ba30.re.blocky.model.cst.Category;
 
 public interface CstManager {
     @Nonnull

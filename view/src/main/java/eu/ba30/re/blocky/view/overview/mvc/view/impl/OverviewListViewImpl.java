@@ -1,18 +1,19 @@
 package eu.ba30.re.blocky.view.overview.mvc.view.impl;
 
-import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.VerticalLayout;
-import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
-import eu.ba30.re.blocky.view.common.mvc.view.Style;
-import eu.ba30.re.blocky.view.common.mvc.view.components.InvoiceTable;
-import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
-import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
+import javax.annotation.Nonnull;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.VerticalLayout;
+
+import eu.ba30.re.blocky.view.common.mvc.view.Style;
+import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
+import eu.ba30.re.blocky.view.common.mvc.view.components.InvoiceTable;
+import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
+import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 
 @Component
 @Scope("prototype")

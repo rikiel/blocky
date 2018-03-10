@@ -1,9 +1,20 @@
 package eu.ba30.re.blocky.view.overview.mvc.presenter;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.google.common.collect.Lists;
+
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
 import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
@@ -11,15 +22,6 @@ import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
 import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Set;
 
 @Component
 @Scope("prototype")

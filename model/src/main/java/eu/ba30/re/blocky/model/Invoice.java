@@ -1,9 +1,9 @@
 package eu.ba30.re.blocky.model;
 
-import com.google.common.base.MoreObjects;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import com.google.common.base.MoreObjects;
 
 public class Invoice {
     private Integer id;

@@ -1,9 +1,10 @@
 package eu.ba30.re.blocky.view.overview.mvc.model;
 
-import com.google.common.base.MoreObjects;
-import eu.ba30.re.blocky.model.Invoice;
-
 import java.util.List;
+
+import com.google.common.base.MoreObjects;
+
+import eu.ba30.re.blocky.model.Invoice;
 
 public class InvoiceBulkDeleteModel {
     private List<Invoice> toRemove;

@@ -1,13 +1,15 @@
 package eu.ba30.re.blocky.view.common.mvc.view.components;
 
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.VerticalLayout;
-import eu.ba30.re.blocky.model.Invoice;
-
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
+
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.VerticalLayout;
+
+import eu.ba30.re.blocky.model.Invoice;
 
 public class InvoiceTable extends VerticalLayout {
     private final Grid<Invoice> grid;

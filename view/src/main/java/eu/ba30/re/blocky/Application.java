@@ -18,7 +18,6 @@ public class Application {
         SpringApplication.run(Application.class);
     }
 
-
     @Bean
     public CommandLineRunner run() {
         return (args) -> {

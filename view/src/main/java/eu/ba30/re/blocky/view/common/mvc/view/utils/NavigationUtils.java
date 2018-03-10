@@ -1,13 +1,15 @@
 package eu.ba30.re.blocky.view.common.mvc.view.utils;
 
-import com.vaadin.ui.UI;
-import eu.ba30.re.blocky.utils.Validate;
-import eu.ba30.re.blocky.view.ApplicationViewName;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import com.vaadin.ui.UI;
+
+import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.view.ApplicationViewName;
 
 public class NavigationUtils {
     private static final Logger log = LoggerFactory.getLogger(NavigationUtils.class);

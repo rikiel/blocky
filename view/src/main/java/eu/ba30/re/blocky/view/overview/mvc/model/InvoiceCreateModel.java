@@ -1,10 +1,11 @@
 package eu.ba30.re.blocky.view.overview.mvc.model;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.base.MoreObjects;
+
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.utils.Validate;
-
-import javax.annotation.Nonnull;
 
 public class InvoiceCreateModel {
     @Nonnull

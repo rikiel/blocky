@@ -1,9 +1,10 @@
 package eu.ba30.re.blocky.service;
 
-import eu.ba30.re.blocky.model.Invoice;
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import eu.ba30.re.blocky.model.Invoice;
 
 public interface InvoiceService {
     @Nonnull

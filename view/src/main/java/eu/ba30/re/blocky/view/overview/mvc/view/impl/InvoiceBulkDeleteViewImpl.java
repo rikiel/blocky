@@ -1,19 +1,19 @@
 package eu.ba30.re.blocky.view.overview.mvc.view.impl;
 
-import com.vaadin.navigator.ViewChangeListener;
+import javax.annotation.Nonnull;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
+
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
 import eu.ba30.re.blocky.view.common.mvc.view.components.InvoiceTable;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceBulkDeleteView;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
 
 @Component
 @Scope("prototype")
@@ -40,7 +40,7 @@ public class InvoiceBulkDeleteViewImpl extends VerticalLayout implements Invoice
         addItems();
     }
 
-    private void addHeader(){
+    private void addHeader() {
         addComponent(new Header("Zmazať položky"));
     }
 

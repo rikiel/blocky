@@ -1,16 +1,20 @@
 package eu.ba30.re.blocky.service.impl;
 
-import com.google.common.collect.Lists;
-import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.service.CstManager;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.google.common.collect.Lists;
+
+import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.service.CstManager;
 
 @Service
 public class CstManagerImpl implements CstManager {
     private static final List<Category> CATEGORIES;
+
     static {
         final Category c1 = new Category();
         c1.setId(1);

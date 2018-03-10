@@ -1,19 +1,28 @@
 package eu.ba30.re.blocky.view.overview.mvc.view.impl;
 
+import java.util.Objects;
+
+import javax.annotation.Nonnull;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.vaadin.data.provider.ListDataProvider;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Nonnull;
-import java.util.Objects;
 
 @Component
 @Scope("prototype")
@@ -57,7 +66,7 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
         final Header header;
         if (Objects.equals(InvoiceCreateModel.UseCase.CREATE, model.getUseCase())) {
             header = new Header("Vytvorenie novej položky");
-        }else {
+        } else {
             header = new Header("Úprava položky");
         }
         addComponent(header);

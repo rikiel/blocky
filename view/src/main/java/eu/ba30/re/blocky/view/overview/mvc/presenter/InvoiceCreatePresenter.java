@@ -1,16 +1,16 @@
 package eu.ba30.re.blocky.view.overview.mvc.presenter;
 
-import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.view.ApplicationViewName;
-import eu.ba30.re.blocky.view.common.mvc.view.CommonView;
-import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
-import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
-import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
+import javax.annotation.Nonnull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
+import eu.ba30.re.blocky.service.InvoiceService;
+import eu.ba30.re.blocky.view.ApplicationViewName;
+import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
+import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
+import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
 
 @Component
 @Scope("prototype")

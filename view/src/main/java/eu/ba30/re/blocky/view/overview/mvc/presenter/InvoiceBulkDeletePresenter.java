@@ -1,19 +1,20 @@
 package eu.ba30.re.blocky.view.overview.mvc.presenter;
 
-import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
-import eu.ba30.re.blocky.view.ApplicationViewName;
-import eu.ba30.re.blocky.view.common.mvc.view.CommonView;
-import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
-import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
-import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceBulkDeleteView;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Set;
+import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
+import eu.ba30.re.blocky.view.ApplicationViewName;
+import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
+import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
+import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceBulkDeleteView;
 
 @Component
 @Scope("prototype")
