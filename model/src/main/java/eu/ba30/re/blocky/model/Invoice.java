@@ -14,8 +14,7 @@ public class Invoice {
     private String details;
     private LocalDate creationDate;
     private LocalDate modificationDate;
-    // TODO BLOCKY-3 Detaily poloziek - prilohy
-    private List<String> attachements;
+    private List<Attachment> attachements;
 
     public Integer getId() {
         return id;
@@ -65,11 +64,11 @@ public class Invoice {
         this.modificationDate = modificationDate;
     }
 
-    public List<String> getAttachements() {
+    public List<Attachment> getAttachements() {
         return attachements;
     }
 
-    public void setAttachements(List<String> attachements) {
+    public void setAttachements(List<Attachment> attachements) {
         this.attachements = attachements;
     }
 

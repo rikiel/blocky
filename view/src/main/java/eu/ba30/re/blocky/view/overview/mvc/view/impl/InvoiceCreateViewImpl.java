@@ -21,10 +21,12 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
+import eu.ba30.re.blocky.view.common.mvc.view.components.AttachmentUploadFragment;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
@@ -43,6 +45,7 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
     private TextField name;
     private ComboBox<Category> category;
     private TextArea details;
+    private AttachmentUploadFragment attachmentUploadFragment;
 
     private Binder<Invoice> binder;
 
@@ -69,14 +72,24 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
 
     @Override
     public boolean validateView() {
+        binder.validate();
         try {
             binder.writeBean(model.getInvoice());
             return true;
         } catch (ValidationException e) {
-            // not valid
             log.trace("Validation error", e);
             return false;
         }
+    }
+
+    @Override
+    public void stopUpload() {
+        attachmentUploadFragment.stopUpload();
+    }
+
+    @Override
+    public void showAttachment(@Nonnull final Attachment attachment) {
+        attachmentUploadFragment.showAttachment(attachment);
     }
 
     private void addHeader() {
@@ -113,7 +126,9 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
 
         details = new TextArea("Detaily položky");
 
-        layout.addComponents(name, category, details);
+        attachmentUploadFragment = new AttachmentUploadFragment(handler);
+
+        layout.addComponents(name, category, details, attachmentUploadFragment.build());
         addComponent(layout);
     }
 

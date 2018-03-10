@@ -1,5 +1,7 @@
 package eu.ba30.re.blocky.view.overview.mvc.model;
 
+import java.io.ByteArrayOutputStream;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.base.MoreObjects;
@@ -12,6 +14,8 @@ public class InvoiceCreateModel {
     private final Invoice invoice;
     @Nonnull
     private final UseCase useCase;
+
+    private ByteArrayOutputStream attachmentOutputStream;
 
     public InvoiceCreateModel(@Nonnull final Invoice invoice,
                               @Nonnull final UseCase useCase) {
@@ -31,10 +35,19 @@ public class InvoiceCreateModel {
         return useCase;
     }
 
+    public ByteArrayOutputStream getAttachmentOutputStream() {
+        return attachmentOutputStream;
+    }
+
+    public void setAttachmentOutputStream(ByteArrayOutputStream attachmentOutputStream) {
+        this.attachmentOutputStream = attachmentOutputStream;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("invoice", invoice)
+                .add("useCase", useCase)
                 .toString();
     }
 
