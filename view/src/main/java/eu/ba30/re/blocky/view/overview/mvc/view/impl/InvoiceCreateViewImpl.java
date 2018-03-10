@@ -4,10 +4,14 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValidationException;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -17,6 +21,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
@@ -27,6 +32,8 @@ import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
 @Component
 @Scope("prototype")
 public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCreateView {
+    private static final Logger log = LoggerFactory.getLogger(InvoiceCreateViewImpl.class);
+
     private InvoiceCreateHandler handler;
     private InvoiceCreateModel model;
 
@@ -36,6 +43,8 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
     private TextField name;
     private ComboBox<Category> category;
     private TextArea details;
+
+    private Binder<Invoice> binder;
 
     @Override
     public void setHandler(@Nonnull final InvoiceCreateHandler handler) {
@@ -54,12 +63,20 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
         addHeader();
         addActions();
 
-        addInvoiceFormular();
+        addInvoiceForm();
+        bindFormFields();
     }
 
     @Override
     public boolean validateView() {
-        return false;
+        try {
+            binder.writeBean(model.getInvoice());
+            return true;
+        } catch (ValidationException e) {
+            // not valid
+            log.trace("Validation error", e);
+            return false;
+        }
     }
 
     private void addHeader() {
@@ -86,7 +103,7 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
         addComponent(layout);
     }
 
-    private void addInvoiceFormular() {
+    private void addInvoiceForm() {
         final FormLayout layout = new FormLayout();
 
         name = new TextField("Názov");
@@ -98,6 +115,20 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
 
         layout.addComponents(name, category, details);
         addComponent(layout);
+    }
+
+    private void bindFormFields() {
+        binder = new Binder<>();
+        binder.readBean(model.getInvoice());
+
+        binder.forField(name)
+                .asRequired("Neplatny nazov")
+                .bind(Invoice::getName, Invoice::setName);
+        binder.forField(category)
+                .asRequired("Neplatna kategoria")
+                .bind(Invoice::getCategory, Invoice::setCategory);
+        binder.forField(details)
+                .bind(Invoice::getDetails, Invoice::setDetails);
     }
 
     private class CategoryDataProvider extends ListDataProvider<Category> {

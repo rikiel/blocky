@@ -5,10 +5,13 @@ import java.util.List;
 
 import com.google.common.base.MoreObjects;
 
+import eu.ba30.re.blocky.model.cst.Category;
+
 public class Invoice {
     private Integer id;
     private String name;
-    private String category;
+    private Category category;
+    private String details;
     private LocalDate creationDate;
     private LocalDate modificationDate;
     // TODO BLOCKY-3 Detaily poloziek - prilohy
@@ -30,12 +33,20 @@ public class Invoice {
         this.name = name;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public LocalDate getCreationDate() {
