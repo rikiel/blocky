@@ -8,8 +8,13 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValidationException;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
@@ -53,7 +58,31 @@ public class AttachmentUploadFragment {
 
     public void showAttachment(@Nonnull final Attachment attachment) {
         Validate.notNull(attachment);
-        previewsLayout.addComponent(new AttachmentPreview(attachment).build());
+        final TextField attachmentName = new TextField("Názov prílohy");
+        final Binder<Attachment> nameBinder = new Binder<>();
+        nameBinder.forField(attachmentName)
+                .asRequired("Názov prílohy je povinný")
+                .bind(Attachment::getName, Attachment::setName);
+        nameBinder.readBean(attachment);
+
+        final Button changeName = new Button("Zmeniť názov");
+        changeName.addClickListener(event -> {
+            nameBinder.validate();
+            if (nameBinder.isValid()) {
+                try {
+                    nameBinder.writeBean(attachment);
+                } catch (ValidationException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+
+        final AttachmentPreview attachmentPreview = new AttachmentPreview(attachment);
+
+        final VerticalLayout layout = new VerticalLayout();
+        layout.addComponentsAndExpand(new HorizontalLayout(attachmentName, changeName));
+        layout.addComponentsAndExpand(attachmentPreview.build());
+        previewsLayout.addComponent(layout);
     }
 
     private void initUploadComponent() {

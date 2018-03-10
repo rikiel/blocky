@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.cst.Category;
 
@@ -14,7 +15,7 @@ public class Invoice {
     private String details;
     private LocalDate creationDate;
     private LocalDate modificationDate;
-    private List<Attachment> attachements;
+    private final List<Attachment> attachments = Lists.newArrayList();
 
     public Integer getId() {
         return id;
@@ -64,12 +65,8 @@ public class Invoice {
         this.modificationDate = modificationDate;
     }
 
-    public List<Attachment> getAttachements() {
-        return attachements;
-    }
-
-    public void setAttachements(List<Attachment> attachements) {
-        this.attachements = attachements;
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
     @Override
@@ -78,9 +75,10 @@ public class Invoice {
                 .add("id", id)
                 .add("name", name)
                 .add("category", category)
+                .add("details", details)
                 .add("creationDate", creationDate)
                 .add("modificationDate", modificationDate)
-                .add("attachements", attachements)
+                .add("attachments", attachments)
                 .toString();
     }
 }

@@ -95,5 +95,6 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
 
         view.showAttachment(attachment);
         model.setAttachmentOutputStream(null);
+        model.getInvoice().getAttachments().add(attachment);
     }
 }
