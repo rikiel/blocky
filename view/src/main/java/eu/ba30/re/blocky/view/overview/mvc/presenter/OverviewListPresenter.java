@@ -2,11 +2,13 @@ package eu.ba30.re.blocky.view.overview.mvc.presenter;
 
 import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
 import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
+import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
 import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 import org.slf4j.Logger;
@@ -27,7 +29,7 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     @Autowired
     private OverviewListView view;
     @Autowired
-    private InvoiceServiceImpl invoiceService;
+    private InvoiceService invoiceService;
 
     private OverviewListModel model;
 
@@ -48,8 +50,8 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
 
     @Override
     public void onAddNew() {
-        log.debug("onAddNew");
-
+        final InvoiceCreateModel targetModel = new InvoiceCreateModel(new Invoice(), InvoiceCreateModel.UseCase.CREATE);
+        NavigationUtils.navigateTo(ApplicationViewName.CREATE, targetModel);
     }
 
     @Override
@@ -59,7 +61,7 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
 
         final InvoiceBulkDeleteModel targetModel = new InvoiceBulkDeleteModel();
         targetModel.setToRemove(toRemove);
-        NavigationUtils.navigateTo(ApplicationViewName.BULK_DELETE.getViewName(), targetModel);
+        NavigationUtils.navigateTo(ApplicationViewName.BULK_DELETE, targetModel);
     }
 
     @Nonnull

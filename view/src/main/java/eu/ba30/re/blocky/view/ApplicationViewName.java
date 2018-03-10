@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 public enum ApplicationViewName {
     OVERVIEW(""),
     BULK_DELETE("bulkDelete"),
+    CREATE("create"),
     ;
 
     @Nonnull

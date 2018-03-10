@@ -2,25 +2,32 @@ package eu.ba30.re.blocky.view.common.mvc.view.utils;
 
 import com.vaadin.ui.UI;
 import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.view.ApplicationViewName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class NavigationUtils {
+    private static final Logger log = LoggerFactory.getLogger(NavigationUtils.class);
+
     private NavigationUtils() {
         throw new UnsupportedOperationException();
     }
 
-    public static void navigateTo(@Nonnull final String view) {
-        navigateTo(view, null);
+    public static void navigateTo(@Nonnull final ApplicationViewName viewName) {
+        navigateTo(viewName, null);
     }
 
-    public static <Data> void navigateTo(@Nonnull final String viewName, @Nullable final Data data) {
+    public static <Data> void navigateTo(@Nonnull final ApplicationViewName viewName,
+                                         @Nullable final Data data) {
         Validate.notNull(viewName);
+        log.info("Navigating to {} with data {}", viewName, data);
 
         final UI currentUI = UI.getCurrent();
         currentUI.setData(data);
-        currentUI.getNavigator().navigateTo(viewName);
+        currentUI.getNavigator().navigateTo(viewName.getViewName());
     }
 
     @Nonnull

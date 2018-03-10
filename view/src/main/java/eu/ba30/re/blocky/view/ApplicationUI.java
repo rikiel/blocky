@@ -16,6 +16,8 @@ public class ApplicationUI extends UI {
     private OverviewListVaadinView overviewListVaadinView;
     @Autowired
     private InvoiceBulkDeleteVaadinView invoiceBulkDeleteVaadinView;
+    @Autowired
+    private InvoiceCreateVaadinView invoiceCreateVaadinView;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -24,5 +26,6 @@ public class ApplicationUI extends UI {
 
         navigator.addView(ApplicationViewName.OVERVIEW.getViewName(), overviewListVaadinView);
         navigator.addView(ApplicationViewName.BULK_DELETE.getViewName(), invoiceBulkDeleteVaadinView);
+        navigator.addView(ApplicationViewName.CREATE.getViewName(), invoiceCreateVaadinView);
     }
 }

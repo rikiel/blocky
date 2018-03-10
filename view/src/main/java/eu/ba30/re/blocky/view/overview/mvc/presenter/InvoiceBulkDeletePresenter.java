@@ -40,7 +40,7 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
 
     @Override
     public void onBack() {
-        NavigationUtils.navigateTo(ApplicationViewName.OVERVIEW.getViewName());
+        NavigationUtils.navigateTo(ApplicationViewName.OVERVIEW);
     }
 
     @Override
