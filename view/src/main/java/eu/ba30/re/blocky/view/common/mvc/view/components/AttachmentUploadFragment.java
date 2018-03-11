@@ -1,5 +1,6 @@
 package eu.ba30.re.blocky.view.common.mvc.view.components;
 
+import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
@@ -9,6 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -57,6 +61,7 @@ public class AttachmentUploadFragment {
 
     public void showAttachment(@Nonnull final Attachment attachment) {
         Validate.notNull(attachment);
+        final VerticalLayout layout = new VerticalLayout();
         final TextField attachmentName = new TextField("Názov prílohy");
         final Binder<Attachment> nameBinder = new Binder<>();
         nameBinder.forField(attachmentName)
@@ -76,10 +81,26 @@ public class AttachmentUploadFragment {
             }
         });
 
+        final Button deleteAttachment = new Button("Odstrániť");
+        deleteAttachment.addClickListener(event -> {
+            handler.deleteAttachment(attachment);
+            previewsLayout.removeComponent(layout);
+        });
+
+        final Button downloadAttachment = new Button("Stiahnuť");
+        new FileDownloader(new StreamResource((StreamResource.StreamSource) () -> new ByteArrayInputStream(attachment.getContent()), attachment.getFileName()))
+                .extend(downloadAttachment);
+
         final AttachmentPreview attachmentPreview = new AttachmentPreview(attachment);
 
-        final VerticalLayout layout = new VerticalLayout();
-        layout.addComponentsAndExpand(new HorizontalLayout(attachmentName, changeName));
+        final HorizontalLayout changeNameLayout = new HorizontalLayout();
+        changeNameLayout.addComponentsAndExpand(attachmentName, changeName);
+
+        final HorizontalLayout actionLayout = new HorizontalLayout();
+        actionLayout.addComponentsAndExpand(deleteAttachment, downloadAttachment);
+
+        layout.addComponentsAndExpand(changeNameLayout);
+        layout.addComponentsAndExpand(actionLayout);
         layout.addComponentsAndExpand(attachmentPreview.build());
         previewsLayout.addComponent(layout);
     }
@@ -100,8 +121,26 @@ public class AttachmentUploadFragment {
     }
 
     private void addHandlerListener() {
+        upload.addStartedListener(event -> {
+            if (event.getContentLength() == 0) {
+                upload.setComponentError(new ErrorMessage() {
+                    @Override
+                    public ErrorLevel getErrorLevel() {
+                        return ErrorLevel.ERROR;
+                    }
+
+                    @Override
+                    public String getFormattedHtmlMessage() {
+                        return "Vyber súbor";
+                    }
+                });
+                stopUpload();
+            } else {
+                upload.setComponentError(null);
+            }
+        });
         upload.addFailedListener(event -> handler.uploadFailed());
-        upload.addFinishedListener(event -> handler.uploadFinished(event.getFilename(), event.getMIMEType(), event.getLength()));
+        upload.addFinishedListener(event -> handler.uploadFinished(event.getFilename(), event.getMIMEType()));
         upload.addProgressListener(handler::uploadProgress);
     }
 
@@ -113,7 +152,9 @@ public class AttachmentUploadFragment {
 
         void uploadFailed();
 
-        void uploadFinished(@Nonnull String fileName, @Nonnull String mimeType, long length);
+        void uploadFinished(@Nonnull String fileName, @Nonnull String mimeType);
+
+        void deleteAttachment(@Nonnull Attachment attachment);
     }
 
     private enum UploadLogger implements Upload.FinishedListener, Upload.FailedListener, Upload.ProgressListener {

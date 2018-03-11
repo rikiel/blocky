@@ -5,6 +5,8 @@ import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,9 @@ import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
 @Component
 @Scope("prototype")
 public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHandler {
-    private static final int UPLOAD_FILE_MAX_BYTES = 1_000_000;
+    private static final Logger log = LoggerFactory.getLogger(InvoiceCreatePresenter.class);
+
+    private static final int UPLOAD_FILE_MAX_BYTES = 10_000_000;
     private static final int MAXIMUM_UPLOADS_COUNT = 3;
 
     @Autowired
@@ -80,11 +84,11 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
     }
 
     @Override
-    public void uploadFinished(@Nonnull final String fileName, @Nonnull final String mimeType, final long length) {
-        if (length == 0) {
+    public void uploadFinished(@Nonnull final String fileName, @Nonnull final String mimeType) {
+        if (model.getAttachmentOutputStream() == null) {
+            // upload failed
             return;
         }
-        Validate.notNull(model.getAttachmentOutputStream());
         final Attachment attachment = new Attachment();
         attachment.setName(fileName);
         attachment.setFileName(fileName);
@@ -95,5 +99,13 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
         view.showAttachment(attachment);
         model.setAttachmentOutputStream(null);
         model.getInvoice().getAttachments().add(attachment);
+    }
+
+    @Override
+    public void deleteAttachment(@Nonnull final Attachment attachment) {
+        final boolean removed = model.getInvoice().getAttachments().remove(attachment);
+        if (!removed) {
+            log.warn("Attachment was not found: {} -> {}", attachment, model.getInvoice().getAttachments());
+        }
     }
 }
