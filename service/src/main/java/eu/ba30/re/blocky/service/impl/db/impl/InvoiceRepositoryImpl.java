@@ -1,0 +1,99 @@
+package eu.ba30.re.blocky.service.impl.db.impl;
+
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
+import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.service.CstManager;
+import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
+import eu.ba30.re.blocky.utils.Validate;
+
+@Service
+public class InvoiceRepositoryImpl implements InvoiceRepository {
+    private static final Logger log = LoggerFactory.getLogger(InvoiceRepositoryImpl.class);
+
+    private static final String GET_ALL_INVOICES_SQL_REQUEST = ""
+                                                               + " SELECT * "
+                                                               + " FROM T_INVOICES ";
+
+    private static final String CREATE_INVOICE_SQL_REQUEST = ""
+                                                             + " INSERT INTO T_INVOICES "
+                                                             + " (ID, CATEGORY_ID, DETAILS, CREATION, LAST_MODIFICATION) "
+                                                             + " VALUES (?, ?, ?, ?, NULL)";
+
+    private static final String REMOVE_INVOICE_SQL_REQUEST = ""
+                                                             + " DELETE FROM T_INVOICES "
+                                                             + " WHERE ID IN ?";
+
+    @Autowired
+    private CstManager cstManager;
+
+    @Autowired
+    private AttachmentsRepository attachmentsRepository;
+
+    @Autowired
+    private JdbcTemplate jdbc;
+
+    @Nonnull
+    @Override
+    public List<Invoice> getInvoices() {
+        return jdbc.query(GET_ALL_INVOICES_SQL_REQUEST, new InvoiceRowMapper());
+    }
+
+    @Override
+    public void remove(@Nonnull final List<Invoice> invoices) {
+        Validate.notEmpty(invoices);
+
+        final List<Integer> invoiceIds = invoices
+                .stream()
+                .map(Invoice::getId)
+                .collect(Collectors.toList());
+
+        jdbc.update(REMOVE_INVOICE_SQL_REQUEST, invoiceIds);
+        attachmentsRepository.removeAttachments(invoiceIds);
+    }
+
+    @Override
+    public void create(@Nonnull final Invoice invoice) {
+        Validate.notNull(invoice);
+
+        jdbc.update(CREATE_INVOICE_SQL_REQUEST,
+                invoice.getId(),
+                invoice.getCategory().getId(),
+                invoice.getDetails(),
+                Date.valueOf(invoice.getCreationDate()));
+        attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
+    }
+
+    private class InvoiceRowMapper implements RowMapper<Invoice> {
+        @Override
+        public Invoice mapRow(ResultSet resultSet, int i) throws SQLException {
+            final Invoice invoice = new Invoice();
+
+            final int id = resultSet.getInt("ID");
+            invoice.setId(id);
+            invoice.setName(resultSet.getString("NAME"));
+            invoice.setCategory(cstManager.getCategory(resultSet.getInt("CATEGORY_ID")));
+            invoice.setDetails(resultSet.getString("DETAILS"));
+            invoice.setCreationDate(resultSet.getDate("CREATION").toLocalDate());
+            invoice.setModificationDate(resultSet.getDate("LAST_MODIFICATION").toLocalDate());
+            invoice.setAttachments(attachmentsRepository.getAttachmentList(id));
+
+            log.debug("Loaded invoice: {}", invoice);
+            return invoice;
+        }
+    }
+}

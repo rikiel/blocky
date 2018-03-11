@@ -34,4 +34,10 @@ public class CstManagerImpl implements CstManager {
     public List<Category> getCategories() {
         return CATEGORIES;
     }
+
+    @Nonnull
+    @Override
+    public Category getCategory(int categoryId) {
+        return CATEGORIES.get(0);
+    }
 }

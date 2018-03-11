@@ -1,10 +1,8 @@
 package eu.ba30.re.blocky.service.impl;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,48 +10,41 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.InvoiceService;
+import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
 import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
-    // TODO BLOCKY-4 Akcie: Pridat novy/upravit/zmazat
-    private List<Invoice> invoiceList;
-
     @Autowired
-    private CstManager cstManager;
-
-    @PostConstruct
-    private void init() {
-        invoiceList = Lists.newArrayList();
-        for (int i = 0; i < 10; ++i) {
-            final Invoice item = new Invoice();
-            item.setId(i);
-            item.setName("itemName#" + i);
-            item.setCategory(cstManager.getCategories().get(0));
-            item.setCreationDate(LocalDate.now().minusMonths(1));
-            invoiceList.add(item);
-        }
-    }
+    private InvoiceRepository invoiceRepository;
 
     @Nonnull
     @Override
     public List<Invoice> getInvoices() {
-        return invoiceList;
+        return invoiceRepository.getInvoices();
     }
 
     @Override
     public void remove(@Nonnull final List<Invoice> invoices) {
         Validate.notEmpty(invoices);
-
-        invoiceList.removeAll(invoices);
+        invoiceRepository.remove(invoices);
     }
 
     @Override
     public void create(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
 
-        invoiceList.add(invoice);
+        // TODO BLOCKY-7 domapovat fieldy
+        invoiceRepository.create(invoice);
+    }
+
+    @Override
+    public void update(@Nonnull final Invoice invoice) {
+        Validate.notNull(invoice);
+
+        // TODO BLOCKY-7 domapovat fieldy
+        invoiceRepository.remove(Lists.newArrayList(invoice));
+        invoiceRepository.create(invoice);
     }
 }

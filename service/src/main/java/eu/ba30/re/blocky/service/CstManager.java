@@ -9,4 +9,7 @@ import eu.ba30.re.blocky.model.cst.Category;
 public interface CstManager {
     @Nonnull
     List<Category> getCategories();
+
+    @Nonnull
+    Category getCategory(int categoryId);
 }
