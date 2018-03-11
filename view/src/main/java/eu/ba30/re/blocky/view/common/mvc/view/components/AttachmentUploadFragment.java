@@ -3,7 +3,6 @@ package eu.ba30.re.blocky.view.common.mvc.view.components;
 import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,15 +94,14 @@ public class AttachmentUploadFragment {
     }
 
     private void addLoggingListener() {
-        final UploadLogger logger = new UploadLogger();
-        upload.addProgressListener(logger);
-        upload.addFinishedListener(logger);
-        upload.addFailedListener(logger);
+        upload.addProgressListener(UploadLogger.INSTANCE);
+        upload.addFinishedListener(UploadLogger.INSTANCE);
+        upload.addFailedListener(UploadLogger.INSTANCE);
     }
 
     private void addHandlerListener() {
         upload.addFailedListener(event -> handler.uploadFailed());
-        upload.addFinishedListener(event -> handler.uploadFinished(event.getFilename(), event.getMIMEType()));
+        upload.addFinishedListener(event -> handler.uploadFinished(event.getFilename(), event.getMIMEType(), event.getLength()));
         upload.addProgressListener(handler::uploadProgress);
     }
 
@@ -115,10 +113,12 @@ public class AttachmentUploadFragment {
 
         void uploadFailed();
 
-        void uploadFinished(@Nullable String fileName, @Nullable String mimeType);
+        void uploadFinished(@Nonnull String fileName, @Nonnull String mimeType, long length);
     }
 
-    private static class UploadLogger implements Upload.FinishedListener, Upload.FailedListener, Upload.ProgressListener {
+    private enum UploadLogger implements Upload.FinishedListener, Upload.FailedListener, Upload.ProgressListener {
+        INSTANCE;
+
         private static final Logger log = LoggerFactory.getLogger(UploadLogger.class);
 
         @Override
@@ -128,13 +128,13 @@ public class AttachmentUploadFragment {
 
         @Override
         public void uploadFinished(Upload.FinishedEvent event) {
-            log.info("Upload finished. FileName {}, Length {}, MimeType {}",
+            log.info("Upload finished. FileName '{}', Length '{}', MimeType '{}'",
                     event.getFilename(), event.getLength(), event.getMIMEType());
         }
 
         @Override
         public void updateProgress(long readBytes, long contentLength) {
-            log.debug("Progress of upload: Read {}, TotalLength {}", readBytes, contentLength);
+            log.trace("Progress of upload: Read '{}', TotalLength '{}'", readBytes, contentLength);
         }
     }
 }

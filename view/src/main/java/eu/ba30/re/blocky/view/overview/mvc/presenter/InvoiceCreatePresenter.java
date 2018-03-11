@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -81,8 +80,8 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
     }
 
     @Override
-    public void uploadFinished(@Nullable final String fileName, @Nullable final String mimeType) {
-        if (fileName == null || mimeType == null) {
+    public void uploadFinished(@Nonnull final String fileName, @Nonnull final String mimeType, final long length) {
+        if (length == 0) {
             return;
         }
         Validate.notNull(model.getAttachmentOutputStream());
