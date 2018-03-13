@@ -35,7 +35,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
     @Autowired
     private InvoiceRepositoryImpl invoiceRepository;
 
-    @Test
+    @Test(priority = 1)
     public void getInvoices() {
         new Expectations() {{
             attachmentsRepository.getAttachmentList(1);
@@ -46,19 +46,30 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         }};
         final List<Invoice> invoices = invoiceRepository.getInvoices();
         assertEquals(invoices.size(), 1);
-        assertReflectionEquals(getExpectedInvoiceList(), invoices);
+        assertReflectionEquals(Lists.newArrayList(createDbInvoice()), invoices);
     }
 
-    @Test
-    public void remove() {
-    }
-
-    @Test
+    @Test(priority = 2)
     public void create() {
+        invoiceRepository.create(createNewInvoice());
+
+        assertEquals(invoiceRepository.getInvoices().size(), 2);
     }
+
+    @Test(priority = 3)
+    public void remove() {
+        new Expectations() {{
+            attachmentsRepository.removeAttachments(Lists.newArrayList(1));
+            result = null;
+        }};
+        invoiceRepository.remove(Lists.newArrayList(createDbInvoice()));
+
+        assertEquals(invoiceRepository.getInvoices().size(), 1);
+    }
+
 
     @Nonnull
-    private List<Invoice> getExpectedInvoiceList() {
+    private static Invoice createDbInvoice() {
         final Invoice invoice = new Invoice();
         invoice.setId(1);
         invoice.setName("Nazov#1");
@@ -67,8 +78,20 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         invoice.setCreationDate(LocalDate.parse("2018-03-11"));
         invoice.setModificationDate(LocalDate.parse("2018-03-11"));
         invoice.setAttachments(Lists.newArrayList(getMockedAttachment()));
+        return invoice;
+    }
 
-        return Lists.newArrayList(invoice);
+    @Nonnull
+    private static Invoice createNewInvoice() {
+        final Invoice invoice = new Invoice();
+        invoice.setId(2);
+        invoice.setName("Nazov#2");
+        invoice.setCategory(getMockedCategory());
+        invoice.setDetails("Detail#2");
+        invoice.setCreationDate(LocalDate.parse("2018-03-13"));
+        invoice.setModificationDate(LocalDate.parse("2018-03-13"));
+        invoice.setAttachments(Lists.newArrayList(getMockedAttachment()));
+        return invoice;
     }
 
     @Nonnull

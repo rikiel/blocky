@@ -31,12 +31,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
     private static final String CREATE_INVOICE_SQL_REQUEST = ""
                                                              + " INSERT INTO T_INVOICES "
-                                                             + " (ID, CATEGORY_ID, DETAILS, CREATION, LAST_MODIFICATION) "
-                                                             + " VALUES (?, ?, ?, ?, NULL) ";
+                                                             + " (ID, NAME, CATEGORY_ID, DETAILS, CREATION, LAST_MODIFICATION) "
+                                                             + " VALUES (?, ?, ?, ?, ?, ?) ";
 
     private static final String REMOVE_INVOICE_SQL_REQUEST = ""
                                                              + " DELETE FROM T_INVOICES "
-                                                             + " WHERE ID IN  ";
+                                                             + " WHERE ID IN ";
 
     @Autowired
     private CstManager cstManager;
@@ -62,7 +62,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 .map(Invoice::getId)
                 .collect(Collectors.toList());
 
-        jdbc.update(REMOVE_INVOICE_SQL_REQUEST, invoiceIds);
+        final String sqlRequestArgsPart = invoiceIds.stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(","));
+        final String sqlRequest = String.format("%s (%s)", REMOVE_INVOICE_SQL_REQUEST, sqlRequestArgsPart);
+
+        jdbc.update(sqlRequest, invoiceIds.toArray());
         attachmentsRepository.removeAttachments(invoiceIds);
     }
 
@@ -75,7 +80,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 invoice.getName(),
                 invoice.getCategory().getId(),
                 invoice.getDetails(),
-                Date.valueOf(invoice.getCreationDate()));
+                Date.valueOf(invoice.getCreationDate()),
+                Date.valueOf(invoice.getModificationDate()));
         attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
     }
 
