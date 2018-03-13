@@ -7,11 +7,20 @@ import com.google.common.base.MoreObjects;
 import eu.ba30.re.blocky.utils.Validate;
 
 public class Attachment {
+    private Integer id;
     private String name;
     private String fileName;
     private String mimeType;
     private Type type;
     private byte[] content;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -56,6 +65,7 @@ public class Attachment {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
+                .add("id", id)
                 .add("name", name)
                 .add("fileName", fileName)
                 .add("mimeType", mimeType)

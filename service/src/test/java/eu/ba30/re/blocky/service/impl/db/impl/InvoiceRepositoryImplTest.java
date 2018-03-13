@@ -52,6 +52,10 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
 
     @Test(priority = 2)
     public void create() {
+        new Expectations() {{
+            attachmentsRepository.createAttachments(2, (List<Attachment>) any);
+            result = null;
+        }};
         invoiceRepository.create(createNewInvoice());
 
         assertEquals(invoiceRepository.getInvoices().size(), 2);
@@ -106,6 +110,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
     @Nonnull
     private static Attachment getMockedAttachment() {
         final Attachment attachment = new Attachment();
+        attachment.setId(1);
         attachment.setName("MockedAttachment");
         attachment.setType(Attachment.Type.PDF);
         attachment.setFileName("MockedFileName");
