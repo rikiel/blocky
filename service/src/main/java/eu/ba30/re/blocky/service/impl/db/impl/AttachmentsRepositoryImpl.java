@@ -10,7 +10,7 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
 
 @Service
-public class AttachmentRepositoryImpl implements AttachmentsRepository {
+public class AttachmentsRepositoryImpl implements AttachmentsRepository {
     @Nonnull
     @Override
     public List<Attachment> getAttachmentList(int invoiceId) {

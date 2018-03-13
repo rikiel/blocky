@@ -32,11 +32,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     private static final String CREATE_INVOICE_SQL_REQUEST = ""
                                                              + " INSERT INTO T_INVOICES "
                                                              + " (ID, CATEGORY_ID, DETAILS, CREATION, LAST_MODIFICATION) "
-                                                             + " VALUES (?, ?, ?, ?, NULL)";
+                                                             + " VALUES (?, ?, ?, ?, NULL) ";
 
     private static final String REMOVE_INVOICE_SQL_REQUEST = ""
                                                              + " DELETE FROM T_INVOICES "
-                                                             + " WHERE ID IN ?";
+                                                             + " WHERE ID IN  ";
 
     @Autowired
     private CstManager cstManager;
@@ -72,6 +72,7 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
         jdbc.update(CREATE_INVOICE_SQL_REQUEST,
                 invoice.getId(),
+                invoice.getName(),
                 invoice.getCategory().getId(),
                 invoice.getDetails(),
                 Date.valueOf(invoice.getCreationDate()));
