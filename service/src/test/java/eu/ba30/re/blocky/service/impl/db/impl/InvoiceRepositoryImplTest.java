@@ -1,6 +1,5 @@
 package eu.ba30.re.blocky.service.impl.db.impl;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -15,13 +14,16 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import mockit.Capturing;
 import mockit.Expectations;
 
+import static eu.ba30.re.blocky.service.TestUtils.createDbInvoice;
+import static eu.ba30.re.blocky.service.TestUtils.createNewInvoice;
+import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment;
+import static eu.ba30.re.blocky.service.TestUtils.getMockedCategory;
 import static org.testng.Assert.assertEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -72,50 +74,6 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         assertEquals(invoiceRepository.getInvoices().size(), 1);
     }
 
-    @Nonnull
-    private static Invoice createDbInvoice() {
-        final Invoice invoice = new Invoice();
-        invoice.setId(1);
-        invoice.setName("Nazov#1");
-        invoice.setCategory(getMockedCategory());
-        invoice.setDetails("Detail#1");
-        invoice.setCreationDate(LocalDate.parse("2018-03-11"));
-        invoice.setModificationDate(LocalDate.parse("2018-03-11"));
-        invoice.setAttachments(Lists.newArrayList(getMockedAttachment()));
-        return invoice;
-    }
-
-    @Nonnull
-    private static Invoice createNewInvoice() {
-        final Invoice invoice = new Invoice();
-        invoice.setId(2);
-        invoice.setName("Nazov#2");
-        invoice.setCategory(getMockedCategory());
-        invoice.setDetails("Detail#2");
-        invoice.setCreationDate(LocalDate.parse("2018-03-13"));
-        invoice.setModificationDate(LocalDate.parse("2018-03-13"));
-        invoice.setAttachments(Lists.newArrayList(getMockedAttachment()));
-        return invoice;
-    }
-
-    @Nonnull
-    private static Category getMockedCategory() {
-        final Category category = new Category();
-        category.setId(123);
-        category.setName("MockedCategory");
-        category.setDescription("MockedCategoryDescription");
-        return category;
-    }
-
-    @Nonnull
-    private static Attachment getMockedAttachment() {
-        final Attachment attachment = new Attachment();
-        attachment.setId(1);
-        attachment.setName("MockedAttachment");
-        attachment.setType(Attachment.Type.PDF);
-        attachment.setFileName("MockedFileName");
-        return attachment;
-    }
 
     @Configuration
     public static class InvoiceRepositoryConfiguration extends RepositoryTestConfiguration {
