@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
@@ -16,15 +17,15 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
-import eu.ba30.re.blocky.service.ServiceTestConfiguration;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import mockit.Capturing;
 import mockit.Expectations;
 
 import static org.testng.Assert.assertEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-@ContextConfiguration(classes = { ServiceTestConfiguration.class })
+@ContextConfiguration(classes = { InvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
 public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests {
     @Capturing
     private AttachmentsRepository attachmentsRepository;
@@ -66,7 +67,6 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
 
         assertEquals(invoiceRepository.getInvoices().size(), 1);
     }
-
 
     @Nonnull
     private static Invoice createDbInvoice() {
@@ -110,5 +110,14 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         attachment.setType(Attachment.Type.PDF);
         attachment.setFileName("MockedFileName");
         return attachment;
+    }
+
+    @Configuration
+    public static class InvoiceRepositoryConfiguration extends RepositoryTestConfiguration {
+        @Nonnull
+        @Override
+        protected List<String> getSqlScripts() {
+            return Lists.newArrayList("db/test-data-invoices.sql");
+        }
     }
 }
