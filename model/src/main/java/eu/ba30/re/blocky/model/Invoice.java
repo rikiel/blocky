@@ -2,6 +2,7 @@ package eu.ba30.re.blocky.model;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.common.base.MoreObjects;
 
@@ -83,5 +84,22 @@ public class Invoice {
                 .add("modificationDate", modificationDate)
                 .add("attachments", attachments)
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Invoice)) {
+            return false;
+        }
+        final Invoice invoice = (Invoice) o;
+        return Objects.equals(id, invoice.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

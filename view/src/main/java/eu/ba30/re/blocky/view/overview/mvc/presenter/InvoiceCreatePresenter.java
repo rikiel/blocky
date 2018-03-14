@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import eu.ba30.re.blocky.model.Attachment;
+import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.ApplicationViewName;
@@ -93,7 +94,7 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
         attachment.setName(fileName);
         attachment.setFileName(fileName);
         attachment.setMimeType(mimeType);
-        attachment.setType(Attachment.Type.forMime(mimeType));
+        attachment.setType(AttachmentType.forMime(mimeType));
         attachment.setContent(model.getAttachmentOutputStream().toByteArray());
 
         view.showAttachment(attachment);

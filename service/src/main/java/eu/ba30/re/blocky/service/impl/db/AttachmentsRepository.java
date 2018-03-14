@@ -12,5 +12,5 @@ public interface AttachmentsRepository {
 
     void createAttachments(int invoiceId, @Nonnull List<Attachment> attachments);
 
-    void removeAttachments(@Nonnull List<Integer> invoiceIds);
+    void removeAttachments(@Nonnull List<Attachment> attachments);
 }

@@ -1,22 +1,39 @@
 package eu.ba30.re.blocky.service.impl.db.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.model.Attachment;
+import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
+import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class AttachmentsRepositoryImpl implements AttachmentsRepository {
+    private static final Logger log = LoggerFactory.getLogger(AttachmentsRepositoryImpl.class);
+
     private static final String CREATE_ATTACHMENT_SQL_REQUEST = ""
                                                                 + " INSERT INTO T_ATTACHMENTS "
                                                                 + " (ID, INVOICE_ID, NAME, FILE_NAME, MIME_TYPE, TYPE, FILE_CONTENT) "
                                                                 + " VALUES (?, ?, ?, ?, ?, ?, ?) ";
+    private static final String GET_ATTACHMENT_LIST_SQL_REQUEST = ""
+                                                                  + " SELECT * "
+                                                                  + " FROM T_ATTACHMENTS "
+                                                                  + " WHERE INVOICE_ID = ?";
+    private static final String REMOVE_ATTACHMENTS_SQL_REQUEST = ""
+                                                                 + " DELETE FROM T_ATTACHMENTS "
+                                                                 + " WHERE ID IN ";
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -24,25 +41,62 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
     @Nonnull
     @Override
     public List<Attachment> getAttachmentList(final int invoiceId) {
-        throw new UnsupportedOperationException();
+        return jdbc.query(GET_ATTACHMENT_LIST_SQL_REQUEST,
+                new Object[] { invoiceId },
+                new AttachmentMapper());
     }
 
     @Override
     public void createAttachments(final int invoiceId, @Nonnull final List<Attachment> attachments) {
-        final Attachment item = attachments.get(0);
-        jdbc.update(CREATE_ATTACHMENT_SQL_REQUEST,
-                item.getId(),
-                invoiceId,
-                item.getName(),
-                item.getFileName(),
-                item.getMimeType(),
-                item.getType().toString(),
-                item.getContent());
+        Validate.notEmpty(attachments);
+
+        final List<Object[]> sqlArgs = attachments.stream()
+                .map(item -> new Object[] {
+                        item.getId(),
+                        invoiceId,
+                        item.getName(),
+                        item.getFileName(),
+                        item.getMimeType(),
+                        item.getType().getId(),
+                        item.getContent()
+                })
+                .collect(Collectors.toList());
+
+        jdbc.batchUpdate(CREATE_ATTACHMENT_SQL_REQUEST, sqlArgs);
     }
 
     @Override
-    public void removeAttachments(@Nonnull final List<Integer> invoiceIds) {
-        throw new UnsupportedOperationException();
+    public void removeAttachments(@Nonnull final List<Attachment> attachments) {
+        Validate.notEmpty(attachments);
 
+        final List<Integer> attachmentIds = attachments
+                .stream()
+                .map(Attachment::getId)
+                .collect(Collectors.toList());
+
+        final String sqlRequestArgsPart = attachmentIds
+                .stream()
+                .map(id -> "?")
+                .collect(Collectors.joining(","));
+        final String sqlRequest = String.format("%s (%s)", REMOVE_ATTACHMENTS_SQL_REQUEST, sqlRequestArgsPart);
+
+        jdbc.update(sqlRequest, attachmentIds.toArray());
+    }
+
+    private static class AttachmentMapper implements RowMapper<Attachment> {
+        @Override
+        public Attachment mapRow(ResultSet rs, int rowNum) throws SQLException {
+            final Attachment attachment = new Attachment();
+
+            attachment.setId(rs.getInt("ID"));
+            attachment.setName(rs.getString("NAME"));
+            attachment.setFileName(rs.getString("FILE_NAME"));
+            attachment.setMimeType(rs.getString("MIME_TYPE"));
+            attachment.setType(AttachmentType.forId(rs.getInt("TYPE")));
+            attachment.setContent(rs.getBytes("FILE_CONTENT"));
+
+            log.debug("Loaded attachment: {}", attachment);
+            return attachment;
+        }
     }
 }

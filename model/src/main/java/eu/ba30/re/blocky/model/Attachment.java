@@ -1,17 +1,17 @@
 package eu.ba30.re.blocky.model;
 
-import javax.annotation.Nonnull;
+import java.util.Objects;
 
 import com.google.common.base.MoreObjects;
 
-import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.model.cst.AttachmentType;
 
 public class Attachment {
     private Integer id;
     private String name;
     private String fileName;
     private String mimeType;
-    private Type type;
+    private AttachmentType type;
     private byte[] content;
 
     public Integer getId() {
@@ -46,11 +46,11 @@ public class Attachment {
         this.mimeType = mimeType;
     }
 
-    public Type getType() {
+    public AttachmentType getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(AttachmentType type) {
         this.type = type;
     }
 
@@ -73,26 +73,20 @@ public class Attachment {
                 .toString();
     }
 
-    public enum Type {
-        IMAGE,
-        PDF,
-        TEXT,
-        UNKNOWN;
-
-        @Nonnull
-        public static Type forMime(@Nonnull final String mimeType) {
-            Validate.notNull(mimeType);
-            final String mime = mimeType.toLowerCase();
-            if (mime.contains("pdf")) {
-                return PDF;
-            }
-            if (mime.contains("image")) {
-                return IMAGE;
-            }
-            if (mime.contains("text")) {
-                return TEXT;
-            }
-            return UNKNOWN;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
+        if (!(o instanceof Attachment)) {
+            return false;
+        }
+        final Attachment that = (Attachment) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

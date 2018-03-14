@@ -1,5 +1,7 @@
 package eu.ba30.re.blocky.model.cst;
 
+import java.util.Objects;
+
 import com.google.common.base.MoreObjects;
 
 public class Category {
@@ -38,5 +40,22 @@ public class Category {
                 .add("name", name)
                 .add("description", description)
                 .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Category)) {
+            return false;
+        }
+        final Category category = (Category) o;
+        return Objects.equals(id, category.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
