@@ -73,7 +73,7 @@ public class Invoice {
         return attachments;
     }
 
-    public void setAttachments(List<Attachment> attachments) {
+    public void setAttachments(@Nonnull List<Attachment> attachments) {
         this.attachments.clear();
         this.attachments.addAll(attachments);
     }

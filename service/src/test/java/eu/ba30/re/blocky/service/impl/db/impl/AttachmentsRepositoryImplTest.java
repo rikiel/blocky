@@ -55,8 +55,8 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
 
     @Test
     public void getNextItemId() {
-        assertEquals(attachmentsRepository.getNextItemId(), 1);
-        assertEquals(attachmentsRepository.getNextItemId(), 2);
+        assertEquals(attachmentsRepository.getNextItemId(), 10);
+        assertEquals(attachmentsRepository.getNextItemId(), 11);
     }
 
     @Configuration

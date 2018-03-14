@@ -26,6 +26,6 @@ public class CstManagerImplTest extends AbstractTestNGSpringContextTests {
     @Test
     public void getCategory() {
         assertReflectionEquals(getDbCategory(),
-                cstManager.getCategory(123));
+                cstManager.getCategory(1));
     }
 }

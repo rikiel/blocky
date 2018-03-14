@@ -16,7 +16,7 @@ public class TestUtils {
     }
 
     @Nonnull
-    public static Invoice createDbInvoice() {
+    public static Invoice getDbInvoice() {
         final Invoice invoice = new Invoice();
         invoice.setId(1);
         invoice.setName("Nazov#1");
@@ -29,7 +29,7 @@ public class TestUtils {
     }
 
     @Nonnull
-    public static Invoice createNewInvoice() {
+    public static Invoice getNewInvoice() {
         final Invoice invoice = new Invoice();
         invoice.setId(2);
         invoice.setName("Nazov#2");
@@ -44,12 +44,22 @@ public class TestUtils {
     @Nonnull
     public static Category getDbCategory() {
         final Category category = new Category();
-        category.setId(123);
-        category.setName("CategoryName");
-        category.setDescription("CategoryDescription");
+        category.setId(1);
+        category.setName("CategoryName#1");
+        category.setDescription("CategoryDescription#1");
         return category;
     }
 
+    @Nonnull
+    public static Category getDbCategory2() {
+        final Category category = new Category();
+        category.setId(2);
+        category.setName("CategoryName#2");
+        category.setDescription("CategoryDescription#2");
+        return category;
+    }
+
+    @Nonnull
     public static Attachment getDbAttachment() {
         final Attachment attachment = new Attachment();
         attachment.setId(1);
