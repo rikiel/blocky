@@ -20,7 +20,7 @@ public class TestUtils {
         final Invoice invoice = new Invoice();
         invoice.setId(1);
         invoice.setName("Nazov#1");
-        invoice.setCategory(getMockedCategory());
+        invoice.setCategory(getDbCategory());
         invoice.setDetails("Detail#1");
         invoice.setCreationDate(LocalDate.parse("2018-03-11"));
         invoice.setModificationDate(LocalDate.parse("2018-03-11"));
@@ -33,7 +33,7 @@ public class TestUtils {
         final Invoice invoice = new Invoice();
         invoice.setId(2);
         invoice.setName("Nazov#2");
-        invoice.setCategory(getMockedCategory());
+        invoice.setCategory(getDbCategory());
         invoice.setDetails("Detail#2");
         invoice.setCreationDate(LocalDate.parse("2018-03-13"));
         invoice.setModificationDate(LocalDate.parse("2018-03-13"));
@@ -42,11 +42,11 @@ public class TestUtils {
     }
 
     @Nonnull
-    public static Category getMockedCategory() {
+    public static Category getDbCategory() {
         final Category category = new Category();
         category.setId(123);
-        category.setName("MockedCategory");
-        category.setDescription("MockedCategoryDescription");
+        category.setName("CategoryName");
+        category.setDescription("CategoryDescription");
         return category;
     }
 

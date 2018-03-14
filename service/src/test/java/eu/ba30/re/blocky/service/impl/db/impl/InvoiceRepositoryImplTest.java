@@ -22,8 +22,8 @@ import mockit.Expectations;
 import static eu.ba30.re.blocky.service.TestUtils.createDbInvoice;
 import static eu.ba30.re.blocky.service.TestUtils.createNewInvoice;
 import static eu.ba30.re.blocky.service.TestUtils.getDbAttachment;
+import static eu.ba30.re.blocky.service.TestUtils.getDbCategory;
 import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment2;
-import static eu.ba30.re.blocky.service.TestUtils.getMockedCategory;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { InvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
@@ -83,10 +83,9 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
             result = Lists.newArrayList(getDbAttachment());
 
             cstManager.getCategory(123);
-            result = getMockedCategory();
+            result = getDbCategory();
         }};
     }
-
 
     @Configuration
     public static class InvoiceRepositoryConfiguration extends RepositoryTestConfiguration {
