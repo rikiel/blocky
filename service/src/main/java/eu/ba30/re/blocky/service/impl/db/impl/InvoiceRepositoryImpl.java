@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -16,9 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
-
-import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
@@ -66,12 +62,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
         final List<Integer> invoiceIds = invoices
                 .stream()
-                .map(Invoice::getId)
+                .map(invoice -> {
+                    Validate.notNull(invoice.getId());
+                    return invoice.getId();
+                })
                 .collect(Collectors.toList());
-        final Set<Attachment> attachments = invoices
-                .stream()
-                .flatMap(i -> i.getAttachments().stream())
-                .collect(Collectors.toSet());
 
         final String sqlRequestArgsPart = invoiceIds
                 .stream()
@@ -80,15 +75,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         final String sqlRequest = String.format("%s (%s)", REMOVE_INVOICE_SQL_REQUEST, sqlRequestArgsPart);
 
         jdbc.update(sqlRequest, invoiceIds.toArray());
-
-        if (!attachments.isEmpty()) {
-            attachmentsRepository.removeAttachments(Lists.newArrayList(attachments));
-        }
     }
 
     @Override
     public void create(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
+        Validate.notNull(invoice.getId());
 
         jdbc.update(CREATE_INVOICE_SQL_REQUEST,
                 invoice.getId(),
@@ -97,10 +89,6 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 invoice.getDetails(),
                 Date.valueOf(invoice.getCreationDate()),
                 Date.valueOf(invoice.getModificationDate()));
-
-        if (!invoice.getAttachments().isEmpty()) {
-            attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
-        }
     }
 
     @Override

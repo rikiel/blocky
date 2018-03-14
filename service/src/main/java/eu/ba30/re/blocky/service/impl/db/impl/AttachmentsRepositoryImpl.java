@@ -55,14 +55,17 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
 
         final List<Object[]> sqlArgs = attachments
                 .stream()
-                .map(item -> new Object[] {
-                        item.getId(),
-                        invoiceId,
-                        item.getName(),
-                        item.getFileName(),
-                        item.getMimeType(),
-                        item.getType().getId(),
-                        item.getContent()
+                .map(item -> {
+                    Validate.notNull(item.getId());
+                    return new Object[] {
+                            item.getId(),
+                            invoiceId,
+                            item.getName(),
+                            item.getFileName(),
+                            item.getMimeType(),
+                            item.getType().getId(),
+                            item.getContent()
+                    };
                 })
                 .collect(Collectors.toList());
 
@@ -75,7 +78,10 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
 
         final List<Integer> attachmentIds = attachments
                 .stream()
-                .map(Attachment::getId)
+                .map(attachment -> {
+                    Validate.notNull(attachment.getId());
+                    return attachment.getId();
+                })
                 .collect(Collectors.toList());
 
         final String sqlRequestArgsPart = attachmentIds

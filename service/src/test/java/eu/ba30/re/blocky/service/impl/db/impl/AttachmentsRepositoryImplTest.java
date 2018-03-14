@@ -53,7 +53,7 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 
-    @Test(priority = 4)
+    @Test
     public void getNextItemId() {
         assertEquals(attachmentsRepository.getNextItemId(), 1);
         assertEquals(attachmentsRepository.getNextItemId(), 2);

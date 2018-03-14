@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.cst.Category;
 
@@ -15,7 +18,7 @@ public class Invoice {
     private String details;
     private LocalDate creationDate;
     private LocalDate modificationDate;
-    private List<Attachment> attachments;
+    private final List<Attachment> attachments = Lists.newArrayList();
 
     public Integer getId() {
         return id;
@@ -65,12 +68,14 @@ public class Invoice {
         this.modificationDate = modificationDate;
     }
 
+    @Nonnull
     public List<Attachment> getAttachments() {
         return attachments;
     }
 
     public void setAttachments(List<Attachment> attachments) {
-        this.attachments = attachments;
+        this.attachments.clear();
+        this.attachments.addAll(attachments);
     }
 
     @Override

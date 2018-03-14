@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
-import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
@@ -50,10 +49,6 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
     public void create() {
         initDbInvoiceExpectations();
         new Expectations() {{
-            // create
-            attachmentsRepository.createAttachments(2, (List<Attachment>) any);
-            result = null;
-
             // getList
             attachmentsRepository.getAttachmentList(2);
             result = Lists.newArrayList(getMockedAttachment2());
@@ -67,18 +62,13 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
     @Test(priority = 3)
     public void remove() {
         initDbInvoiceExpectations();
-        new Expectations() {{
-            // remove
-            attachmentsRepository.removeAttachments(Lists.newArrayList(getMockedAttachment2()));
-            result = null;
-        }};
         invoiceRepository.remove(Lists.newArrayList(createNewInvoice()));
 
         assertReflectionEquals(Lists.newArrayList(createDbInvoice()),
                 invoiceRepository.getInvoices());
     }
 
-    @Test(priority = 4)
+    @Test
     public void getNextItemId() {
         assertEquals(invoiceRepository.getNextItemId(), 1);
         assertEquals(invoiceRepository.getNextItemId(), 2);
