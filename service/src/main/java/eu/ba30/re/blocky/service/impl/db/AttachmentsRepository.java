@@ -13,4 +13,6 @@ public interface AttachmentsRepository {
     void createAttachments(int invoiceId, @Nonnull List<Attachment> attachments);
 
     void removeAttachments(@Nonnull List<Attachment> attachments);
+
+    int getNextItemId();
 }

@@ -34,6 +34,9 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
     private static final String REMOVE_ATTACHMENTS_SQL_REQUEST = ""
                                                                  + " DELETE FROM T_ATTACHMENTS "
                                                                  + " WHERE ID IN ";
+    private static final String GET_NEXT_ATTACHMENT_ID_SQL_REQUEST = "" +
+                                                                 " SELECT NEXT VALUE FOR S_ATTACHMENT_ID " +
+                                                                 " FROM DUAL_ATTACHMENT_ID ";
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -50,7 +53,8 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
     public void createAttachments(final int invoiceId, @Nonnull final List<Attachment> attachments) {
         Validate.notEmpty(attachments);
 
-        final List<Object[]> sqlArgs = attachments.stream()
+        final List<Object[]> sqlArgs = attachments
+                .stream()
                 .map(item -> new Object[] {
                         item.getId(),
                         invoiceId,
@@ -81,6 +85,11 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
         final String sqlRequest = String.format("%s (%s)", REMOVE_ATTACHMENTS_SQL_REQUEST, sqlRequestArgsPart);
 
         jdbc.update(sqlRequest, attachmentIds.toArray());
+    }
+
+    @Override
+    public int getNextItemId() {
+        return jdbc.queryForObject(GET_NEXT_ATTACHMENT_ID_SQL_REQUEST, Integer.class);
     }
 
     private static class AttachmentMapper implements RowMapper<Attachment> {

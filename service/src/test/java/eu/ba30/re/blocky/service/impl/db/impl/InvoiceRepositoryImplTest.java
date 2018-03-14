@@ -24,6 +24,7 @@ import static eu.ba30.re.blocky.service.TestUtils.createNewInvoice;
 import static eu.ba30.re.blocky.service.TestUtils.getDbAttachment;
 import static eu.ba30.re.blocky.service.TestUtils.getDbCategory;
 import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment2;
+import static org.testng.Assert.assertEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { InvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
@@ -75,6 +76,11 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
 
         assertReflectionEquals(Lists.newArrayList(createDbInvoice()),
                 invoiceRepository.getInvoices());
+    }
+
+    @Test(priority = 4)
+    public void getNextItemId() {
+        assertEquals(invoiceRepository.getNextItemId(), 1);
     }
 
     private void initDbInvoiceExpectations() {

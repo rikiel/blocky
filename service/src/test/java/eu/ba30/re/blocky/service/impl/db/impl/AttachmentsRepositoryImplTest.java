@@ -19,6 +19,7 @@ import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import static eu.ba30.re.blocky.service.TestUtils.getDbAttachment;
 import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment2;
 import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment3;
+import static org.testng.Assert.assertEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { AttachmentsRepositoryImplTest.AttachmentRepositoryConfiguration.class })
@@ -50,6 +51,11 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
 
         assertReflectionEquals(Lists.newArrayList(getDbAttachment()),
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
+    }
+
+    @Test(priority = 4)
+    public void getNextItemId() {
+        assertEquals(attachmentsRepository.getNextItemId(), 1);
     }
 
     @Configuration

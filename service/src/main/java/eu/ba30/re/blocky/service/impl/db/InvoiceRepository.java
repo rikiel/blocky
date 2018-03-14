@@ -13,4 +13,6 @@ public interface InvoiceRepository {
     void remove(@Nonnull List<Invoice> invoices);
 
     void create(@Nonnull Invoice invoice);
+
+    int getNextItemId();
 }

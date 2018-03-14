@@ -41,6 +41,9 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     private static final String REMOVE_INVOICE_SQL_REQUEST = ""
                                                              + " DELETE FROM T_INVOICES "
                                                              + " WHERE ID IN ";
+    private static final String GET_NEXT_INVOICE_ID_SQL_REQUEST = "" +
+                                                                     " SELECT NEXT VALUE FOR S_INVOICE_ID " +
+                                                                     " FROM DUAL_INVOICE_ID ";
 
     @Autowired
     private CstManager cstManager;
@@ -98,6 +101,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         if (!invoice.getAttachments().isEmpty()) {
             attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
         }
+    }
+
+    @Override
+    public int getNextItemId() {
+        return jdbc.queryForObject(GET_NEXT_INVOICE_ID_SQL_REQUEST, Integer.class);
     }
 
     private class InvoiceRowMapper implements RowMapper<Invoice> {
