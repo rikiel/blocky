@@ -81,6 +81,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
     @Test(priority = 4)
     public void getNextItemId() {
         assertEquals(invoiceRepository.getNextItemId(), 1);
+        assertEquals(invoiceRepository.getNextItemId(), 2);
     }
 
     private void initDbInvoiceExpectations() {
