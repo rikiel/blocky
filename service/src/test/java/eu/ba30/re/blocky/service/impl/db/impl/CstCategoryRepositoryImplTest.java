@@ -32,7 +32,7 @@ public class CstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTe
     @Test
     public void getById() {
         assertReflectionEquals(getDbCategory(),
-                cstCategoryRepository.getById(123));
+                cstCategoryRepository.getById(1));
     }
 
     @Configuration
