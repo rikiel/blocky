@@ -40,7 +40,7 @@ public class CstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTe
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
-            return Lists.newArrayList("db/test-data-cst-category.sql");
+            return Lists.newArrayList("db/repositoryTests/test-data-cst-category.sql");
         }
     }
 }

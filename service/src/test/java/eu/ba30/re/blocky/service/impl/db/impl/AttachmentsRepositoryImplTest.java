@@ -64,7 +64,7 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
-            return Lists.newArrayList("db/test-data-attachments.sql");
+            return Lists.newArrayList("db/repositoryTests/test-data-attachments.sql");
         }
     }
 }

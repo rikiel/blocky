@@ -18,11 +18,11 @@ import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import mockit.Capturing;
 import mockit.Expectations;
 
-import static eu.ba30.re.blocky.service.TestUtils.createDbInvoice;
-import static eu.ba30.re.blocky.service.TestUtils.createNewInvoice;
 import static eu.ba30.re.blocky.service.TestUtils.getDbAttachment;
 import static eu.ba30.re.blocky.service.TestUtils.getDbCategory;
+import static eu.ba30.re.blocky.service.TestUtils.getDbInvoice;
 import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment2;
+import static eu.ba30.re.blocky.service.TestUtils.getNewInvoice;
 import static org.testng.Assert.assertEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -41,7 +41,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
     public void getInvoices() {
         initDbInvoiceExpectations();
 
-        assertReflectionEquals(Lists.newArrayList(createDbInvoice()),
+        assertReflectionEquals(Lists.newArrayList(getDbInvoice()),
                 invoiceRepository.getInvoices());
     }
 
@@ -53,18 +53,18 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
             attachmentsRepository.getAttachmentList(2);
             result = Lists.newArrayList(getMockedAttachment2());
         }};
-        invoiceRepository.create(createNewInvoice());
+        invoiceRepository.create(getNewInvoice());
 
-        assertReflectionEquals(Lists.newArrayList(createDbInvoice(), createNewInvoice()),
+        assertReflectionEquals(Lists.newArrayList(getDbInvoice(), getNewInvoice()),
                 invoiceRepository.getInvoices());
     }
 
     @Test(priority = 3)
     public void remove() {
         initDbInvoiceExpectations();
-        invoiceRepository.remove(Lists.newArrayList(createNewInvoice()));
+        invoiceRepository.remove(Lists.newArrayList(getNewInvoice()));
 
-        assertReflectionEquals(Lists.newArrayList(createDbInvoice()),
+        assertReflectionEquals(Lists.newArrayList(getDbInvoice()),
                 invoiceRepository.getInvoices());
     }
 
@@ -89,7 +89,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
-            return Lists.newArrayList("db/test-data-invoices.sql");
+            return Lists.newArrayList("db/repositoryTests/test-data-invoices.sql");
         }
     }
 }
