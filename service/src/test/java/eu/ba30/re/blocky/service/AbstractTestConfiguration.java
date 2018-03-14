@@ -19,6 +19,7 @@ public abstract class AbstractTestConfiguration {
     @Bean
     public JdbcTemplate jdbcTemplate() {
         final EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        builder.addScript("db/test-data-db-schema.sql");
         getSqlScripts().forEach(builder::addScript);
         return new JdbcTemplate(builder.build());
     }

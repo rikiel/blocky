@@ -28,6 +28,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void remove(@Nonnull final List<Invoice> invoices) {
         Validate.notEmpty(invoices);
+
         invoiceRepository.remove(invoices);
     }
 

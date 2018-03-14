@@ -15,7 +15,8 @@ public class ServiceTestConfiguration extends AbstractTestConfiguration {
     @Nonnull
     @Override
     protected List<String> getSqlScripts() {
-        return Lists.newArrayList("db/test-data-attachments.sql",
+        return Lists.newArrayList(
+                "db/test-data-attachments.sql",
                 "db/test-data-cst-category.sql",
                 "db/test-data-invoices.sql");
     }
