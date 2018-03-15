@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.service.impl.InvoiceServiceImpl;
+import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
@@ -22,7 +22,7 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
     @Autowired
     private InvoiceBulkDeleteView view;
     @Autowired
-    private InvoiceServiceImpl invoiceService;
+    private InvoiceService invoiceService;
 
     private InvoiceBulkDeleteModel model;
 
