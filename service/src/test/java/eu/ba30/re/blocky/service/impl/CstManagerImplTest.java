@@ -5,12 +5,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
-
 import eu.ba30.re.blocky.service.CstManager;
+import eu.ba30.re.blocky.service.TestObjectsBuilder;
 
-import static eu.ba30.re.blocky.service.TestUtils.getDbCategory;
-import static eu.ba30.re.blocky.service.TestUtils.getDbCategory2;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { ServiceTestConfiguration.class })
@@ -20,13 +17,13 @@ public class CstManagerImplTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void getCategories() {
-        assertReflectionEquals(Lists.newArrayList(getDbCategory(), getDbCategory2()),
+        assertReflectionEquals(new TestObjectsBuilder().category1().category2().buildCategories(),
                 cstManager.getCategories());
     }
 
     @Test
     public void getCategory() {
-        assertReflectionEquals(getDbCategory(),
+        assertReflectionEquals(new TestObjectsBuilder().category1().buildSingleCategory(),
                 cstManager.getCategory(1));
     }
 }

@@ -12,10 +12,10 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
+import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.impl.db.CstCategoryRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 
-import static eu.ba30.re.blocky.service.TestUtils.getDbCategory;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { CstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
@@ -25,13 +25,13 @@ public class CstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTe
 
     @Test
     public void getAllCategories() {
-        assertReflectionEquals(Lists.newArrayList(getDbCategory()),
+        assertReflectionEquals(new TestObjectsBuilder().category1().buildCategories(),
                 cstCategoryRepository.getAllCategories());
     }
 
     @Test
     public void getById() {
-        assertReflectionEquals(getDbCategory(),
+        assertReflectionEquals(new TestObjectsBuilder().category1().buildSingleCategory(),
                 cstCategoryRepository.getById(1));
     }
 

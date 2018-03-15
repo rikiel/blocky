@@ -12,13 +12,10 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
-import eu.ba30.re.blocky.model.Attachment;
+import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 
-import static eu.ba30.re.blocky.service.TestUtils.getDbAttachment;
-import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment2;
-import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment3;
 import static org.testng.Assert.assertEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -31,25 +28,24 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
 
     @Test(priority = 1)
     public void getAttachmentList() {
-        final List<Attachment> attachmentList = attachmentsRepository.getAttachmentList(INVOICE_ID);
-
-        assertReflectionEquals(Lists.newArrayList(getDbAttachment()), attachmentList);
+        assertReflectionEquals(new TestObjectsBuilder().attachment1().buildAttachments(),
+                attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 
     @Test(priority = 2)
     public void createAttachments() {
         attachmentsRepository.createAttachments(INVOICE_ID,
-                Lists.newArrayList(getMockedAttachment2(), getMockedAttachment3()));
+                new TestObjectsBuilder().attachment2().attachment3().buildAttachments());
 
-        assertReflectionEquals(Lists.newArrayList(getDbAttachment(), getMockedAttachment2(), getMockedAttachment3()),
+        assertReflectionEquals(new TestObjectsBuilder().attachment1().attachment2().attachment3().buildAttachments(),
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 
     @Test(priority = 3)
     public void removeAttachments() {
-        attachmentsRepository.removeAttachments(Lists.newArrayList(getMockedAttachment2(), getMockedAttachment3()));
+        attachmentsRepository.removeAttachments(new TestObjectsBuilder().attachment2().attachment3().buildAttachments());
 
-        assertReflectionEquals(Lists.newArrayList(getDbAttachment()),
+        assertReflectionEquals(new TestObjectsBuilder().attachment1().buildAttachments(),
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 

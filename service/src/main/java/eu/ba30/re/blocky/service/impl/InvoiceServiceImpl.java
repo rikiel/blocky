@@ -3,6 +3,7 @@ package eu.ba30.re.blocky.service.impl;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +30,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Nonnull
     @Override
     public List<Invoice> getInvoices() {
-        return invoiceRepository.getInvoices();
+        return invoiceRepository.getInvoices()
+                .stream()
+                .peek(invoice -> invoice.setAttachments(attachmentsRepository.getAttachmentList(invoice.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -37,6 +41,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         Validate.notEmpty(invoices);
 
         invoiceRepository.remove(invoices);
+        final Set<Attachment> attachments = invoices
+                .stream()
+                .flatMap(invoice -> invoice.getAttachments().stream())
+                .collect(Collectors.toSet());
+        if (!attachments.isEmpty()) {
+            attachmentsRepository.removeAttachments(Lists.newArrayList(attachments));
+        }
     }
 
     @Override

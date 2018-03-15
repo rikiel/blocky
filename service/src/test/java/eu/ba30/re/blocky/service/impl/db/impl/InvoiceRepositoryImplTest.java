@@ -13,24 +13,16 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.service.CstManager;
-import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
+import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import mockit.Capturing;
 import mockit.Expectations;
 
-import static eu.ba30.re.blocky.service.TestUtils.getDbAttachment;
-import static eu.ba30.re.blocky.service.TestUtils.getDbCategory;
-import static eu.ba30.re.blocky.service.TestUtils.getDbInvoice;
-import static eu.ba30.re.blocky.service.TestUtils.getMockedAttachment2;
-import static eu.ba30.re.blocky.service.TestUtils.getNewInvoice;
 import static org.testng.Assert.assertEquals;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { InvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
 public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests {
-    @Capturing
-    private AttachmentsRepository attachmentsRepository;
-
     @Capturing
     private CstManager cstManager;
 
@@ -39,32 +31,29 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
 
     @Test(priority = 1)
     public void getInvoices() {
-        initDbInvoiceExpectations();
+        initCstExpectations();
 
-        assertReflectionEquals(Lists.newArrayList(getDbInvoice()),
+        assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
                 invoiceRepository.getInvoices());
     }
 
     @Test(priority = 2)
     public void create() {
-        initDbInvoiceExpectations();
-        new Expectations() {{
-            // getList
-            attachmentsRepository.getAttachmentList(2);
-            result = Lists.newArrayList(getMockedAttachment2());
-        }};
-        invoiceRepository.create(getNewInvoice());
+        initCstExpectations();
+        invoiceRepository.create(new TestObjectsBuilder().category1().invoice2().buildSingleInvoice());
 
-        assertReflectionEquals(Lists.newArrayList(getDbInvoice(), getNewInvoice()),
+        assertReflectionEquals(new TestObjectsBuilder().category1().invoice1()
+                        .category1().invoice2()
+                        .buildInvoices(),
                 invoiceRepository.getInvoices());
     }
 
     @Test(priority = 3)
     public void remove() {
-        initDbInvoiceExpectations();
-        invoiceRepository.remove(Lists.newArrayList(getNewInvoice()));
+        initCstExpectations();
+        invoiceRepository.remove(new TestObjectsBuilder().category1().invoice2().buildInvoices());
 
-        assertReflectionEquals(Lists.newArrayList(getDbInvoice()),
+        assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
                 invoiceRepository.getInvoices());
     }
 
@@ -74,13 +63,10 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         assertEquals(invoiceRepository.getNextItemId(), 11);
     }
 
-    private void initDbInvoiceExpectations() {
+    private void initCstExpectations() {
         new Expectations() {{
-            attachmentsRepository.getAttachmentList(1);
-            result = Lists.newArrayList(getDbAttachment());
-
-            cstManager.getCategory(123);
-            result = getDbCategory();
+            cstManager.getCategory(1);
+            result = new TestObjectsBuilder().category1().buildSingleCategory();
         }};
     }
 

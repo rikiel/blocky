@@ -1,5 +1,6 @@
 package eu.ba30.re.blocky.service.impl;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,15 +8,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
-
-import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.service.InvoiceService;
+import eu.ba30.re.blocky.service.TestObjectsBuilder;
 
-import static eu.ba30.re.blocky.service.TestUtils.getDbCategory2;
-import static eu.ba30.re.blocky.service.TestUtils.getNewInvoice;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -32,7 +28,7 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
 
     @Test(priority = 2)
     public void create()  {
-        final Invoice newInvoice = getNewInvoice();
+        final Invoice newInvoice = new TestObjectsBuilder().category1().attachment1().invoice2().buildSingleInvoice();
         newInvoice.setId(null);
         invoiceService.create(newInvoice);
         assertNotNull(newInvoice.getId());
@@ -47,11 +43,7 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
 
     @Test(priority = 3)
     public void updateWithoutAttachments()  {
-        final Invoice actualInvoice = getNewInvoice();
-        actualInvoice.setDetails("NewDetail");
-        actualInvoice.setName("NewName");
-        actualInvoice.setCategory(getDbCategory2());
-        actualInvoice.setAttachments(Lists.newArrayList());
+        final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice2().buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
 
@@ -66,22 +58,11 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
 
     @Test(priority = 3)
     public void updateWithAttachments()  {
-        final Invoice actualInvoice = getNewInvoice();
-        actualInvoice.setDetails("NewDetailWithAttachment");
-        actualInvoice.setName("NewNameWithAttachment");
-        actualInvoice.setCategory(getDbCategory2());
-
-        final Attachment attachment = new Attachment();
-        attachment.setMimeType("newMime");
-        attachment.setContent("newAttachment".getBytes());
-        attachment.setType(AttachmentType.PDF);
-        attachment.setFileName("newFileName");
-        attachment.setName("newName");
-        actualInvoice.setAttachments(Lists.newArrayList(attachment));
+        final Invoice actualInvoice = new TestObjectsBuilder().category1().attachment3().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
 
-        assertNotNull(attachment.getId());
+        assertNotNull(actualInvoice.getAttachments().get(0).getId());
 
         final Invoice updatedInvoice = invoiceService.getInvoices()
                 .stream()
@@ -95,7 +76,8 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     @Test(priority = 4)
     public void remove()  {
         int size = invoiceService.getInvoices().size();
-        invoiceService.remove(Lists.newArrayList(getNewInvoice()));
+        List<Invoice> invoices = new TestObjectsBuilder().category1().attachment3().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildInvoices();
+        invoiceService.remove(invoices);
         assertEquals(invoiceService.getInvoices().size(), size - 1);
         invoiceService.remove(invoiceService.getInvoices());
         assertEquals(invoiceService.getInvoices().size(), 0);

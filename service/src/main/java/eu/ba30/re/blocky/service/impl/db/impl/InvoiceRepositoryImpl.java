@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.CstManager;
-import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
 import eu.ba30.re.blocky.utils.Validate;
 
@@ -43,9 +42,6 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
     @Autowired
     private CstManager cstManager;
-
-    @Autowired
-    private AttachmentsRepository attachmentsRepository;
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -108,7 +104,6 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
             invoice.setDetails(resultSet.getString("DETAILS"));
             invoice.setCreationDate(resultSet.getDate("CREATION").toLocalDate());
             invoice.setModificationDate(resultSet.getDate("LAST_MODIFICATION").toLocalDate());
-            invoice.setAttachments(attachmentsRepository.getAttachmentList(id));
 
             log.debug("Loaded invoice: {}", invoice);
             return invoice;
