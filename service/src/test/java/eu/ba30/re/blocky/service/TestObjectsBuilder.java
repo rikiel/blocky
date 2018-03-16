@@ -84,7 +84,7 @@ public class TestObjectsBuilder {
     }
 
     public TestObjectsBuilder category1() {
-        final Category        category = new Category();
+        final Category category = new Category();
         categories.add(category);
         category.setId(1);
         category.setName("CategoryName#1");
@@ -93,7 +93,7 @@ public class TestObjectsBuilder {
     }
 
     public TestObjectsBuilder category2() {
-        final Category        category = new Category();
+        final Category category = new Category();
         categories.add(category);
         category.setId(2);
         category.setName("CategoryName#2");
@@ -129,18 +129,6 @@ public class TestObjectsBuilder {
         final Attachment attachment = new Attachment();
         attachments.add(attachment);
         attachment.setId(3);
-        attachment.setName("Name#3");
-        attachment.setMimeType("MimeType3");
-        attachment.setType(AttachmentType.TEXT);
-        attachment.setFileName("FileName#3");
-        attachment.setContent("AHOJ3".getBytes());
-        return this;
-    }
-
-    public TestObjectsBuilder attachment4() {
-        final Attachment attachment = new Attachment();
-        attachments.add(attachment);
-        attachment.setId(4);
         attachment.setName("Name#3");
         attachment.setMimeType("MimeType3");
         attachment.setType(AttachmentType.TEXT);

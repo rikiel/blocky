@@ -118,12 +118,12 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
     @DataProvider
     private Object[][] removeErrorDataProvider() {
         return new Object[][] {
-                {null},
-                {new Invoice()},
+                { null },
+                { new Invoice() },
                 // not exist
-                {new TestObjectsBuilder().invoice2().buildSingleInvoice()},
-                {new TestObjectsBuilder().invoice3().buildSingleInvoice()},
-        };
+                { new TestObjectsBuilder().invoice2().buildSingleInvoice() },
+                { new TestObjectsBuilder().invoice3().buildSingleInvoice() },
+                };
     }
 
     @Configuration

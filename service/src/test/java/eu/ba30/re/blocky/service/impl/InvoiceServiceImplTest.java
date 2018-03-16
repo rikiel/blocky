@@ -22,12 +22,12 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     private InvoiceService invoiceService;
 
     @Test(priority = 1)
-    public void getInvoices()  {
+    public void getInvoices() {
         invoiceService.getInvoices();
     }
 
     @Test(priority = 2)
-    public void create()  {
+    public void create() {
         final Invoice newInvoice = new TestObjectsBuilder().category1().attachment1().invoice2().buildSingleInvoice();
         newInvoice.setId(null);
         invoiceService.create(newInvoice);
@@ -42,7 +42,7 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(priority = 3)
-    public void updateWithoutAttachments()  {
+    public void updateWithoutAttachments() {
         final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice2().buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
@@ -57,8 +57,13 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(priority = 3)
-    public void updateWithAttachments()  {
-        final Invoice actualInvoice = new TestObjectsBuilder().category1().attachment3().attachmentWithoutId().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildSingleInvoice();
+    public void updateWithAttachments() {
+        final Invoice actualInvoice = new TestObjectsBuilder().category1()
+                .attachment3()
+                .attachmentWithoutId()
+                .invoice3()
+                .invoiceId(TestObjectsBuilder.INVOICE_ID_2)
+                .buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
 
@@ -74,7 +79,7 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(priority = 4)
-    public void remove()  {
+    public void remove() {
         int size = invoiceService.getInvoices().size();
         List<Invoice> invoices = new TestObjectsBuilder().category1().attachment3().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildInvoices();
         invoiceService.remove(invoices);

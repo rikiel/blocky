@@ -93,10 +93,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         final Sets.SetView<Attachment> toInsert = Sets.difference(actualModelAttachments, actualDbAttachments);
         if (!toInsert.isEmpty()) {
             toInsert.forEach(attachment -> {
-                if (attachment.getId() == null) {
-                    // should be created
-                    attachment.setId(attachmentsRepository.getNextItemId());
-                }
+                Validate.isNull(attachment.getId());
+                attachment.setId(attachmentsRepository.getNextItemId());
             });
             attachmentsRepository.createAttachments(invoice.getId(), Lists.newArrayList(toInsert));
         }

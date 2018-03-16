@@ -44,7 +44,7 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
     @Test(priority = 1)
     public void getAttachmentListEmpty() {
         assertReflectionEquals(Lists.newArrayList(),
-            attachmentsRepository.getAttachmentList(999));
+                attachmentsRepository.getAttachmentList(999));
     }
 
     @Test(priority = 1)
@@ -71,7 +71,7 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
     }
 
     @Test(priority = 4,
-    dataProvider = "createAttachmentsErrorDataProvider")
+            dataProvider = "createAttachmentsErrorDataProvider")
     public void createAttachmentsError(Attachment toCreate) {
         final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
         try {
@@ -85,7 +85,7 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
     }
 
     @Test(priority = 4,
-    dataProvider = "removeAttachmentsErrorDataProvider")
+            dataProvider = "removeAttachmentsErrorDataProvider")
     public void removeAttachmentsError(Attachment toRemove) {
         final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
         try {
@@ -102,23 +102,23 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
     private Object[][] createAttachmentsErrorDataProvider() {
         return new Object[][] {
                 // null values
-                {null},
-                {new Attachment()},
+                { null },
+                { new Attachment() },
                 // attachments exists in db
-                { new TestObjectsBuilder().attachment1().buildSingleAttachment()}
-        };
+                { new TestObjectsBuilder().attachment1().buildSingleAttachment() },
+                };
     }
 
     @DataProvider
     private Object[][] removeAttachmentsErrorDataProvider() {
         return new Object[][] {
                 // null values
-                {null},
-                {new Attachment()},
+                { null },
+                { new Attachment() },
                 // not exist
-                { new TestObjectsBuilder().attachment2().buildSingleAttachment()},
-                { new TestObjectsBuilder().attachment3().buildSingleAttachment()},
-        };
+                { new TestObjectsBuilder().attachment2().buildSingleAttachment() },
+                { new TestObjectsBuilder().attachment3().buildSingleAttachment() },
+                };
     }
 
     @Configuration
