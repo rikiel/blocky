@@ -47,6 +47,12 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
             attachmentsRepository.getAttachmentList(999));
     }
 
+    @Test(priority = 1)
+    public void getAttachmentWithInvoiceIdList() {
+        assertReflectionEquals(Lists.newArrayList(new TestObjectsBuilder().attachment1().buildSingleAttachment()),
+                attachmentsRepository.getAllAttachments());
+    }
+
     @Test(priority = 2)
     public void createAttachments() {
         attachmentsRepository.createAttachments(INVOICE_ID,

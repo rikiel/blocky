@@ -27,10 +27,13 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
                                                                 + " INSERT INTO T_ATTACHMENTS "
                                                                 + " (ID, INVOICE_ID, NAME, FILE_NAME, MIME_TYPE, TYPE, FILE_CONTENT) "
                                                                 + " VALUES (?, ?, ?, ?, ?, ?, ?) ";
+    private static final String GET_ATTACHMENT_LIST_BY_ID_SQL_REQUEST = ""
+                                                                        + " SELECT * "
+                                                                        + " FROM T_ATTACHMENTS "
+                                                                        + " WHERE INVOICE_ID = ?";
     private static final String GET_ATTACHMENT_LIST_SQL_REQUEST = ""
                                                                   + " SELECT * "
-                                                                  + " FROM T_ATTACHMENTS "
-                                                                  + " WHERE INVOICE_ID = ?";
+                                                                  + " FROM T_ATTACHMENTS ";
     private static final String REMOVE_ATTACHMENTS_SQL_REQUEST = ""
                                                                  + " DELETE FROM T_ATTACHMENTS "
                                                                  + " WHERE ID = ?";
@@ -44,7 +47,7 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
     @Nonnull
     @Override
     public List<Attachment> getAttachmentList(final int invoiceId) {
-        return jdbc.query(GET_ATTACHMENT_LIST_SQL_REQUEST,
+        return jdbc.query(GET_ATTACHMENT_LIST_BY_ID_SQL_REQUEST,
                 new Object[] { invoiceId },
                 new AttachmentMapper());
     }
@@ -82,7 +85,7 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
                 .stream()
                 .map(attachment -> {
                     Validate.notNull(attachment.getId());
-                    return new Object[]{attachment.getId()};
+                    return new Object[] { attachment.getId() };
                 })
                 .collect(Collectors.toList());
 
@@ -94,6 +97,13 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
     @Override
     public int getNextItemId() {
         return jdbc.queryForObject(GET_NEXT_ATTACHMENT_ID_SQL_REQUEST, Integer.class);
+    }
+
+    @Nonnull
+    @Override
+    public List<Attachment> getAllAttachments() {
+        return jdbc.query(GET_ATTACHMENT_LIST_SQL_REQUEST,
+                new AttachmentMapper());
     }
 
     private static class AttachmentMapper implements RowMapper<Attachment> {

@@ -31,7 +31,7 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
         final Invoice newInvoice = new TestObjectsBuilder().category1().attachment1().invoice2().buildSingleInvoice();
         newInvoice.setId(null);
         invoiceService.create(newInvoice);
-        assertNotNull(newInvoice.getId());
+        assertEquals(newInvoice.getId(), (Integer) TestObjectsBuilder.INVOICE_ID_2);
 
         final Invoice createdInvoice = invoiceService.getInvoices()
                 .stream()
@@ -58,7 +58,7 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
 
     @Test(priority = 3)
     public void updateWithAttachments()  {
-        final Invoice actualInvoice = new TestObjectsBuilder().category1().attachment3().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildSingleInvoice();
+        final Invoice actualInvoice = new TestObjectsBuilder().category1().attachment3().attachmentWithoutId().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
 

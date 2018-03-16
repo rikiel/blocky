@@ -15,8 +15,8 @@ import eu.ba30.re.blocky.utils.Validate;
 
 public class TestObjectsBuilder {
     public static final int INVOICE_ID_1 = 1;
-    public static final int INVOICE_ID_2 = 2;
-    public static final int INVOICE_ID_3 = 3;
+    public static final int INVOICE_ID_2 = 10;
+    public static final int INVOICE_ID_3 = 11;
     private List<Invoice> invoices = Lists.newArrayList();
     private List<Attachment> attachments = Lists.newArrayList();
     private List<Category> categories = Lists.newArrayList();
@@ -134,6 +134,11 @@ public class TestObjectsBuilder {
         attachment.setType(AttachmentType.TEXT);
         attachment.setFileName("FileName#3");
         attachment.setContent("AHOJ3".getBytes());
+        return this;
+    }
+
+    public TestObjectsBuilder attachmentWithoutId() {
+        attachments.get(attachments.size() - 1).setId(null);
         return this;
     }
 

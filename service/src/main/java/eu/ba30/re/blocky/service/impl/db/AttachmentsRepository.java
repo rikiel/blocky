@@ -15,4 +15,7 @@ public interface AttachmentsRepository {
     void removeAttachments(@Nonnull List<Attachment> attachments);
 
     int getNextItemId();
+
+    @Nonnull
+    List<Attachment> getAllAttachments();
 }
