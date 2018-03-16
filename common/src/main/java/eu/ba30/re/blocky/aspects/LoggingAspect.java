@@ -1,6 +1,7 @@
 package eu.ba30.re.blocky.aspects;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -8,14 +9,15 @@ import javax.annotation.Nonnull;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Aspect
+@Order(1)
 @Component
-public class LoggingAspect {
+public class LoggingAspect extends AspectPointcuts  {
     private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
     private static int CALL_ID = 100;
@@ -45,24 +47,8 @@ public class LoggingAspect {
         }
     }
 
-    @Pointcut("execution(* eu.ba30.re.blocky.service..*Service+.*(..))")
-    public void serviceCall() {
-    }
-
-    @Pointcut("execution(* eu.ba30.re.blocky.view..*View+.*(..))")
-    public void viewCall() {
-    }
-
-    @Pointcut("execution(* eu.ba30.re.blocky.view..*Presenter+.*(..))")
-    public void presenterCall() {
-    }
-
-    @Pointcut("execution(* eu.ba30.re.blocky.service..*Repository+.*(..))")
-    public void repositoryCall() {
-    }
-
     @Nonnull
     private static String joinArgs(@Nonnull final Object[] args) {
-        return Arrays.stream(args).map(Object::toString).collect(Collectors.joining(""));
+        return Arrays.stream(args).map(Objects::toString).collect(Collectors.joining(""));
     }
 }

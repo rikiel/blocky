@@ -7,11 +7,13 @@ import javax.annotation.Nonnull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 @Configuration
-@ComponentScan("eu.ba30.re.blocky.service")
+@ComponentScan({"eu.ba30.re.blocky.service", "eu.ba30.re.blocky.aspects"})
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public abstract class AbstractTestConfiguration {
     @Nonnull
     protected abstract List<String> getSqlScripts();

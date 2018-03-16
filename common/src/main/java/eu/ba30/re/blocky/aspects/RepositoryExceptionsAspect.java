@@ -3,20 +3,21 @@ package eu.ba30.re.blocky.aspects;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import eu.ba30.re.blocky.exception.DatabaseException;
 
 @Aspect
+@Order(2)
 @Component
-public class RepositoryExceptionsAspect {
+public class RepositoryExceptionsAspect extends AspectPointcuts{
     private static final Logger log = LoggerFactory.getLogger(RepositoryExceptionsAspect.class);
 
     @Around("repositoryCall()")
-    public Object logCalls(ProceedingJoinPoint joinPoint) throws DatabaseException {
+    public Object watchCalls(ProceedingJoinPoint joinPoint) throws DatabaseException {
         try {
             return joinPoint.proceed();
         }catch (DatabaseException e) {
@@ -28,7 +29,4 @@ public class RepositoryExceptionsAspect {
         }
     }
 
-    @Pointcut("execution(* eu.ba30.re.blocky.service..*Repository+.*(..))")
-    public void repositoryCall() {
-    }
 }

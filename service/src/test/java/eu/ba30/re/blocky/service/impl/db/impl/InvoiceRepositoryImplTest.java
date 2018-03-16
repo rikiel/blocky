@@ -82,6 +82,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
                     invoiceRepository.getInvoices());
         }
     }
+
     @Test(priority = 4,
             dataProvider = "removeErrorDataProvider")
     public void removeError(Invoice toRemove) {
