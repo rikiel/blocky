@@ -78,7 +78,6 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
             attachmentsRepository.createAttachments(1, Lists.newArrayList(toCreate));
             fail("createAttachments should not pass");
         } catch (Exception e) {
-            logger.debug("Catched exception ", e);
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
                     attachmentsRepository.getAttachmentList(1));
@@ -93,7 +92,6 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
             attachmentsRepository.removeAttachments(Lists.newArrayList(toRemove));
             fail("removeAttachments should not pass!");
         } catch (Exception e) {
-            logger.debug("Catched exception ", e);
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
                     attachmentsRepository.getAttachmentList(1));

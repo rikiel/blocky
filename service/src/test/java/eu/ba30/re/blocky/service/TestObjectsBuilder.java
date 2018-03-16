@@ -137,6 +137,18 @@ public class TestObjectsBuilder {
         return this;
     }
 
+    public TestObjectsBuilder attachment4() {
+        final Attachment attachment = new Attachment();
+        attachments.add(attachment);
+        attachment.setId(4);
+        attachment.setName("Name#3");
+        attachment.setMimeType("MimeType3");
+        attachment.setType(AttachmentType.TEXT);
+        attachment.setFileName("FileName#3");
+        attachment.setContent("AHOJ3".getBytes());
+        return this;
+    }
+
     public TestObjectsBuilder attachmentWithoutId() {
         attachments.get(attachments.size() - 1).setId(null);
         return this;

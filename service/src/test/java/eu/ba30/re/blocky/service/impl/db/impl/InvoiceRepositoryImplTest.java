@@ -76,7 +76,6 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
             invoiceRepository.create(toCreate);
             fail("create should not pass!");
         } catch (Exception e) {
-            logger.debug("Catched exception ", e);
             assertReflectionEquals("Should not create any invoice",
                     allInvoices,
                     invoiceRepository.getInvoices());
@@ -92,7 +91,6 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
             invoiceRepository.remove(Lists.newArrayList(toRemove));
             fail("remove should not pass!");
         } catch (Exception e) {
-            logger.debug("Catched exception ", e);
             assertReflectionEquals("Should not remove any invoice",
                     allInvoices,
                     invoiceRepository.getInvoices());

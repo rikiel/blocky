@@ -42,7 +42,7 @@ public class CstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTe
             cstCategoryRepository.getById(999);
             fail("getById should not pass!");
         } catch (Exception e) {
-            logger.trace("Catched exception", e);
+            // nothing to do
         }
     }
 

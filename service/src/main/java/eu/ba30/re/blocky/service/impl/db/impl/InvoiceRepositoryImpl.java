@@ -3,10 +3,12 @@ package eu.ba30.re.blocky.service.impl.db.impl;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
 import eu.ba30.re.blocky.utils.Validate;
@@ -72,7 +75,7 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     @Override
     public void create(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
-        Validate.notNull(invoice.getId());
+        Validate.notNull(invoice.getId(), invoice.getName(), invoice.getCreationDate());
 
         final int created = jdbc.update(CREATE_INVOICE_SQL_REQUEST,
                 invoice.getId(),
@@ -82,7 +85,9 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                         : invoice.getCategory().getId(),
                 invoice.getDetails(),
                 Date.valueOf(invoice.getCreationDate()),
-                Date.valueOf(invoice.getModificationDate()));
+                invoice.getModificationDate() == null
+                        ? null
+                        : Date.valueOf(invoice.getModificationDate()));
 
         Validate.validateOneRowAffectedInDbCall(new int[]{created});
     }
@@ -100,13 +105,27 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
             final int id = resultSet.getInt("ID");
             invoice.setId(id);
             invoice.setName(resultSet.getString("NAME"));
-            invoice.setCategory(cstManager.getCategory(resultSet.getInt("CATEGORY_ID")));
+            invoice.setCategory(getCategory(resultSet.getObject("CATEGORY_ID", Integer.class)));
             invoice.setDetails(resultSet.getString("DETAILS"));
-            invoice.setCreationDate(resultSet.getDate("CREATION").toLocalDate());
-            invoice.setModificationDate(resultSet.getDate("LAST_MODIFICATION").toLocalDate());
+            invoice.setCreationDate(getLocalDate(resultSet.getDate("CREATION")));
+            invoice.setModificationDate(getLocalDate(resultSet.getDate("LAST_MODIFICATION")));
 
             log.debug("Loaded invoice: {}", invoice);
             return invoice;
+        }
+
+        @Nullable
+        private Category getCategory(@Nullable final Integer id) {
+            return id == null
+                    ? null
+                    : cstManager.getCategory(id);
+        }
+
+        @Nullable
+        private LocalDate getLocalDate(@Nullable final Date date) {
+            return date == null
+                    ? null
+                    : date.toLocalDate();
         }
     }
 }

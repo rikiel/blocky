@@ -59,7 +59,7 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
         final List<Object[]> sqlArgs = attachments
                 .stream()
                 .map(item -> {
-                    Validate.notNull(item.getId());
+                    Validate.notNull(item.getId(), item.getType(), item.getContent());
                     return new Object[] {
                             item.getId(),
                             invoiceId,

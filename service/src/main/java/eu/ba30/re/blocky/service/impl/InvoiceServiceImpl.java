@@ -65,7 +65,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         final List<Attachment> attachments = invoice.getAttachments();
         if (!attachments.isEmpty()) {
-            attachments.forEach(attachment -> attachment.setId(attachmentsRepository.getNextItemId()));
+            attachments.forEach(attachment -> {
+                Validate.isNull(attachment.getId());
+                attachment.setId(attachmentsRepository.getNextItemId());
+            });
             attachmentsRepository.createAttachments(invoice.getId(), attachments);
         }
     }
