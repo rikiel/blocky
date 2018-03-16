@@ -8,15 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
+import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { AttachmentsRepositoryImplTest.AttachmentRepositoryConfiguration.class })
@@ -25,6 +28,12 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
 
     @Autowired
     private AttachmentsRepository attachmentsRepository;
+
+    @Test
+    public void getNextItemId() {
+        assertEquals(attachmentsRepository.getNextItemId(), 10);
+        assertEquals(attachmentsRepository.getNextItemId(), 11);
+    }
 
     @Test(priority = 1)
     public void getAttachmentList() {
@@ -49,10 +58,57 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 
-    @Test
-    public void getNextItemId() {
-        assertEquals(attachmentsRepository.getNextItemId(), 10);
-        assertEquals(attachmentsRepository.getNextItemId(), 11);
+    @Test(priority = 4,
+    dataProvider = "createAttachmentsErrorDataProvider")
+    public void createAttachmentsError(Attachment toCreate) {
+        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
+        try {
+            attachmentsRepository.createAttachments(1, Lists.newArrayList(toCreate));
+            fail("createAttachments should not pass");
+        } catch (Exception e) {
+            logger.debug("Catched exception ", e);
+            assertReflectionEquals("Should not create any attachment",
+                    allAttachments,
+                    attachmentsRepository.getAttachmentList(1));
+        }
+    }
+
+    @Test(priority = 4,
+    dataProvider = "removeAttachmentsErrorDataProvider")
+    public void removeAttachmentsError(Attachment toRemove) {
+        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
+        try {
+            attachmentsRepository.removeAttachments(Lists.newArrayList(toRemove));
+            fail("removeAttachments should not pass!");
+        } catch (Exception e) {
+            logger.debug("Catched exception ", e);
+            assertReflectionEquals("Should not create any attachment",
+                    allAttachments,
+                    attachmentsRepository.getAttachmentList(1));
+        }
+    }
+
+    @DataProvider
+    private Object[][] createAttachmentsErrorDataProvider() {
+        return new Object[][] {
+                // null values
+                {null},
+                {new Attachment()},
+                // attachments exists in db
+                { new TestObjectsBuilder().attachment1().buildSingleAttachment()}
+        };
+    }
+
+    @DataProvider
+    private Object[][] removeAttachmentsErrorDataProvider() {
+        return new Object[][] {
+                // null values
+                {null},
+                {new Attachment()},
+                // not exist
+                { new TestObjectsBuilder().attachment2().buildSingleAttachment()},
+                { new TestObjectsBuilder().attachment3().buildSingleAttachment()},
+        };
     }
 
     @Configuration

@@ -16,6 +16,7 @@ import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.impl.db.CstCategoryRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 
+import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { CstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
@@ -33,6 +34,16 @@ public class CstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTe
     public void getById() {
         assertReflectionEquals(new TestObjectsBuilder().category1().buildSingleCategory(),
                 cstCategoryRepository.getById(1));
+    }
+
+    @Test
+    public void getByIdError() {
+        try {
+            cstCategoryRepository.getById(999);
+            fail("getById should not pass!");
+        } catch (Exception e) {
+            logger.trace("Catched exception", e);
+        }
     }
 
     @Configuration

@@ -74,7 +74,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         final List<Invoice> allInvoices = invoiceRepository.getInvoices();
         try {
             invoiceRepository.create(toCreate);
-            fail();
+            fail("create should not pass!");
         } catch (Exception e) {
             logger.debug("Catched exception ", e);
             assertReflectionEquals("Should not create any invoice",
@@ -90,7 +90,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         Validate.isFalse(allInvoices.contains(toRemove), "Invoice exists in db");
         try {
             invoiceRepository.remove(Lists.newArrayList(toRemove));
-            fail();
+            fail("remove should not pass!");
         } catch (Exception e) {
             logger.debug("Catched exception ", e);
             assertReflectionEquals("Should not remove any invoice",
