@@ -35,8 +35,8 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
                                                                  + " DELETE FROM T_ATTACHMENTS "
                                                                  + " WHERE ID IN ";
     private static final String GET_NEXT_ATTACHMENT_ID_SQL_REQUEST = "" +
-                                                                 " SELECT NEXT VALUE FOR S_ATTACHMENT_ID " +
-                                                                 " FROM DUAL_ATTACHMENT_ID ";
+                                                                     " SELECT NEXT VALUE FOR S_ATTACHMENT_ID " +
+                                                                     " FROM DUAL_ATTACHMENT_ID ";
 
     @Autowired
     private JdbcTemplate jdbc;

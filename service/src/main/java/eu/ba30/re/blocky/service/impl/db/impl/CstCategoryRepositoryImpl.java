@@ -34,13 +34,16 @@ public class CstCategoryRepositoryImpl implements CstCategoryRepository {
     @Nonnull
     @Override
     public List<Category> getAllCategories() {
-        return jdbc.query(GET_ALL_CATEGORIES_SQL_REQUEST, new CategoryMapper());
+        return jdbc.query(GET_ALL_CATEGORIES_SQL_REQUEST,
+                new CategoryMapper());
     }
 
     @Nonnull
     @Override
     public Category getById(int categoryId) {
-        return jdbc.queryForObject(GET_CATEGORY_BY_ID_SQL_REQUEST, new Object[] { categoryId }, new CategoryMapper());
+        return jdbc.queryForObject(GET_CATEGORY_BY_ID_SQL_REQUEST,
+                new Object[] { categoryId },
+                new CategoryMapper());
     }
 
     private static class CategoryMapper implements RowMapper<Category> {

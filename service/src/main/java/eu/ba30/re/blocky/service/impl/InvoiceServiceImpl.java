@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -28,6 +29,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private AttachmentsRepository attachmentsRepository;
 
     @Nonnull
+    @Transactional(readOnly = true)
     @Override
     public List<Invoice> getInvoices() {
         return invoiceRepository.getInvoices()
@@ -36,6 +38,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void remove(@Nonnull final List<Invoice> invoices) {
         Validate.notEmpty(invoices);
@@ -43,13 +46,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRepository.remove(invoices);
         final Set<Attachment> attachments = invoices
                 .stream()
-                .flatMap(invoice -> invoice.getAttachments().stream())
+                .flatMap(invoice -> attachmentsRepository.getAttachmentList(invoice.getId()).stream())
                 .collect(Collectors.toSet());
         if (!attachments.isEmpty()) {
             attachmentsRepository.removeAttachments(Lists.newArrayList(attachments));
         }
     }
 
+    @Transactional
     @Override
     public void create(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
@@ -66,6 +70,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    @Transactional
     @Override
     public void update(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
@@ -85,11 +90,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         final Sets.SetView<Attachment> toInsert = Sets.difference(actualModelAttachments, actualDbAttachments);
         if (!toInsert.isEmpty()) {
             toInsert.forEach(attachment -> {
-                        if (attachment.getId() == null) {
-                            // should be created
-                            attachment.setId(attachmentsRepository.getNextItemId());
-                        }
-                    });
+                if (attachment.getId() == null) {
+                    // should be created
+                    attachment.setId(attachmentsRepository.getNextItemId());
+                }
+            });
             attachmentsRepository.createAttachments(invoice.getId(), Lists.newArrayList(toInsert));
         }
     }

@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import eu.ba30.re.blocky.exception.DatabaseException;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
@@ -37,8 +38,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                                                              + " DELETE FROM T_INVOICES "
                                                              + " WHERE ID IN ";
     private static final String GET_NEXT_INVOICE_ID_SQL_REQUEST = "" +
-                                                                     " SELECT NEXT VALUE FOR S_INVOICE_ID " +
-                                                                     " FROM DUAL_INVOICE_ID ";
+                                                                  " SELECT NEXT VALUE FOR S_INVOICE_ID " +
+                                                                  " FROM DUAL_INVOICE_ID ";
 
     @Autowired
     private CstManager cstManager;
@@ -70,7 +71,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 .collect(Collectors.joining(","));
         final String sqlRequest = String.format("%s (%s)", REMOVE_INVOICE_SQL_REQUEST, sqlRequestArgsPart);
 
-        jdbc.update(sqlRequest, invoiceIds.toArray());
+        final int removed = jdbc.update(sqlRequest, invoiceIds.toArray());
+        if (removed != invoices.size()) {
+            throw new DatabaseException(String.format("Could not remove all items. Expected %s but removed was only %s",
+                    invoices.size(), removed));
+        }
     }
 
     @Override
@@ -78,13 +83,18 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         Validate.notNull(invoice);
         Validate.notNull(invoice.getId());
 
-        jdbc.update(CREATE_INVOICE_SQL_REQUEST,
+        final int created = jdbc.update(CREATE_INVOICE_SQL_REQUEST,
                 invoice.getId(),
                 invoice.getName(),
-                invoice.getCategory().getId(),
+                invoice.getCategory() == null
+                        ? null
+                        : invoice.getCategory().getId(),
                 invoice.getDetails(),
                 Date.valueOf(invoice.getCreationDate()),
                 Date.valueOf(invoice.getModificationDate()));
+        if (created != 1) {
+            throw new DatabaseException(String.format("Update %s items instead of 1 creation", created));
+        }
     }
 
     @Override

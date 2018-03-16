@@ -30,8 +30,10 @@ public class TestObjectsBuilder {
         invoice.setCreationDate(LocalDate.parse("2018-03-11"));
         invoice.setModificationDate(LocalDate.parse("2018-03-11"));
 
-        Validate.equals(categories.size(), 1, "Expected 1 category");
-        invoice.setCategory(categories.get(0));
+        if (!categories.isEmpty()) {
+            Validate.equals(categories.size(), 1, "Expected 1 category");
+            invoice.setCategory(categories.get(0));
+        }
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
@@ -47,8 +49,10 @@ public class TestObjectsBuilder {
         invoice.setCreationDate(LocalDate.parse("2018-03-13"));
         invoice.setModificationDate(LocalDate.parse("2018-03-13"));
 
-        Validate.equals(categories.size(), 1, "Expected 1 category");
-        invoice.setCategory(categories.get(0));
+        if (!categories.isEmpty()) {
+            Validate.equals(categories.size(), 1, "Expected 1 category");
+            invoice.setCategory(categories.get(0));
+        }
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
@@ -64,8 +68,10 @@ public class TestObjectsBuilder {
         invoice.setCreationDate(LocalDate.parse("2018-03-13"));
         invoice.setModificationDate(LocalDate.parse("2018-03-13"));
 
-        Validate.equals(categories.size(), 1, "Expected 1 category");
-        invoice.setCategory(categories.get(0));
+        if (!categories.isEmpty()) {
+            Validate.equals(categories.size(), 1, "Expected 1 category");
+            invoice.setCategory(categories.get(0));
+        }
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
