@@ -33,7 +33,7 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
                                                                   + " WHERE INVOICE_ID = ?";
     private static final String REMOVE_ATTACHMENTS_SQL_REQUEST = ""
                                                                  + " DELETE FROM T_ATTACHMENTS "
-                                                                 + " WHERE ID IN ";
+                                                                 + " WHERE ID = ?";
     private static final String GET_NEXT_ATTACHMENT_ID_SQL_REQUEST = "" +
                                                                      " SELECT NEXT VALUE FOR S_ATTACHMENT_ID " +
                                                                      " FROM DUAL_ATTACHMENT_ID ";
@@ -69,28 +69,26 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
                 })
                 .collect(Collectors.toList());
 
-        jdbc.batchUpdate(CREATE_ATTACHMENT_SQL_REQUEST, sqlArgs);
+        final int[] createdPerItem = jdbc.batchUpdate(CREATE_ATTACHMENT_SQL_REQUEST, sqlArgs);
+
+        Validate.validateOneRowAffectedInDbCall(createdPerItem);
     }
 
     @Override
     public void removeAttachments(@Nonnull final List<Attachment> attachments) {
         Validate.notEmpty(attachments);
 
-        final List<Integer> attachmentIds = attachments
+        final List<Object[]> attachmentIds = attachments
                 .stream()
                 .map(attachment -> {
                     Validate.notNull(attachment.getId());
-                    return attachment.getId();
+                    return new Object[]{attachment.getId()};
                 })
                 .collect(Collectors.toList());
 
-        final String sqlRequestArgsPart = attachmentIds
-                .stream()
-                .map(id -> "?")
-                .collect(Collectors.joining(","));
-        final String sqlRequest = String.format("%s (%s)", REMOVE_ATTACHMENTS_SQL_REQUEST, sqlRequestArgsPart);
+        final int[] removedPerRow = jdbc.batchUpdate(REMOVE_ATTACHMENTS_SQL_REQUEST, attachmentIds);
 
-        jdbc.update(sqlRequest, attachmentIds.toArray());
+        Validate.validateOneRowAffectedInDbCall(removedPerRow);
     }
 
     @Override

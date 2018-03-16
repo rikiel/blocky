@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import eu.ba30.re.blocky.exception.DatabaseException;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
@@ -36,7 +35,7 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
 
     private static final String REMOVE_INVOICE_SQL_REQUEST = ""
                                                              + " DELETE FROM T_INVOICES "
-                                                             + " WHERE ID IN ";
+                                                             + " WHERE ID = ?";
     private static final String GET_NEXT_INVOICE_ID_SQL_REQUEST = "" +
                                                                   " SELECT NEXT VALUE FOR S_INVOICE_ID " +
                                                                   " FROM DUAL_INVOICE_ID ";
@@ -57,25 +56,17 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     public void remove(@Nonnull final List<Invoice> invoices) {
         Validate.notEmpty(invoices);
 
-        final List<Integer> invoiceIds = invoices
+        final List<Object[]> invoiceIds = invoices
                 .stream()
                 .map(invoice -> {
                     Validate.notNull(invoice.getId());
-                    return invoice.getId();
+                    return new Object[]{invoice.getId()};
                 })
                 .collect(Collectors.toList());
 
-        final String sqlRequestArgsPart = invoiceIds
-                .stream()
-                .map(id -> "?")
-                .collect(Collectors.joining(","));
-        final String sqlRequest = String.format("%s (%s)", REMOVE_INVOICE_SQL_REQUEST, sqlRequestArgsPart);
+        final int[] removedPerItem = jdbc.batchUpdate(REMOVE_INVOICE_SQL_REQUEST, invoiceIds);
 
-        final int removed = jdbc.update(sqlRequest, invoiceIds.toArray());
-        if (removed != invoices.size()) {
-            throw new DatabaseException(String.format("Could not remove all items. Expected %s but removed was only %s",
-                    invoices.size(), removed));
-        }
+        Validate.validateOneRowAffectedInDbCall(removedPerItem);
     }
 
     @Override
@@ -92,9 +83,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 invoice.getDetails(),
                 Date.valueOf(invoice.getCreationDate()),
                 Date.valueOf(invoice.getModificationDate()));
-        if (created != 1) {
-            throw new DatabaseException(String.format("Update %s items instead of 1 creation", created));
-        }
+
+        Validate.validateOneRowAffectedInDbCall(new int[]{created});
     }
 
     @Override

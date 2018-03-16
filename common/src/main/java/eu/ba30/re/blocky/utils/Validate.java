@@ -1,7 +1,13 @@
 package eu.ba30.re.blocky.utils;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+
+import eu.ba30.re.blocky.exception.DatabaseException;
 
 public class Validate {
     private Validate() {
@@ -65,4 +71,13 @@ public class Validate {
         }
     }
 
+    public static void validateOneRowAffectedInDbCall(@Nonnull final int[] rowsAffected) {
+        final boolean notOneAffected = Arrays
+                .stream(rowsAffected)
+                .anyMatch(value -> value != 1);
+        if (notOneAffected) {
+            throw new DatabaseException(String.format("Db failed to make change for some rows. Expected 1 affected row per attachment. Found %s",
+                    Arrays.stream(rowsAffected).boxed().collect(Collectors.toList())));
+        }
+    }
 }
