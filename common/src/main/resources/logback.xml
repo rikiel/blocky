@@ -3,5 +3,9 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="eu.ba30.re.blocky" level="TRACE"/>
 
+    <logger name="org.springframework.transaction">
+        <level value="TRACE" />
+    </logger>
+
     <root level="INFO"/>
 </configuration>
