@@ -17,7 +17,7 @@ import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 
 @Component
 @Scope("prototype")
-public class OverviewListViewImpl extends CssLayout implements OverviewListView {
+public class OverviewListViewImpl extends AbstractViewImpl implements OverviewListView {
     private OverviewListHandler handler;
     private OverviewListModel model;
 
@@ -47,9 +47,9 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
 
     private void initializeLayouts() {
         rootLayout = new VerticalLayout();
-        addComponent(new VerticalLayout(
-                new Header("Zoznam"),
-                rootLayout));
+        rootLayout.setSizeFull();
+        addComponent(new Header("Zoznam"));
+        addComponent(rootLayout);
     }
 
     private void addActions() {
@@ -69,7 +69,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
 
     private void addItems() {
         invoiceTable = new InvoiceTable(handler);
-        rootLayout.addComponent(new CssLayout(invoiceTable));
+        rootLayout.addComponent(invoiceTable);
     }
 
     @Override

@@ -8,6 +8,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.UI;
 
+import eu.ba30.re.blocky.view.vaadinview.InvoiceBulkDeleteVaadinView;
+import eu.ba30.re.blocky.view.vaadinview.InvoiceCreateVaadinView;
+import eu.ba30.re.blocky.view.vaadinview.OverviewListVaadinView;
+
 @SpringUI
 @Theme("valo")
 public class ApplicationUI extends UI {

@@ -19,7 +19,6 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
@@ -33,7 +32,7 @@ import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
 
 @Component
 @Scope("prototype")
-public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCreateView {
+public class InvoiceCreateViewImpl extends AbstractViewImpl implements InvoiceCreateView {
     private static final Logger log = LoggerFactory.getLogger(InvoiceCreateViewImpl.class);
 
     private InvoiceCreateHandler handler;

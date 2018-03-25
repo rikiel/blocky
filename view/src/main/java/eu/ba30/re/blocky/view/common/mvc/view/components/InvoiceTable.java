@@ -29,8 +29,8 @@ public class InvoiceTable extends Grid<Invoice> {
         addColumn(invoice -> FormatterUtils.formatCategoryByName(invoice.getCategory())).setCaption("Kategória");
         addColumn(invoice -> FormatterUtils.formatDate(invoice.getCreationDate())).setCaption("Dátum vytvorenia");
 
-        setHeight(640, Unit.PIXELS);
-        setWidth(720, Unit.PIXELS);
+        setWidth("100%");
+        setHeight(1000, Unit.PIXELS);
 
         setDetailsGenerator((DetailsGenerator<Invoice>) invoice -> new InvoiceDetail(invoice, handler).build());
         addItemClickListener((ItemClickListener<Invoice>) event -> setDetailsVisible(event.getItem(), !isDetailsVisible(event.getItem())));

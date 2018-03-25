@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
 
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
@@ -17,7 +16,7 @@ import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceBulkDeleteView;
 
 @Component
 @Scope("prototype")
-public class InvoiceBulkDeleteViewImpl extends VerticalLayout implements InvoiceBulkDeleteView {
+public class InvoiceBulkDeleteViewImpl extends AbstractViewImpl implements InvoiceBulkDeleteView {
     private InvoiceBulkDeleteHandler handler;
     private InvoiceBulkDeleteModel model;
 
