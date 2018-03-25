@@ -61,6 +61,13 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
         }
     }
 
+    @Override
+    public void onUpdate() {
+        if (view.validateView()) {
+            invoiceService.update(model.getInvoice());
+        }
+    }
+
     @Nonnull
     @Override
     public OutputStream uploadFileToOutputStream() {

@@ -109,10 +109,16 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
         final Button backButton = new Button("Späť");
         backButton.addClickListener(event -> handler.onBack());
 
-        final Button createButton = new Button("Vytvoriť");
-        createButton.addClickListener(event -> handler.onCreate());
+        final Button actionButton;
+        if (Objects.equals(InvoiceCreateModel.UseCase.CREATE, model.getUseCase())) {
+            actionButton = new Button("Vytvoriť");
+            actionButton.addClickListener(event -> handler.onCreate());
+        } else {
+            actionButton = new Button("Upraviť");
+            actionButton.addClickListener(event -> handler.onUpdate());
+        }
 
-        layout.addComponentsAndExpand(backButton, createButton);
+        layout.addComponentsAndExpand(backButton, actionButton);
         addComponent(layout);
     }
 
@@ -134,7 +140,6 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
 
     private void bindFormFields() {
         binder = new Binder<>();
-        binder.readBean(model.getInvoice());
 
         binder.forField(name)
                 .asRequired("Neplatny nazov")
@@ -144,6 +149,12 @@ public class InvoiceCreateViewImpl extends VerticalLayout implements InvoiceCrea
                 .bind(Invoice::getCategory, Invoice::setCategory);
         binder.forField(details)
                 .bind(Invoice::getDetails, Invoice::setDetails);
+
+        for (Attachment attachment : model.getInvoice().getAttachments()) {
+            attachmentUploadFragment.showAttachment(attachment);
+        }
+
+        binder.readBean(model.getInvoice());
     }
 
     private class CategoryDataProvider extends ListDataProvider<Category> {

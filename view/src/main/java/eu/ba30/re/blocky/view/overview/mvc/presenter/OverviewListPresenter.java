@@ -103,6 +103,8 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
 
     @Override
     public void onUpdate(@Nonnull final Invoice invoice) {
+        final InvoiceCreateModel targetModel = new InvoiceCreateModel(invoice, InvoiceCreateModel.UseCase.MODIFY);
+        NavigationUtils.navigateTo(ApplicationViewName.CREATE, targetModel);
     }
 
     private void fillInvoicesFromService() {

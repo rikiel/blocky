@@ -21,5 +21,7 @@ public interface InvoiceCreateView extends CommonView<InvoiceCreateModel, Invoic
         void onBack();
 
         void onCreate();
+
+        void onUpdate();
     }
 }
