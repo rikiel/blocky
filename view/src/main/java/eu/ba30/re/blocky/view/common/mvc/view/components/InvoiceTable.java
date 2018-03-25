@@ -45,6 +45,12 @@ public class InvoiceTable extends Grid<Invoice> {
         setItems(handler.getItems());
     }
 
+    public void showSingleItemDetail() {
+        final List<Invoice> items = handler.getItems();
+        Validate.equals(items.size(), 1, "Should contain exactly one element!");
+        setDetailsVisible(items.get(0), true);
+    }
+
     public interface SelectionHandler extends InvoiceDetail.Handler {
         @Nonnull
         List<Invoice> getItems();

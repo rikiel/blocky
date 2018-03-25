@@ -97,6 +97,7 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     public void onDelete(@Nonnull final Invoice invoice) {
         final InvoiceBulkDeleteModel targetModel = new InvoiceBulkDeleteModel();
         targetModel.setToRemove(Lists.newArrayList(invoice));
+        targetModel.setShowSingleItemDetail(true);
         NavigationUtils.navigateTo(ApplicationViewName.BULK_DELETE, targetModel);
     }
 
