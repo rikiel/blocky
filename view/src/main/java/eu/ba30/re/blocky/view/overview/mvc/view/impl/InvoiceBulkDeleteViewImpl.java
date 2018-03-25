@@ -52,7 +52,7 @@ public class InvoiceBulkDeleteViewImpl extends VerticalLayout implements Invoice
         backButton.addClickListener(event -> handler.onBack());
 
         final Button deleteButton = new Button("Zmazať");
-        deleteButton.addClickListener(event -> handler.onDelete());
+        deleteButton.addClickListener(event -> handler.onBulkDelete());
 
         layout.addComponentsAndExpand(backButton, deleteButton);
         addComponent(layout);

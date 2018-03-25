@@ -10,6 +10,6 @@ public interface InvoiceBulkDeleteView extends CommonView<InvoiceBulkDeleteModel
     interface InvoiceBulkDeleteHandler extends CommonView.CommonHandler, InvoiceTable.SelectionHandler {
         void onBack();
 
-        void onDelete();
+        void onBulkDelete();
     }
 }

@@ -45,9 +45,29 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
     }
 
     @Override
-    public void onDelete() {
+    public void onBulkDelete() {
         invoiceService.remove(model.getToRemove());
         // TODO BLOCKY-9 zobrazit hlasku OK/ERR
+    }
+
+    @Override
+    public boolean isUpdateAllowed() {
+        return false;
+    }
+
+    @Override
+    public boolean isDeleteAllowed() {
+        return false;
+    }
+
+    @Override
+    public void onDelete(@Nonnull final Invoice invoice) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void onUpdate(@Nonnull final Invoice invoice) {
+        throw new UnsupportedOperationException();
     }
 
     @Nonnull

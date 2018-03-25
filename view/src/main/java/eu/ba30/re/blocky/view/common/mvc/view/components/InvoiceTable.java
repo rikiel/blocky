@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.ItemClickListener;
 
 import eu.ba30.re.blocky.model.Invoice;
@@ -31,7 +32,7 @@ public class InvoiceTable extends Grid<Invoice> {
         setHeight(640, Unit.PIXELS);
         setWidth(720, Unit.PIXELS);
 
-        setDetailsGenerator(new InvoiceDetail());
+        setDetailsGenerator((DetailsGenerator<Invoice>) invoice -> new InvoiceDetail(invoice, handler).build());
         addItemClickListener((ItemClickListener<Invoice>) event -> setDetailsVisible(event.getItem(), !isDetailsVisible(event.getItem())));
 
         if (handler.isChangingSelectionAllowed()) {
@@ -44,7 +45,7 @@ public class InvoiceTable extends Grid<Invoice> {
         setItems(handler.getItems());
     }
 
-    public interface SelectionHandler {
+    public interface SelectionHandler extends InvoiceDetail.Handler {
         @Nonnull
         List<Invoice> getItems();
 

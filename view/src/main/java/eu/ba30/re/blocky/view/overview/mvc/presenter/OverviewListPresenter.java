@@ -83,6 +83,27 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
         model.setSelectedInvoices(Lists.newArrayList(invoices));
     }
 
+    @Override
+    public boolean isUpdateAllowed() {
+        return true;
+    }
+
+    @Override
+    public boolean isDeleteAllowed() {
+        return true;
+    }
+
+    @Override
+    public void onDelete(@Nonnull final Invoice invoice) {
+        final InvoiceBulkDeleteModel targetModel = new InvoiceBulkDeleteModel();
+        targetModel.setToRemove(Lists.newArrayList(invoice));
+        NavigationUtils.navigateTo(ApplicationViewName.BULK_DELETE, targetModel);
+    }
+
+    @Override
+    public void onUpdate(@Nonnull final Invoice invoice) {
+    }
+
     private void fillInvoicesFromService() {
         model.setInvoices(invoiceService.getInvoices());
     }
