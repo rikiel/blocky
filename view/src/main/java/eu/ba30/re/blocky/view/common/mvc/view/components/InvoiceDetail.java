@@ -3,6 +3,7 @@ package eu.ba30.re.blocky.view.common.mvc.view.components;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.vaadin.server.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -16,13 +17,15 @@ import eu.ba30.re.blocky.view.common.mvc.view.utils.FormatterUtils;
 public class InvoiceDetail {
     private final Invoice invoice;
     private final Handler handler;
-    private final VerticalLayout layout = new VerticalLayout();
+    private final VerticalLayout layout;
 
     public InvoiceDetail(@Nonnull final Invoice invoice,
                          @Nonnull final Handler handler) {
         Validate.notNull(invoice, handler);
         this.invoice = invoice;
         this.handler = handler;
+        layout  = new VerticalLayout();
+        layout.setSpacing(false);
     }
 
     @Nonnull
@@ -49,11 +52,9 @@ public class InvoiceDetail {
     private void addAttachmentRows() {
         invoice.getAttachments()
                 .forEach(attachment -> {
-                    final VerticalLayout attachmentLayout = new VerticalLayout();
-                    attachmentLayout.addComponent(keyValue("Príloha", attachment.getName()));
-                    attachmentLayout.addComponent(keyValue("Typ súboru", FormatterUtils.formatAttachmentType(attachment.getType())));
-                    attachmentLayout.addComponent(new AttachmentPreview(attachment).build());
-                    layout.addComponent(attachmentLayout);
+                    layout.addComponent(keyValue("Príloha", attachment.getName()));
+                    layout.addComponent(keyValue("Typ súboru", FormatterUtils.formatAttachmentType(attachment.getType())));
+                    layout.addComponent(new AttachmentPreview(attachment).build());
                 });
     }
 
@@ -71,7 +72,12 @@ public class InvoiceDetail {
 
     @Nonnull
     private HorizontalLayout keyValue(@Nonnull final String caption, @Nullable final String value) {
-        return new HorizontalLayout(new Label(caption), new Label(value));
+        final Label lCaption = new Label(caption);
+        final Label lValue = new Label(value);
+
+        lCaption.setWidth(210, Sizeable.Unit.PIXELS);
+
+        return new HorizontalLayout(lCaption, lValue);
     }
 
     public interface Handler {
