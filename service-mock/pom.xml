@@ -11,4 +11,12 @@
 
     <artifactId>blocky-service-mock</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>blocky</groupId>
+            <artifactId>blocky-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
