@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
@@ -83,20 +82,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setModificationDate(LocalDate.now());
         invoiceRepository.create(invoice);
 
-        final Set<Attachment> actualDbAttachments = Sets.newHashSet(attachmentsRepository.getAttachmentList(invoice.getId()));
-        final Set<Attachment> actualModelAttachments = Sets.newHashSet(invoice.getAttachments());
-
-        final Sets.SetView<Attachment> toDelete = Sets.difference(actualDbAttachments, actualModelAttachments);
-        if (!toDelete.isEmpty()) {
-            attachmentsRepository.removeAttachments(Lists.newArrayList(toDelete));
+        // instead of update, do remove all from db and then insert all from model
+        final List<Attachment> actualDbAttachments = attachmentsRepository.getAttachmentList(invoice.getId());
+        if (!actualDbAttachments.isEmpty()) {
+            attachmentsRepository.removeAttachments(actualDbAttachments);
         }
-        final Sets.SetView<Attachment> toInsert = Sets.difference(actualModelAttachments, actualDbAttachments);
-        if (!toInsert.isEmpty()) {
-            toInsert.forEach(attachment -> {
-                Validate.isNull(attachment.getId());
-                attachment.setId(attachmentsRepository.getNextItemId());
+        if (!invoice.getAttachments().isEmpty()) {
+            invoice.getAttachments().forEach(attachment -> {
+                if (attachment.getId() == null) {
+                    attachment.setId(attachmentsRepository.getNextItemId());
+                }
             });
-            attachmentsRepository.createAttachments(invoice.getId(), Lists.newArrayList(toInsert));
+            attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
         }
     }
 }
