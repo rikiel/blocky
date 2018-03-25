@@ -21,7 +21,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     private OverviewListHandler handler;
     private OverviewListModel model;
 
-    private CssLayout rootLayout;
+    private VerticalLayout rootLayout;
     private Button addButton;
     private Button bulkRemoveButton;
     private InvoiceTable invoiceTable;
@@ -46,7 +46,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
     }
 
     private void initializeLayouts() {
-        rootLayout = new CssLayout();
+        rootLayout = new VerticalLayout();
         addComponent(new VerticalLayout(
                 new Header("Zoznam"),
                 rootLayout));
@@ -69,7 +69,7 @@ public class OverviewListViewImpl extends CssLayout implements OverviewListView 
 
     private void addItems() {
         invoiceTable = new InvoiceTable(handler);
-        rootLayout.addComponent(invoiceTable);
+        rootLayout.addComponent(new CssLayout(invoiceTable));
     }
 
     @Override
