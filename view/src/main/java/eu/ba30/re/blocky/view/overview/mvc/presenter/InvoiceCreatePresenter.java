@@ -106,6 +106,8 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
     public void uploadProgress(long readBytes, long contentLength) {
         if (readBytes > UPLOAD_FILE_MAX_BYTES || contentLength > UPLOAD_FILE_MAX_BYTES) {
             view.stopUpload();
+            Notification.show(String.format("Súbor prekročil povolenú veľkosť %d bytov.", UPLOAD_FILE_MAX_BYTES),
+                    Notification.Type.ERROR_MESSAGE);
             model.setAttachmentOutputStream(null);
         }
     }
