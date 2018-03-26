@@ -16,7 +16,7 @@ import eu.ba30.re.blocky.exception.DatabaseException;
 public class RepositoryExceptionsAspect extends AspectPointcuts{
     private static final Logger log = LoggerFactory.getLogger(RepositoryExceptionsAspect.class);
 
-    @Around("repositoryCall()")
+    @Around("serviceCall()")
     public Object watchCalls(ProceedingJoinPoint joinPoint) throws DatabaseException {
         try {
             return joinPoint.proceed();

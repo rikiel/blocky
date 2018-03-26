@@ -7,7 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 public class MockConfiguration {
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new MockDb().getJdbcTemplate();
+    public JdbcTemplate jdbcTemplate(MockDb mockDb) {
+        mockDb.initDb();
+        return mockDb.getJdbcTemplate();
     }
 }

@@ -1,6 +1,5 @@
 package eu.ba30.re.blocky.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Date;
@@ -8,11 +7,15 @@ import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.stereotype.Component;
 
 import eu.ba30.re.blocky.utils.Validate;
 
+@Component
 public class MockDb {
     private static final String INSERT_ATTACHMENT_SQL_REQUEST = ""
                                                                 + " INSERT INTO T_ATTACHMENTS "
@@ -32,13 +35,19 @@ public class MockDb {
 
     private final JdbcTemplate jdbc;
 
+    @Value("classpath:attachments/img-1.jpg")
+    private Resource attachment1;
+    @Value("classpath:attachments/img-2.jpg")
+    private Resource attachment2;
+    @Value("classpath:attachments/nakupnyZoznam")
+    private Resource attachment3;
+
     public MockDb() {
         final EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         builder.addScripts(
                 "db/mock-data-db-schema.sql"
         );
         jdbc = new JdbcTemplate(builder.build());
-        initDb();
     }
 
     @Nonnull
@@ -46,7 +55,7 @@ public class MockDb {
         return jdbc;
     }
 
-    private void initDb() {
+    public void initDb() {
         addCstCategories();
         addInvoices();
         addAttachments();
@@ -81,25 +90,37 @@ public class MockDb {
     }
 
     private void addAttachments() {
-        for (int i = 1; i <= 2; ++i) {
-            final String fileName = String.format("img-%d.jpg", i);
+        jdbc.update(INSERT_ATTACHMENT_SQL_REQUEST,
+                1,
+                1,
+                "Západ slnka - 1",
+                attachment1.getFilename(),
+                "image/jpeg",
+                1,
+                readInput(attachment1));
+        jdbc.update(INSERT_ATTACHMENT_SQL_REQUEST,
+                2,
+                2,
+                "Západ slnka - 2",
+                attachment1.getFilename(),
+                "image/jpeg",
+                1,
+                readInput(attachment2));
 
-            jdbc.update(INSERT_ATTACHMENT_SQL_REQUEST,
-                    i,
-                    i,
-                    "Západ slnka - " + i,
-                    fileName,
-                    "image/jpeg",
-                    1,
-                    readImage("attachments/" + fileName));
-        }
+        jdbc.update(INSERT_ATTACHMENT_SQL_REQUEST,
+                3,
+                1,
+                "Nákupný zoznam",
+                attachment1.getFilename(),
+                "text/text",
+                3,
+                readInput(attachment3));
     }
 
     @Nonnull
-    private byte[] readImage(@Nonnull final String resourceFileName) {
-        final String resourceFile = getClass().getClassLoader().getResource(resourceFileName).getFile();
+    private byte[] readInput(@Nonnull final Resource resource) {
         try {
-            return Files.readAllBytes(new File(resourceFile).toPath());
+            return Files.readAllBytes(resource.getFile().toPath());
         } catch (IOException e) {
             Validate.fail(e);
             return null;
