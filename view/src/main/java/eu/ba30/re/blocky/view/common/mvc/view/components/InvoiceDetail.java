@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -14,22 +13,24 @@ import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.FormatterUtils;
 
-public class InvoiceDetail {
+/**
+ * Detail of {@link Invoice} in grid with possible actions - update and delete of invoice.
+ */
+public class InvoiceDetail extends VerticalLayout {
     private final Invoice invoice;
     private final Handler handler;
-    private final VerticalLayout layout;
 
     public InvoiceDetail(@Nonnull final Invoice invoice,
                          @Nonnull final Handler handler) {
         Validate.notNull(invoice, handler);
         this.invoice = invoice;
         this.handler = handler;
-        layout = new VerticalLayout();
-        layout.setSpacing(false);
+
+        setSpacing(false);
+        buildComponentLayout();
     }
 
-    @Nonnull
-    public Component build() {
+    private void buildComponentLayout() {
         addRow("Názov", invoice.getName());
         addRow("Kategória", FormatterUtils.formatCategoryByNameAndDescription(invoice.getCategory()));
         addRow("Ďalšie detaily", invoice.getDetails());
@@ -41,20 +42,18 @@ public class InvoiceDetail {
 
         addAttachmentRows();
         addActions();
-
-        return layout;
     }
 
     private void addRow(@Nonnull final String caption, @Nullable final String value) {
-        layout.addComponent(keyValue(caption, value));
+        addComponent(keyValue(caption, value));
     }
 
     private void addAttachmentRows() {
         invoice.getAttachments()
                 .forEach(attachment -> {
-                    layout.addComponent(keyValue("Príloha", attachment.getName()));
-                    layout.addComponent(keyValue("Typ súboru", FormatterUtils.formatAttachmentType(attachment.getType())));
-                    layout.addComponent(new AttachmentPreview(attachment));
+                    addComponent(keyValue("Príloha", attachment.getName()));
+                    addComponent(keyValue("Typ súboru", FormatterUtils.formatAttachmentType(attachment.getType())));
+                    addComponent(new AttachmentPreview(attachment));
                 });
     }
 
@@ -67,7 +66,7 @@ public class InvoiceDetail {
         removeButton.addClickListener(event -> handler.onDelete(invoice));
         removeButton.setVisible(handler.isDeleteAllowed());
 
-        layout.addComponent(new HorizontalLayout(updateButton, removeButton));
+        addComponent(new HorizontalLayout(updateButton, removeButton));
     }
 
     @Nonnull
@@ -81,12 +80,24 @@ public class InvoiceDetail {
     }
 
     public interface Handler {
+        /**
+         * @return if button for updating invoice should be visible
+         */
         boolean isUpdateAllowed();
 
+        /**
+         * @return if button for deleting invoice should be visible
+         */
         boolean isDeleteAllowed();
 
+        /**
+         * @param invoice to be deleted
+         */
         void onDelete(@Nonnull Invoice invoice);
 
+        /**
+         * @param invoice to be updated
+         */
         void onUpdate(@Nonnull Invoice invoice);
     }
 }

@@ -14,6 +14,11 @@ import com.vaadin.ui.TextArea;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.utils.Validate;
 
+/**
+ * Preview for {@link Attachment}.
+ * Support of preview is limited to {@link eu.ba30.re.blocky.model.cst.AttachmentType#IMAGE} and {@link eu.ba30.re.blocky.model.cst.AttachmentType#TEXT}.
+ * For other types, preview label for not supporting type is shown.
+ */
 public class AttachmentPreview extends CssLayout {
     private static final int MAX_WIDTH = 600;
     private static final int MAX_HEIGHT = 600;

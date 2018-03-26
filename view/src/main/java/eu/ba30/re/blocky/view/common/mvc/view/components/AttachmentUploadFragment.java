@@ -24,6 +24,9 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 
+/**
+ * Upload fragment for {@link Attachment}
+ */
 public class AttachmentUploadFragment extends VerticalLayout {
     private final Handler handler;
 
@@ -141,15 +144,37 @@ public class AttachmentUploadFragment extends VerticalLayout {
     }
 
     public interface Handler {
+        /**
+         * @return stream where attachment will be uploaded
+         */
         @Nonnull
         OutputStream uploadFileToOutputStream();
 
+        /**
+         * Notify upload progress.
+         *
+         * @param readBytes number of read bytes
+         * @param contentLength length of input
+         */
         void uploadProgress(long readBytes, long contentLength);
 
+        /**
+         * Advertise, that upload failed
+         */
         void uploadFailed();
 
+        /**
+         * Notify, that upload finished
+         *
+         * @param fileName name of uploaded file
+         * @param mimeType mimeType of uploaded file
+         */
         void uploadFinished(@Nonnull String fileName, @Nonnull String mimeType);
 
+        /**
+         * Handle delete of uploaded attachment
+         * @param attachment attachment to delete
+         */
         void deleteAttachment(@Nonnull Attachment attachment);
     }
 

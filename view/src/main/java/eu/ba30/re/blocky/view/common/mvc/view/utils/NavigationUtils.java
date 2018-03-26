@@ -18,10 +18,18 @@ public class NavigationUtils {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * @param viewName view to be navigated to
+     */
     public static void navigateTo(@Nonnull final ApplicationViewName viewName) {
         navigateTo(viewName, null);
     }
 
+    /**
+     * @param viewName view to be navigated to
+     * @param data data for target view
+     * @param <Data> type of data
+     */
     public static <Data> void navigateTo(@Nonnull final ApplicationViewName viewName,
                                          @Nullable final Data data) {
         Validate.notNull(viewName);
@@ -32,6 +40,11 @@ public class NavigationUtils {
         currentUI.getNavigator().navigateTo(viewName.getViewName());
     }
 
+    /**
+     * @param <Data> type of saved data
+     * @return what user saved in previous call of {@link #navigateTo(ApplicationViewName, Object)}.
+     * @throws NullPointerException when data is null
+     */
     @Nonnull
     @SuppressWarnings("unchecked")
     public static <Data> Data getDataAfterNavigation() {
@@ -40,6 +53,10 @@ public class NavigationUtils {
         return data;
     }
 
+    /**
+     * @param <Data> type of saved data
+     * @return what user saved in previous call of {@link #navigateTo(ApplicationViewName, Object)}. When nothing is saved, returns null.
+     */
     @Nullable
     @SuppressWarnings("unchecked")
     public static <Data> Data tryGetDataAfterNavigation() {

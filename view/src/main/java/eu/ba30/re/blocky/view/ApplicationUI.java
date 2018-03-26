@@ -12,6 +12,9 @@ import eu.ba30.re.blocky.view.vaadinview.InvoiceBulkDeleteVaadinView;
 import eu.ba30.re.blocky.view.vaadinview.InvoiceCreateVaadinView;
 import eu.ba30.re.blocky.view.vaadinview.OverviewListVaadinView;
 
+/**
+ * UI for application {@code Bločky}. It consists of 3 views - overview, create and bulkDelete.
+ */
 @SpringUI
 @Theme("valo")
 public class ApplicationUI extends UI {
