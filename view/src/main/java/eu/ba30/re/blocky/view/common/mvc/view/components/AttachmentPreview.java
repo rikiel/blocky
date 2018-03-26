@@ -36,13 +36,13 @@ public class AttachmentPreview extends CssLayout {
                 component = createImagePreview();
                 break;
             case PDF:
-                component =  createPdfPreview();
+                component = createPdfPreview();
                 break;
             case TEXT:
-                component =  createTextFilePreview();
+                component = createTextFilePreview();
                 break;
             case UNKNOWN:
-                component = createUnknownFileFormatPreview() ;
+                component = createUnknownFileFormatPreview();
                 break;
             default:
                 throw new UnsupportedOperationException("Not known type " + attachment.getType());
@@ -53,9 +53,9 @@ public class AttachmentPreview extends CssLayout {
 
     @Nonnull
     private Image createImagePreview() {
-            final Image image = new Image();
-            image.setSource(new StreamResource(() -> new ByteArrayInputStream(attachment.getContent()), attachment.getFileName()));
-            return image;
+        final Image image = new Image();
+        image.setSource(new StreamResource(() -> new ByteArrayInputStream(attachment.getContent()), attachment.getFileName()));
+        return image;
     }
 
     @Nonnull

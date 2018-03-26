@@ -24,7 +24,7 @@ public class InvoiceDetail {
         Validate.notNull(invoice, handler);
         this.invoice = invoice;
         this.handler = handler;
-        layout  = new VerticalLayout();
+        layout = new VerticalLayout();
         layout.setSpacing(false);
     }
 

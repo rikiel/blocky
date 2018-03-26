@@ -9,7 +9,7 @@ public class OperationResult {
     private final String message;
 
     public OperationResult(@Nonnull final Result result, @Nonnull final String message) {
-        Validate.notNull(result,message);
+        Validate.notNull(result, message);
         this.result = result;
         this.message = message;
     }

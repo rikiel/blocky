@@ -54,7 +54,7 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
 
             navigateBack(new OperationResult(OperationResult.Result.SUCCESS,
                     "Položky boli úspešne zmazané."));
-        }catch (DatabaseException e) {
+        } catch (DatabaseException e) {
             navigateBack(new OperationResult(OperationResult.Result.ERROR,
                     "Položky sa nepodarilo zmazať."));
         }

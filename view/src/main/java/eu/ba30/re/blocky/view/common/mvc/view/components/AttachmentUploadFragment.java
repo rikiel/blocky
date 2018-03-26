@@ -41,16 +41,6 @@ public class AttachmentUploadFragment extends VerticalLayout {
         buildComponentLayout();
     }
 
-    private void buildComponentLayout() {
-        addStyleName(Style.UPLOAD_FRAGMENT.getCssClass());
-
-        uploadLayout.addStyleName(Style.UPLOAD.getCssClass());
-        uploadLayout.addComponent(upload);
-        previewsLayout.addStyleName(Style.ATTACHMENT_PREVIEW.getCssClass());
-
-        addComponents(uploadLayout, previewsLayout);
-    }
-
     public void stopUpload() {
         upload.interruptUpload();
     }
@@ -99,6 +89,16 @@ public class AttachmentUploadFragment extends VerticalLayout {
         layout.addComponent(actionLayout);
         layout.addComponent(attachmentPreview);
         previewsLayout.addComponent(layout);
+    }
+
+    private void buildComponentLayout() {
+        addStyleName(Style.UPLOAD_FRAGMENT.getCssClass());
+
+        uploadLayout.addStyleName(Style.UPLOAD.getCssClass());
+        uploadLayout.addComponent(upload);
+        previewsLayout.addStyleName(Style.ATTACHMENT_PREVIEW.getCssClass());
+
+        addComponents(uploadLayout, previewsLayout);
     }
 
     private void initUploadComponent() {

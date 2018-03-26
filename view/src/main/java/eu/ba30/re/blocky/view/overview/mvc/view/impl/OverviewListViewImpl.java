@@ -66,6 +66,11 @@ public class OverviewListViewImpl extends AbstractViewImpl implements OverviewLi
         notification.show(Page.getCurrent());
     }
 
+    @Override
+    public void setBulkRemoveButtonEnabled(boolean enabled) {
+        bulkRemoveButton.setEnabled(enabled);
+    }
+
     private void addHeader() {
         addComponent(new CssLayout(new Header("Zoznam platieb")));
     }
@@ -88,10 +93,5 @@ public class OverviewListViewImpl extends AbstractViewImpl implements OverviewLi
     private void addItems() {
         invoiceTable = new InvoiceTable(handler);
         addComponent(invoiceTable);
-    }
-
-    @Override
-    public void setBulkRemoveButtonEnabled(boolean enabled) {
-        bulkRemoveButton.setEnabled(enabled);
     }
 }
