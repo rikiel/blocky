@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.VerticalLayout;
 
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
@@ -21,7 +20,6 @@ public class OverviewListViewImpl extends AbstractViewImpl implements OverviewLi
     private OverviewListHandler handler;
     private OverviewListModel model;
 
-    private VerticalLayout rootLayout;
     private Button addButton;
     private Button bulkRemoveButton;
     private InvoiceTable invoiceTable;
@@ -40,36 +38,33 @@ public class OverviewListViewImpl extends AbstractViewImpl implements OverviewLi
     public void buildView() {
         removeAllComponents();
 
-        initializeLayouts();
+        addHeader();
         addActions();
         addItems();
     }
 
-    private void initializeLayouts() {
-        rootLayout = new VerticalLayout();
-        rootLayout.setSizeFull();
-        addComponent(new Header("Zoznam"));
-        addComponent(rootLayout);
+    private void addHeader() {
+        addComponent(new CssLayout(new Header("Zoznam platieb")));
     }
 
     private void addActions() {
         final CssLayout actionLayout = new CssLayout();
         actionLayout.addStyleName(Style.BUTTONS.getCssClass());
 
-        addButton = new Button("Pridat");
+        addButton = new Button("Pridať");
         addButton.addClickListener((Button.ClickListener) clickEvent -> handler.onAddNew());
 
-        bulkRemoveButton = new Button("Odstranit vybrane");
+        bulkRemoveButton = new Button("Odstrániť vybrané");
         bulkRemoveButton.setEnabled(false);
         bulkRemoveButton.addClickListener((Button.ClickListener) clickEvent -> handler.onBulkRemove());
 
         actionLayout.addComponents(addButton, bulkRemoveButton);
-        rootLayout.addComponent(actionLayout);
+        addComponent(actionLayout);
     }
 
     private void addItems() {
         invoiceTable = new InvoiceTable(handler);
-        rootLayout.addComponent(invoiceTable);
+        addComponent(invoiceTable);
     }
 
     @Override

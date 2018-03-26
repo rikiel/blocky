@@ -15,8 +15,8 @@ import com.vaadin.data.ValidationException;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -98,26 +98,24 @@ public class InvoiceCreateViewImpl extends AbstractViewImpl implements InvoiceCr
         } else {
             header = new Header("Úprava položky");
         }
-        addComponent(header);
+        addComponent(new CssLayout(header));
     }
 
     private void addActions() {
-        final HorizontalLayout layout = new HorizontalLayout();
+        final CssLayout layout = new CssLayout();
         layout.addStyleName(Style.BUTTONS.getCssClass());
 
         final Button backButton = new Button("Späť");
         backButton.addClickListener(event -> handler.onBack());
 
-        final Button actionButton;
+        final Button actionButton = new Button("Potvrdiť");
         if (Objects.equals(InvoiceCreateModel.UseCase.CREATE, model.getUseCase())) {
-            actionButton = new Button("Vytvoriť");
             actionButton.addClickListener(event -> handler.onCreate());
         } else {
-            actionButton = new Button("Upraviť");
             actionButton.addClickListener(event -> handler.onUpdate());
         }
 
-        layout.addComponentsAndExpand(backButton, actionButton);
+        layout.addComponents(backButton, actionButton);
         addComponent(layout);
     }
 

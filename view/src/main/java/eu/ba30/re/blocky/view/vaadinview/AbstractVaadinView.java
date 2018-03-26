@@ -5,8 +5,8 @@ import com.vaadin.ui.VerticalLayout;
 
 public abstract class AbstractVaadinView extends VerticalLayout implements View{
     public AbstractVaadinView() {
-        // undefined -> scrollbars are visible (horizontal/vertical)
-        setSizeUndefined();
+        setHeightUndefined();
+        setWidth("100%");
         setSpacing(false);
     }
 }

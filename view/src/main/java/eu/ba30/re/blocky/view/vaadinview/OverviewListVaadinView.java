@@ -22,6 +22,5 @@ public class OverviewListVaadinView extends AbstractVaadinView {
         view.setHandler(handler);
         handler.onViewEnter();
         addComponent(view);
-        setWidth("100%");
     }
 }

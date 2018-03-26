@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.CssLayout;
 
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
@@ -40,12 +40,12 @@ public class InvoiceBulkDeleteViewImpl extends AbstractViewImpl implements Invoi
     }
 
     private void addHeader() {
-        addComponent(new Header("Zmazať položky"));
+        addComponent(new CssLayout(new Header("Zmazať položky")));
     }
 
     private void addActions() {
-        final HorizontalLayout layout = new HorizontalLayout();
-        layout.addStyleName(Style.BUTTONS.getCssClass());
+        final CssLayout actionLayout = new CssLayout();
+        actionLayout.addStyleName(Style.BUTTONS.getCssClass());
 
         final Button backButton = new Button("Späť");
         backButton.addClickListener(event -> handler.onBack());
@@ -53,8 +53,8 @@ public class InvoiceBulkDeleteViewImpl extends AbstractViewImpl implements Invoi
         final Button deleteButton = new Button("Zmazať");
         deleteButton.addClickListener(event -> handler.onBulkDelete());
 
-        layout.addComponentsAndExpand(backButton, deleteButton);
-        addComponent(layout);
+        actionLayout.addComponents(backButton, deleteButton);
+        addComponent(actionLayout);
     }
 
     private void addItems() {
