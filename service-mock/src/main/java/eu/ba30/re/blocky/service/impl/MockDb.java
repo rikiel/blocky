@@ -73,10 +73,10 @@ public class MockDb {
         jdbc.update(INSERT_INVOICE_SQL_REQUEST,
                 2, "Dobitie kreditu", 3, "Vodafone", Date.valueOf(LocalDate.parse("2018-03-25")), null);
 
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 3; i < 10; ++i) {
             LocalDate date = LocalDate.parse("2018-01-15").plusWeeks(i);
             jdbc.update(INSERT_INVOICE_SQL_REQUEST,
-                    i + 10, "Albert", 1, "Potraviny", Date.valueOf(date), null);
+                    i, "Albert", 1, "Potraviny", Date.valueOf(date), null);
         }
     }
 

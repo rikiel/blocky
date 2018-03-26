@@ -1,7 +1,4 @@
 # TO BE DONE
-BLOCKY-2 Zoznamova obrazovka
-BLOCKY-3 Detaily poloziek
-BLOCKY-4 Akcie: Pridat novy/upravit/zmazat
 BLOCKY-9 EventBus - propagovat vysledky akcii z handlera do view
 
 # DONE
@@ -10,3 +7,6 @@ BLOCKY-8 Logovanie - aspekty
 BLOCKY-6 Obrazovka pre mazanie polozky
 BLOCKY-5 Obrazovka pre vytvorenie/modifikaciu
 BLOCKY-7 Napojenie na databazu + mocky
+BLOCKY-4 Akcie: Pridat novy/upravit/zmazat
+BLOCKY-2 Zoznamova obrazovka
+BLOCKY-3 Detaily poloziek

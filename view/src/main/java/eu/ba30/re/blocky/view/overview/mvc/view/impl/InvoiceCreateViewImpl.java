@@ -17,6 +17,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -76,6 +77,7 @@ public class InvoiceCreateViewImpl extends AbstractViewImpl implements InvoiceCr
             binder.writeBean(model.getInvoice());
             return true;
         } catch (ValidationException e) {
+            Notification.show("Opravte položky");
             log.trace("Validation error", e);
             return false;
         }
