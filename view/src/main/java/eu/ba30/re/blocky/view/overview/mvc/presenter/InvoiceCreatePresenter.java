@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
+import eu.ba30.re.blocky.view.overview.mvc.model.OperationResult;
 import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceCreateView;
 
 @Component
@@ -29,7 +31,6 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
     private static final Logger log = LoggerFactory.getLogger(InvoiceCreatePresenter.class);
 
     private static final int UPLOAD_FILE_MAX_BYTES = 10_000_000;
-    private static final int MAXIMUM_UPLOADS_COUNT = 3;
 
     @Autowired
     private InvoiceCreateView view;
@@ -54,7 +55,7 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
 
     @Override
     public void onBack() {
-        NavigationUtils.navigateTo(ApplicationViewName.OVERVIEW);
+        navigateBack(null);
     }
 
     @Override
@@ -62,8 +63,13 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
         if (view.validateView()) {
             try {
                 invoiceService.create(model.getInvoice());
+
+                navigateBack(new OperationResult(OperationResult.Result.SUCCESS,
+                        String.format("Položka číslo %d s názvom %s bola vytvorená.",
+                                model.getInvoice().getId(),
+                                model.getInvoice().getName())));
             } catch (DatabaseException e) {
-                Notification.show(String.format("Položku '%s' sa nepodarilo vytvoriť", model.getInvoice().getName()),
+                Notification.show(String.format("Položku '%s' sa nepodarilo vytvoriť.", model.getInvoice().getName()),
                         Notification.Type.ERROR_MESSAGE);
             }
         }
@@ -74,8 +80,13 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
         if (view.validateView()) {
             try {
                 invoiceService.update(model.getInvoice());
+
+                navigateBack(new OperationResult(OperationResult.Result.SUCCESS,
+                        String.format("Položka číslo %d s názvom %s bola zmenená.",
+                                model.getInvoice().getId(),
+                                model.getInvoice().getName())));
             } catch (DatabaseException e) {
-                Notification.show(String.format("Položku '%s' sa nepodarilo zmeniť", model.getInvoice().getName()),
+                Notification.show(String.format("Položku '%s' sa nepodarilo zmeniť.", model.getInvoice().getName()),
                         Notification.Type.ERROR_MESSAGE);
             }
         }
@@ -128,5 +139,9 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
         if (!removed) {
             log.warn("Attachment was not found: {} -> {}", attachment, model.getInvoice().getAttachments());
         }
+    }
+
+    private void navigateBack(@Nullable final OperationResult operationResult) {
+        NavigationUtils.navigateTo(ApplicationViewName.OVERVIEW, operationResult);
     }
 }

@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import com.vaadin.ui.Notification;
 
 import eu.ba30.re.blocky.exception.DatabaseException;
 import eu.ba30.re.blocky.model.Invoice;
@@ -17,6 +16,7 @@ import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
+import eu.ba30.re.blocky.view.overview.mvc.model.OperationResult;
 import eu.ba30.re.blocky.view.overview.mvc.view.InvoiceBulkDeleteView;
 
 @Component
@@ -51,8 +51,12 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
     public void onBulkDelete() {
         try {
             invoiceService.remove(model.getToRemove());
+
+            navigateBack(new OperationResult(OperationResult.Result.SUCCESS,
+                    "Položky boli úspešne zmazané."));
         }catch (DatabaseException e) {
-            Notification.show("Položky sa nepodarilo zmazať", Notification.Type.ERROR_MESSAGE);
+            navigateBack(new OperationResult(OperationResult.Result.ERROR,
+                    "Položky sa nepodarilo zmazať."));
         }
     }
 
@@ -90,5 +94,9 @@ public class InvoiceBulkDeletePresenter implements InvoiceBulkDeleteView.Invoice
     @Override
     public void itemsSelectionChanged(@Nonnull final Set<Invoice> invoices) {
         throw new UnsupportedOperationException("Not supported for bulk delete view");
+    }
+
+    private void navigateBack(@Nullable final OperationResult operationResult) {
+        NavigationUtils.navigateTo(ApplicationViewName.OVERVIEW, operationResult);
     }
 }

@@ -5,8 +5,6 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,14 +18,13 @@ import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceBulkDeleteModel;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;
+import eu.ba30.re.blocky.view.overview.mvc.model.OperationResult;
 import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 
 @Component
 @Scope("prototype")
 public class OverviewListPresenter implements OverviewListView.OverviewListHandler {
-    private static final Logger log = LoggerFactory.getLogger(OverviewListPresenter.class);
-
     @Autowired
     private OverviewListView view;
     @Autowired
@@ -37,11 +34,17 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
 
     @Override
     public void onViewEnter() {
+        final OperationResult operationResult = NavigationUtils.tryGetDataAfterNavigation();
+
         model = new OverviewListModel();
         fillInvoicesFromService();
 
         view.setModel(model);
         view.buildView();
+
+        if (operationResult != null) {
+            view.showOperationResult(operationResult);
+        }
     }
 
     @Nonnull

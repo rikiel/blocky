@@ -35,9 +35,15 @@ public class NavigationUtils {
     @Nonnull
     @SuppressWarnings("unchecked")
     public static <Data> Data getDataAfterNavigation() {
-        final UI currentUI = UI.getCurrent();
-        final Data data = (Data) currentUI.getData();
+        final Data data = tryGetDataAfterNavigation();
         Validate.notNull(data, "Method returns always notnull data.");
         return data;
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <Data> Data tryGetDataAfterNavigation() {
+        final UI currentUI = UI.getCurrent();
+        return (Data) currentUI.getData();
     }
 }

@@ -5,12 +5,17 @@ import javax.annotation.Nonnull;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.Notification;
 
+import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
 import eu.ba30.re.blocky.view.common.mvc.view.components.InvoiceTable;
+import eu.ba30.re.blocky.view.overview.mvc.model.OperationResult;
 import eu.ba30.re.blocky.view.overview.mvc.model.OverviewListModel;
 import eu.ba30.re.blocky.view.overview.mvc.view.OverviewListView;
 
@@ -43,6 +48,24 @@ public class OverviewListViewImpl extends AbstractViewImpl implements OverviewLi
         addItems();
     }
 
+    @Override
+    public void showOperationResult(@Nonnull final OperationResult operationResult) {
+        Validate.notNull(operationResult);
+
+        final Notification notification = new Notification(operationResult.getMessage());
+        notification.setPosition(Position.TOP_CENTER);
+
+        switch (operationResult.getResult()) {
+            case SUCCESS:
+                notification.setDelayMsec(3500);
+                break;
+            case ERROR:
+                notification.setDelayMsec(5000);
+                break;
+        }
+        notification.show(Page.getCurrent());
+    }
+
     private void addHeader() {
         addComponent(new CssLayout(new Header("Zoznam platieb")));
     }
@@ -70,10 +93,5 @@ public class OverviewListViewImpl extends AbstractViewImpl implements OverviewLi
     @Override
     public void setBulkRemoveButtonEnabled(boolean enabled) {
         bulkRemoveButton.setEnabled(enabled);
-    }
-
-    @Override
-    public void refreshList() {
-        invoiceTable.refresh();
     }
 }
