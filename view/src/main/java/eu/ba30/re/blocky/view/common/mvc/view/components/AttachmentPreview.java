@@ -1,16 +1,12 @@
 package eu.ba30.re.blocky.view.common.mvc.view.components;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 
 import javax.annotation.Nonnull;
-import javax.imageio.ImageIO;
 
-import com.vaadin.server.Sizeable;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
@@ -18,53 +14,65 @@ import com.vaadin.ui.TextArea;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.utils.Validate;
 
-public class AttachmentPreview {
-    private static final int MAX_IMAGE_WIDTH = 600;
-    private static final int MAX_IMAGE_HEIGHT = 600;
+public class AttachmentPreview extends CssLayout {
+    private static final int MAX_WIDTH = 600;
+    private static final int MAX_HEIGHT = 600;
 
     private final Attachment attachment;
 
     public AttachmentPreview(@Nonnull final Attachment attachment) {
         Validate.notNull(attachment);
         this.attachment = attachment;
+
+        setWidth(MAX_WIDTH, Unit.PIXELS);
+        setHeight(MAX_HEIGHT, Unit.PIXELS);
+        buildComponentLayout();
     }
 
-    @Nonnull
-    public Component build() {
+    private void buildComponentLayout() {
+        final Component component;
         switch (attachment.getType()) {
             case IMAGE:
-                return createImage();
+                component = createImagePreview();
+                break;
             case PDF:
-                return new Label("Could not display PDF files");
+                component =  createPdfPreview();
+                break;
             case TEXT:
-                final TextArea textArea = new TextArea();
-                textArea.setValue(new String(attachment.getContent()));
-                textArea.setEnabled(false);
-                return textArea;
+                component =  createTextFilePreview();
+                break;
             case UNKNOWN:
-                return new Label("Not known file format");
+                component = createUnknownFileFormatPreview() ;
+                break;
             default:
                 throw new UnsupportedOperationException("Not known type " + attachment.getType());
         }
+        component.setSizeFull();
+        addComponent(component);
     }
 
     @Nonnull
-    private Image createImage() {
-        try {
-            final BufferedImage bi = ImageIO.read(new ByteArrayInputStream(attachment.getContent()));
-            int width = bi.getWidth();
-            int height = bi.getHeight();
-            while (height > MAX_IMAGE_HEIGHT || width > MAX_IMAGE_WIDTH) {
-                height /= 2;
-                width /= 2;
-            }
+    private Image createImagePreview() {
             final Image image = new Image();
             image.setSource(new StreamResource(() -> new ByteArrayInputStream(attachment.getContent()), attachment.getFileName()));
-            image.setHeight(height, Sizeable.Unit.PIXELS);
-            image.setWidth(width, Sizeable.Unit.PIXELS);
             return image;
-        } catch (IOException e) {
-            throw new UncheckedIOException("Could not parse image stream", e);
-        }
+    }
+
+    @Nonnull
+    private Component createPdfPreview() {
+        return new Label("PDF súbory zatiaľ nedokážeme zobraziť.");
+    }
+
+    @Nonnull
+    private Component createUnknownFileFormatPreview() {
+        return new Label(String.format("Typ súboru '%s' zatiaľ nedokážeme zobraziť.", attachment.getMimeType()));
+    }
+
+    @Nonnull
+    private Component createTextFilePreview() {
+        final TextArea textArea = new TextArea();
+        textArea.setValue(new String(attachment.getContent()));
+        textArea.setEnabled(false);
+        return textArea;
     }
 }

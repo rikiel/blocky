@@ -97,7 +97,7 @@ public class AttachmentUploadFragment extends VerticalLayout {
 
         layout.addComponentsAndExpand(changeNameLayout);
         layout.addComponentsAndExpand(actionLayout);
-        layout.addComponentsAndExpand(attachmentPreview.build());
+        layout.addComponentsAndExpand(attachmentPreview);
         previewsLayout.addComponent(layout);
     }
 

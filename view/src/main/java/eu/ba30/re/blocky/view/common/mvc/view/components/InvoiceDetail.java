@@ -54,7 +54,7 @@ public class InvoiceDetail {
                 .forEach(attachment -> {
                     layout.addComponent(keyValue("Príloha", attachment.getName()));
                     layout.addComponent(keyValue("Typ súboru", FormatterUtils.formatAttachmentType(attachment.getType())));
-                    layout.addComponent(new AttachmentPreview(attachment).build());
+                    layout.addComponent(new AttachmentPreview(attachment));
                 });
     }
 
