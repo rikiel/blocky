@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+/**
+ * Aspect for logging all calls of repository, service, view and presenter
+ */
 @Aspect
 @Order(1)
 @Component
@@ -22,7 +25,7 @@ public class LoggingAspect extends AspectPointcuts  {
 
     private static int CALL_ID = 100;
 
-    @Around("serviceCall() || repositoryCall() || viewCall() || presenterCall()")
+    @Around("repositoryCall() || serviceCall() || viewCall() || presenterCall()")
     public Object logCalls(ProceedingJoinPoint joinPoint) throws Throwable {
         final int callId = CALL_ID++;
         try {

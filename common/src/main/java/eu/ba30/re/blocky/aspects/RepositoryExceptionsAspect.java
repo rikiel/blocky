@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 
 import eu.ba30.re.blocky.exception.DatabaseException;
 
+/**
+ * Aspect that changes exception type that was thrown from service.
+ * For all exceptions, {@link DatabaseException} is used.
+ */
 @Aspect
 @Order(2)
 @Component
@@ -28,5 +32,4 @@ public class RepositoryExceptionsAspect extends AspectPointcuts{
             throw new DatabaseException(thr);
         }
     }
-
 }
