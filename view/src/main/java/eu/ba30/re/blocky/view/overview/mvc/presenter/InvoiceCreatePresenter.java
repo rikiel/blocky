@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.vaadin.ui.Notification;
+
+import eu.ba30.re.blocky.exception.DatabaseException;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.service.InvoiceService;
@@ -57,14 +60,24 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
     @Override
     public void onCreate() {
         if (view.validateView()) {
-            invoiceService.create(model.getInvoice());
+            try {
+                invoiceService.create(model.getInvoice());
+            } catch (DatabaseException e) {
+                Notification.show(String.format("Položku '%s' sa nepodarilo vytvoriť", model.getInvoice().getName()),
+                        Notification.Type.ERROR_MESSAGE);
+            }
         }
     }
 
     @Override
     public void onUpdate() {
         if (view.validateView()) {
-            invoiceService.update(model.getInvoice());
+            try {
+                invoiceService.update(model.getInvoice());
+            } catch (DatabaseException e) {
+                Notification.show(String.format("Položku '%s' sa nepodarilo zmeniť", model.getInvoice().getName()),
+                        Notification.Type.ERROR_MESSAGE);
+            }
         }
     }
 

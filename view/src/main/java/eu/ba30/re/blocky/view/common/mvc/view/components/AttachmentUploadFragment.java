@@ -14,7 +14,6 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -25,7 +24,7 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 
-public class AttachmentUploadFragment {
+public class AttachmentUploadFragment extends VerticalLayout {
     private final Handler handler;
 
     private Upload upload;
@@ -39,20 +38,17 @@ public class AttachmentUploadFragment {
         this.upload = new Upload();
 
         initUploadComponent();
+        buildComponentLayout();
     }
 
-    @Nonnull
-    public Component build() {
-        final VerticalLayout layout = new VerticalLayout();
-        layout.addStyleName(Style.UPLOAD_FRAGMENT.getCssClass());
+    private void buildComponentLayout() {
+        addStyleName(Style.UPLOAD_FRAGMENT.getCssClass());
 
         uploadLayout.addStyleName(Style.UPLOAD.getCssClass());
         uploadLayout.addComponent(upload);
         previewsLayout.addStyleName(Style.ATTACHMENT_PREVIEW.getCssClass());
 
-        layout.addComponentsAndExpand(uploadLayout, previewsLayout);
-
-        return layout;
+        addComponents(uploadLayout, previewsLayout);
     }
 
     public void stopUpload() {
