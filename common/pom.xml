@@ -6,9 +6,9 @@
     <parent>
         <groupId>blocky</groupId>
         <artifactId>blocky</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.</version>
     </parent>
 
     <artifactId>blocky-common</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.</version>
 </project>
