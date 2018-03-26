@@ -21,7 +21,7 @@
         <project.version>1.0-SNAPSHOT</project.version>
 
         <vaadin.version>3.0.0</vaadin.version>
-        <sprint-boot.version>1.5.10.RELEASE</sprint-boot.version>
+        <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
         <guava.version>24.0-jre</guava.version>
         <spring-test.version>3.2.2.RELEASE</spring-test.version>
         <hsqldb.version>2.3.1</hsqldb.version>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>${sprint-boot.version}</version>
+            <version>${spring-boot.version}</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
