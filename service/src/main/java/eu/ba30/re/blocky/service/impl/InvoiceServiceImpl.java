@@ -1,6 +1,7 @@
 package eu.ba30.re.blocky.service.impl;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,6 +35,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepository.getInvoices()
                 .stream()
                 .peek(invoice -> invoice.setAttachments(attachmentsRepository.getAttachmentList(invoice.getId())))
+                .sorted(Comparator.<Invoice, LocalDate>comparing(invoice -> invoice.getModificationDate() != null
+                        ? invoice.getModificationDate()
+                        : invoice.getCreationDate())
+                        .reversed())
                 .collect(Collectors.toList());
     }
 
