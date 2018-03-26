@@ -1,7 +1,6 @@
 package eu.ba30.re.blocky.service.impl;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.sql.Date;
 import java.time.LocalDate;
 
@@ -12,6 +11,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.stereotype.Component;
+
+import com.google.common.io.ByteStreams;
 
 import eu.ba30.re.blocky.utils.Validate;
 
@@ -120,7 +121,7 @@ public class MockDb {
     @Nonnull
     private byte[] readInput(@Nonnull final Resource resource) {
         try {
-            return Files.readAllBytes(resource.getFile().toPath());
+            return ByteStreams.toByteArray(resource.getInputStream());
         } catch (IOException e) {
             Validate.fail(e);
             return null;
