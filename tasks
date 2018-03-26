@@ -1,5 +1,4 @@
 # TO BE DONE
-BLOCKY-9 EventBus - propagovat vysledky akcii z handlera do view
 BLOCKY-10 Technicke veci
 
 # DONE
@@ -11,3 +10,4 @@ BLOCKY-7 Napojenie na databazu + mocky
 BLOCKY-4 Akcie: Pridat novy/upravit/zmazat
 BLOCKY-2 Zoznamova obrazovka
 BLOCKY-3 Detaily poloziek
+BLOCKY-9 EventBus - propagovat vysledky akcii z handlera do view
