@@ -6,7 +6,7 @@
 
     <groupId>blocky</groupId>
     <artifactId>blocky</artifactId>
-    <version>1.0.</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -18,7 +18,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <project.version>1.0.</project.version>
+        <project.version>1.1-SNAPSHOT</project.version>
 
         <vaadin.version>3.0.0</vaadin.version>
         <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
