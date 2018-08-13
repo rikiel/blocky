@@ -28,6 +28,7 @@
         <testng.version>6.14.2</testng.version>
         <unitils.version>3.4.2</unitils.version>
         <jmockit.version>1.38</jmockit.version>
+        <mybatis.version>3.4.6</mybatis.version>
     </properties>
 
     <dependencies>
@@ -45,6 +46,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
         </dependency>
 
 

@@ -1,10 +1,18 @@
 package eu.ba30.re.blocky.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.mapping.Environment;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,6 +22,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import eu.ba30.re.blocky.service.impl.db.impl.mapper.CategoryMapper;
 
 @Configuration
 @ComponentScan({ "eu.ba30.re.blocky.service", "eu.ba30.re.blocky.aspects" })
@@ -41,5 +51,30 @@ public abstract class AbstractTestConfiguration {
     @Autowired
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
+    @Autowired
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) {
+        // TODO skusit aj XML konfiguraciu
+        return buildByJava();
+        //        return buildByXml();
+    }
+
+    private SqlSessionFactory buildByJava() {
+        final org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration(new Environment("test",
+                new JdbcTransactionFactory(),
+                dataSource()));
+        configuration.addMapper(CategoryMapper.class);
+        return new SqlSessionFactoryBuilder().build(configuration);
+    }
+
+    private SqlSessionFactory buildByXml() {
+        try {
+            final InputStream inputStream = Resources.getResourceAsStream("mybatis/configuration.xml");
+            return new SqlSessionFactoryBuilder().build(inputStream);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
