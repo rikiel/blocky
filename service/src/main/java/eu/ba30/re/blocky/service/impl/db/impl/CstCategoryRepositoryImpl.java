@@ -3,6 +3,7 @@ package eu.ba30.re.blocky.service.impl.db.impl;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -18,6 +19,11 @@ import eu.ba30.re.blocky.utils.Validate;
 public class CstCategoryRepositoryImpl implements CstCategoryRepository {
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
+
+    @PostConstruct
+    private void init() {
+        sqlSessionFactory.getConfiguration().addMapper(CategoryMapper.class);
+    }
 
     @Nonnull
     @Override

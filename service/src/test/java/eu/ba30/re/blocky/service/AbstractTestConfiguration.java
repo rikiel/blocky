@@ -23,9 +23,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import eu.ba30.re.blocky.service.impl.db.impl.mapper.AttachmentMapper;
-import eu.ba30.re.blocky.service.impl.db.impl.mapper.CategoryMapper;
-
 @Configuration
 @ComponentScan({ "eu.ba30.re.blocky.service", "eu.ba30.re.blocky.aspects" })
 @EnableAspectJAutoProxy(proxyTargetClass = true)
@@ -56,7 +53,7 @@ public abstract class AbstractTestConfiguration {
 
     @Bean
     @Autowired
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) {
+    public SqlSessionFactory sqlSessionFactory() {
         // TODO skusit aj XML konfiguraciu
         return buildByJava();
         //        return buildByXml();
@@ -66,8 +63,6 @@ public abstract class AbstractTestConfiguration {
         final org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration(new Environment("test",
                 new JdbcTransactionFactory(),
                 dataSource()));
-        configuration.addMapper(CategoryMapper.class);
-        configuration.addMapper(AttachmentMapper.class);
         return new SqlSessionFactoryBuilder().build(configuration);
     }
 

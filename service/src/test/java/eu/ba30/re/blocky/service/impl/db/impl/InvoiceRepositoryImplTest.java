@@ -15,8 +15,8 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
+import eu.ba30.re.blocky.service.impl.db.CstCategoryRepository;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import mockit.Capturing;
@@ -29,7 +29,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @ContextConfiguration(classes = { InvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
 public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests {
     @Capturing
-    private CstManager cstManager;
+    private CstCategoryRepository cstCategoryRepository;
 
     @Autowired
     private InvoiceRepository invoiceRepository;
@@ -99,7 +99,7 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
 
     private void initCstExpectations() {
         new Expectations() {{
-            cstManager.getCategory(1);
+            cstCategoryRepository.getById(1);
             result = new TestObjectsBuilder().category1().buildSingleCategory();
         }};
     }
