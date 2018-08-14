@@ -52,6 +52,6 @@ public class LoggingAspect extends AspectPointcuts  {
 
     @Nonnull
     private static String joinArgs(@Nonnull final Object[] args) {
-        return Arrays.stream(args).map(Objects::toString).collect(Collectors.joining(""));
+        return Arrays.stream(args).map(Objects::toString).collect(Collectors.joining(", "));
     }
 }

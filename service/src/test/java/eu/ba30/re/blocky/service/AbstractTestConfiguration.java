@@ -23,6 +23,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import eu.ba30.re.blocky.service.impl.db.impl.mapper.AttachmentMapper;
 import eu.ba30.re.blocky.service.impl.db.impl.mapper.CategoryMapper;
 
 @Configuration
@@ -66,6 +67,7 @@ public abstract class AbstractTestConfiguration {
                 new JdbcTransactionFactory(),
                 dataSource()));
         configuration.addMapper(CategoryMapper.class);
+        configuration.addMapper(AttachmentMapper.class);
         return new SqlSessionFactoryBuilder().build(configuration);
     }
 

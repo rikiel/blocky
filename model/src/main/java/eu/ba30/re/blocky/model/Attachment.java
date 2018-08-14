@@ -11,7 +11,7 @@ public class Attachment {
     private String name;
     private String fileName;
     private String mimeType;
-    private AttachmentType type;
+    private AttachmentType attachmentType;
     private byte[] content;
 
     public Integer getId() {
@@ -46,12 +46,12 @@ public class Attachment {
         this.mimeType = mimeType;
     }
 
-    public AttachmentType getType() {
-        return type;
+    public AttachmentType getAttachmentType() {
+        return attachmentType;
     }
 
-    public void setType(AttachmentType type) {
-        this.type = type;
+    public void setAttachmentType(AttachmentType attachmentType) {
+        this.attachmentType = attachmentType;
     }
 
     public byte[] getContent() {
@@ -69,7 +69,7 @@ public class Attachment {
                 .add("name", name)
                 .add("fileName", fileName)
                 .add("mimeType", mimeType)
-                .add("type", type)
+                .add("attachmentType", attachmentType)
                 .toString();
     }
 

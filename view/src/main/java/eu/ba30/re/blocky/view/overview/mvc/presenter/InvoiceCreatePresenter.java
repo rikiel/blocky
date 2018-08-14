@@ -127,7 +127,7 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
         attachment.setName(fileName);
         attachment.setFileName(fileName);
         attachment.setMimeType(mimeType);
-        attachment.setType(AttachmentType.forMime(mimeType));
+        attachment.setAttachmentType(AttachmentType.forMime(mimeType));
         attachment.setContent(model.getAttachmentOutputStream().toByteArray());
 
         view.showAttachment(attachment);

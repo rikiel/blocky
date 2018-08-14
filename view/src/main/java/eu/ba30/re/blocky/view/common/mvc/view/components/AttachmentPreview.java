@@ -36,7 +36,7 @@ public class AttachmentPreview extends CssLayout {
 
     private void buildComponentLayout() {
         final Component component;
-        switch (attachment.getType()) {
+        switch (attachment.getAttachmentType()) {
             case IMAGE:
                 component = createImagePreview();
                 break;
@@ -50,7 +50,7 @@ public class AttachmentPreview extends CssLayout {
                 component = createUnknownFileFormatPreview();
                 break;
             default:
-                throw new UnsupportedOperationException("Not known type " + attachment.getType());
+                throw new UnsupportedOperationException("Not known attachment type " + attachment.getAttachmentType());
         }
         component.setSizeFull();
         addComponent(component);

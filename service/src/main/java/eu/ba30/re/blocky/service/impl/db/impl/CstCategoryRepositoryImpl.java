@@ -23,8 +23,8 @@ public class CstCategoryRepositoryImpl implements CstCategoryRepository {
     @Override
     public List<Category> getAllCategories() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            final CategoryMapper categoryMapper = session.getMapper(CategoryMapper.class);
-            return Validate.validateResult(categoryMapper.getAllCategories());
+            final CategoryMapper mapper = session.getMapper(CategoryMapper.class);
+            return Validate.validateResult(mapper.getAllCategories());
         }
     }
 
@@ -32,8 +32,8 @@ public class CstCategoryRepositoryImpl implements CstCategoryRepository {
     @Override
     public Category getById(int categoryId) {
         try (SqlSession session = sqlSessionFactory.openSession()) {
-            final CategoryMapper categoryMapper = session.getMapper(CategoryMapper.class);
-            return Validate.validateResult(categoryMapper.getCategory(categoryId));
+            final CategoryMapper mapper = session.getMapper(CategoryMapper.class);
+            return Validate.validateResult(mapper.getCategory(categoryId));
         }
     }
 }
