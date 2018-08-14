@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
-import eu.ba30.re.blocky.service.impl.db.impl.mapper.InvoiceCategoryHandler;
 import eu.ba30.re.blocky.service.impl.db.impl.mapper.InvoiceMapper;
 import eu.ba30.re.blocky.utils.Validate;
 
@@ -21,12 +20,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
 
-    @Autowired
-    private InvoiceCategoryHandler invoiceCategoryHandler;
-
     @PostConstruct
     private void init() {
-        sqlSessionFactory.getConfiguration().getTypeHandlerRegistry().register(invoiceCategoryHandler);
         sqlSessionFactory.getConfiguration().addMapper(InvoiceMapper.class);
     }
 

@@ -20,7 +20,6 @@ import eu.ba30.re.blocky.service.impl.db.CstCategoryRepository;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import mockit.Capturing;
-import mockit.Expectations;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -42,15 +41,12 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
 
     @Test(priority = 1)
     public void getInvoices() {
-        initCstExpectations();
-
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
                 invoiceRepository.getInvoices());
     }
 
     @Test(priority = 2)
     public void create() {
-        initCstExpectations();
         invoiceRepository.create(new TestObjectsBuilder().category1().invoice2().buildSingleInvoice());
 
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1()
@@ -61,7 +57,6 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
 
     @Test(priority = 3)
     public void remove() {
-        initCstExpectations();
         invoiceRepository.remove(new TestObjectsBuilder().category1().invoice2().buildInvoices());
 
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
@@ -97,13 +92,6 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         }
     }
 
-    private void initCstExpectations() {
-        new Expectations() {{
-            cstCategoryRepository.getById(1);
-            result = new TestObjectsBuilder().category1().buildSingleCategory();
-        }};
-    }
-
     @DataProvider
     private Object[][] createErrorDataProvider() {
         return new Object[][] {
@@ -131,7 +119,9 @@ public class InvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests 
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
-            return Lists.newArrayList("db/repositoryTests/test-data-invoices.sql");
+            return Lists.newArrayList(
+                    "db/repositoryTests/test-data-invoices.sql",
+                    "db/repositoryTests/test-data-cst-category.sql");
         }
     }
 }

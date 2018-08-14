@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -18,7 +19,7 @@ public interface InvoiceMapper {
     @Results(id = "getAllInvoices", value = {
             @Result(property = "id", column = "ID", id = true),
             @Result(property = "name", column = "NAME"),
-            @Result(property = "category", column = "CATEGORY_ID", typeHandler = InvoiceCategoryHandler.class),
+            @Result(property = "category", column = "CATEGORY_ID", one = @One(select = "eu.ba30.re.blocky.service.impl.db.impl.mapper.CategoryMapper.getCategory")),
             @Result(property = "details", column = "DETAILS"),
             @Result(property = "creationDate", column = "CREATION"),
             @Result(property = "modificationDate", column = "LAST_MODIFICATION"),
@@ -45,7 +46,7 @@ public interface InvoiceMapper {
     @Update({
             "INSERT INTO T_INVOICES",
             "(ID, NAME, CATEGORY_ID, DETAILS, CREATION, LAST_MODIFICATION)",
-            "VALUES (#{invoice.id}, #{invoice.name}, #{invoice.category}, #{invoice.details}, #{invoice.creationDate}, #{invoice.modificationDate})"
+            "VALUES (#{invoice.id}, #{invoice.name}, #{invoice.category.id}, #{invoice.details}, #{invoice.creationDate}, #{invoice.modificationDate})"
     })
     int create(@Param("invoice") Invoice invoice);
 
