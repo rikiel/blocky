@@ -1,5 +1,5 @@
 # TO BE DONE
-BLOCKY-11 MyBatis
+BLOCKY-12 Hibernate
 
 # DONE
 BLOCKY-1 Inicializacia projektu
@@ -12,3 +12,4 @@ BLOCKY-2 Zoznamova obrazovka
 BLOCKY-3 Detaily poloziek
 BLOCKY-9 EventBus - propagovat vysledky akcii z handlera do view
 BLOCKY-10 Technicke veci
+BLOCKY-11 MyBatis
