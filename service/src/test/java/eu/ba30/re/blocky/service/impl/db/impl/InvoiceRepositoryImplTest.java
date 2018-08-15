@@ -16,9 +16,9 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
+import eu.ba30.re.blocky.service.impl.config.RepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.db.CstCategoryRepository;
 import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
-import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 import mockit.Capturing;
 
 import static org.testng.Assert.assertEquals;

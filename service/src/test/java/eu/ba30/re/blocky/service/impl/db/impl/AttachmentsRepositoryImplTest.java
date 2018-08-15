@@ -15,8 +15,8 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
+import eu.ba30.re.blocky.service.impl.config.RepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
-import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;

@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service;
+package eu.ba30.re.blocky.service.impl.config;
 
 import java.util.List;
 
