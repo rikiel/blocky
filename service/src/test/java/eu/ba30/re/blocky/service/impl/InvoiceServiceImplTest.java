@@ -96,29 +96,33 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
         assertEquals(invoiceService.getInvoices().size(), 0);
     }
 
-    @Test(dataProvider = "failTransactionForCreateDataProvider")
+    @Test(priority = 5, dataProvider = "failTransactionForCreateDataProvider")
     public void failTransactionForCreate(Invoice invoice) {
+        final int originalInvoicesCount = invoiceService.getInvoices().size();
+        final int originalAttachmentsCount = attachmentsRepository.getAllAttachments().size();
         try {
             invoiceService.create(invoice);
             fail("create should not pass!");
         } catch (Exception e) {
-            assertEquals(invoiceService.getInvoices().size(), 1);
-            assertEquals(attachmentsRepository.getAllAttachments().size(), 3);
+            assertEquals(invoiceService.getInvoices().size(), originalInvoicesCount);
+            assertEquals(attachmentsRepository.getAllAttachments().size(), originalAttachmentsCount);
         }
     }
 
-    @Test(dataProvider = "failTransactionForRemoveDataProvider")
+    @Test(priority = 5, dataProvider = "failTransactionForRemoveDataProvider")
     public void failTransactionForRemove(Invoice invoice) {
+        final int originalInvoicesCount = invoiceService.getInvoices().size();
+        final int originalAttachmentsCount = attachmentsRepository.getAllAttachments().size();
         try {
             invoiceService.remove(Lists.newArrayList(invoice));
             fail("remove should not pass!");
         } catch (Exception e) {
-            assertEquals(invoiceService.getInvoices().size(), 1);
-            assertEquals(attachmentsRepository.getAllAttachments().size(), 3);
+            assertEquals(invoiceService.getInvoices().size(), originalInvoicesCount);
+            assertEquals(attachmentsRepository.getAllAttachments().size(), originalAttachmentsCount);
         }
     }
 
-    @Test(dataProvider = "failTransactionForUpdateDataProvider")
+    @Test(priority = 5, dataProvider = "failTransactionForUpdateDataProvider")
     public void failTransactionForUpdate(Invoice invoice) {
         final List<Invoice> invoicesStart = invoiceService.getInvoices();
         List<Attachment> attachmentsStart = attachmentsRepository.getAllAttachments();
