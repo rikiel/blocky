@@ -2,11 +2,22 @@ package eu.ba30.re.blocky.model.cst;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.google.common.base.MoreObjects;
 
+@Table(name = "T_CST_CATEGORY")
+@Entity
 public class Category {
+    @Id
+    @Column(name = "ID")
     private Integer id;
+    @Column(name = "NAME")
     private String name;
+    @Column(name = "DESCR")
     private String description;
 
     public Integer getId() {
