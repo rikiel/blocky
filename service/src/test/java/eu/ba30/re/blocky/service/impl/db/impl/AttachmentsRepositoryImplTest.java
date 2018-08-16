@@ -31,8 +31,10 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
 
     @Test
     public void getNextItemId() {
-        assertEquals(attachmentsRepository.getNextItemId(), 10);
-        assertEquals(attachmentsRepository.getNextItemId(), 11);
+        final int sequenceBegin = 10;
+        for (int i = 0; i < 100; ++i) {
+            assertEquals(attachmentsRepository.getNextItemId(), sequenceBegin + i);
+        }
     }
 
     @Test(priority = 1)
