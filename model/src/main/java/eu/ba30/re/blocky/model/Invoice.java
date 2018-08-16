@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +41,7 @@ public class Invoice {
     @Column(name = "LAST_MODIFICATION")
     private LocalDate modificationDate;
     @Column(name = "ATTACHMENT_ID")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice", fetch = FetchType.EAGER)
     private final List<Attachment> attachments = Lists.newArrayList();
 
     public Integer getId() {

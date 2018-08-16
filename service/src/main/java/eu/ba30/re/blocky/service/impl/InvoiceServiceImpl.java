@@ -1,12 +1,14 @@
 package eu.ba30.re.blocky.service.impl;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,18 +30,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     private AttachmentsRepository attachmentsRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Nonnull
     @Transactional(readOnly = true)
     @Override
     public List<Invoice> getInvoices() {
-        return invoiceRepository.getInvoices()
-                .stream()
-                .peek(invoice -> invoice.setAttachments(attachmentsRepository.getAttachmentList(invoice.getId())))
-                .sorted(Comparator.<Invoice, LocalDate>comparing(invoice -> invoice.getModificationDate() != null
-                        ? invoice.getModificationDate()
-                        : invoice.getCreationDate())
-                        .reversed())
-                .collect(Collectors.toList());
+        final CriteriaQuery<Invoice> query = entityManager.getCriteriaBuilder().createQuery(Invoice.class);
+        query.select(query.from(Invoice.class));
+        return Validate.validateResult(entityManager.createQuery(query).getResultList());
     }
 
     @Transactional

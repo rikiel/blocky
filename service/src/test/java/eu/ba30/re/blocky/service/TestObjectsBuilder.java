@@ -34,6 +34,7 @@ public class TestObjectsBuilder {
             Validate.equals(categories.size(), 1, "Expected 1 category");
             invoice.setCategory(categories.get(0));
         }
+        attachments.forEach(attachment -> attachment.setInvoice(invoice));
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();

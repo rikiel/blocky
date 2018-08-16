@@ -32,7 +32,8 @@ public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
 
     @Test(priority = 1)
     public void getInvoices() {
-        invoiceService.getInvoices();
+        assertReflectionEquals(new TestObjectsBuilder().category1().attachment1().attachment2().invoice1().buildInvoices(),
+                invoiceService.getInvoices());
     }
 
     @Test(priority = 2)
