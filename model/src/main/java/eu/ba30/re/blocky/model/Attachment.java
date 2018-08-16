@@ -2,17 +2,40 @@ package eu.ba30.re.blocky.model;
 
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import com.google.common.base.MoreObjects;
 
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 
+@Entity
+@Table(name = "T_ATTACHMENTS")
 public class Attachment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_INVOICE_ID")
+    @Column(name = "ID")
     private Integer id;
+    @Column(name = "NAME")
     private String name;
+    @Column(name = "FILE_NAME")
     private String fileName;
+    @Column(name = "MIME_TYPE")
     private String mimeType;
+    @Column(name = "TYPE")
     private AttachmentType attachmentType;
+    @Column(name = "FILE_CONTENT")
+    @Lob
     private byte[] content;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Invoice invoice;
 
     public Integer getId() {
         return id;
@@ -62,6 +85,14 @@ public class Attachment {
         this.content = content;
     }
 
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -70,6 +101,7 @@ public class Attachment {
                 .add("fileName", fileName)
                 .add("mimeType", mimeType)
                 .add("attachmentType", attachmentType)
+                .add("invoice.id", invoice == null ? null : invoice.getId())
                 .toString();
     }
 

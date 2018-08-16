@@ -5,19 +5,42 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.cst.Category;
 
+@Entity
+@Table(name = "T_INVOICES")
 public class Invoice {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_ATTACHMENT_ID")
+    @Column(name = "ID")
     private Integer id;
+    @Column(name = "NAME")
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_ID")
     private Category category;
+    @Column(name = "DETAILS")
     private String details;
+    @Column(name = "CREATION")
     private LocalDate creationDate;
+    @Column(name = "LAST_MODIFICATION")
     private LocalDate modificationDate;
+    @Column(name = "ATTACHMENT_ID")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     private final List<Attachment> attachments = Lists.newArrayList();
 
     public Integer getId() {
@@ -79,19 +102,6 @@ public class Invoice {
     }
 
     @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("name", name)
-                .add("category", category)
-                .add("details", details)
-                .add("creationDate", creationDate)
-                .add("modificationDate", modificationDate)
-                .add("attachments", attachments)
-                .toString();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -106,5 +116,18 @@ public class Invoice {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("category", category)
+                .add("details", details)
+                .add("creationDate", creationDate)
+                .add("modificationDate", modificationDate)
+                .add("attachments", attachments)
+                .toString();
     }
 }

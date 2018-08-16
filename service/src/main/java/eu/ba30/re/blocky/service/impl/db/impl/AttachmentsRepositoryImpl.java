@@ -3,6 +3,8 @@ package eu.ba30.re.blocky.service.impl.db.impl;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,25 @@ public class AttachmentsRepositoryImpl implements AttachmentsRepository {
     @Autowired
     private AttachmentMapper attachmentMapper;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Nonnull
     @Override
     public List<Attachment> getAttachmentList(final int invoiceId) {
         return Validate.validateResult(attachmentMapper.getAttachmentsByInvoiceId(invoiceId));
+
+        //        return Validate.validateResult(entityManager
+        //                .createQuery("SELECT a FROM Attachment a WHERE a.INVOICE_ID = :invoiceId")
+        //                .setParameter("invoiceId", invoiceId)
+        //                .getResultList());
+
+        //        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        //        final CriteriaQuery<Attachment> query = criteriaBuilder.createQuery(Attachment.class);
+        //        final Root<Attachment> queryRoot = query.from(Attachment.class);
+        //        query.select(queryRoot);
+        //        query.where(criteriaBuilder.equal(queryRoot.get("INVOICE_ID"), invoiceId));
+        //        return Validate.validateResult(entityManager.createQuery(query).getResultList());
     }
 
     @Override

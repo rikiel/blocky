@@ -23,8 +23,7 @@ public class CstCategoryRepositoryImpl implements CstCategoryRepository {
     public List<Category> getAllCategories() {
         final CriteriaQuery<Category> query = entityManager.getCriteriaBuilder().createQuery(Category.class);
         query.select(query.from(Category.class));
-        final List<Category> resultList = entityManager.createQuery(query).getResultList();
-        return Validate.validateResult(resultList);
+        return Validate.validateResult(entityManager.createQuery(query).getResultList());
     }
 
     @Nonnull
