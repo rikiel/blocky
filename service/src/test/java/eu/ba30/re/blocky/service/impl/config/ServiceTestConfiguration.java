@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl;
+package eu.ba30.re.blocky.service.impl.config;
 
 import java.util.List;
 
@@ -7,8 +7,6 @@ import javax.annotation.Nonnull;
 import org.springframework.context.annotation.Configuration;
 
 import com.google.common.collect.Lists;
-
-import eu.ba30.re.blocky.service.AbstractTestConfiguration;
 
 @Configuration
 public class ServiceTestConfiguration extends AbstractTestConfiguration {

@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
+import eu.ba30.re.blocky.service.impl.config.ServiceTestConfiguration;
 
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 

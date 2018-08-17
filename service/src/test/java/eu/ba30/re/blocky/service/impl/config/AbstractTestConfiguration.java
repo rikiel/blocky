@@ -1,22 +1,25 @@
-package eu.ba30.re.blocky.service;
+package eu.ba30.re.blocky.service.impl.config;
 
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
-@ComponentScan({ "eu.ba30.re.blocky.aspects" })
+@org.springframework.context.annotation.Configuration
+@ComponentScan({"eu.ba30.re.blocky.aspects" })
+@MapperScan("eu.ba30.re.blocky.service.impl.db.impl.mapper")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement
 public abstract class AbstractTestConfiguration {
@@ -41,5 +44,12 @@ public abstract class AbstractTestConfiguration {
     @Autowired
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory() throws Exception {
+        final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource());
+        return sqlSessionFactoryBean.getObject();
     }
 }

@@ -29,19 +29,19 @@ public class LoggingAspect extends AspectPointcuts  {
     public Object logCalls(ProceedingJoinPoint joinPoint) throws Throwable {
         final int callId = CALL_ID++;
         try {
-            log.info("[{}] Calling {} with arguments [{}]",
+            log.info("[{}] Call begin: {} with arguments [{}]",
                     callId,
                     joinPoint.getSignature(),
                     joinArgs(joinPoint.getArgs()));
             final Object result = joinPoint.proceed();
-            log.info("[{}] Call {} with arguments [{}] resulted {}",
+            log.info("[{}] Call end: {} with arguments [{}] resulted {}",
                     callId,
                     joinPoint.getSignature(),
                     joinArgs(joinPoint.getArgs()),
                     result);
             return result;
         } catch (Throwable thr) {
-            log.error("[{}] Call {} with arguments [{}] throws exception",
+            log.error("[{}] Call end with exception: {} with arguments [{}]",
                     callId,
                     joinPoint.getSignature(),
                     joinArgs(joinPoint.getArgs()),
@@ -52,6 +52,6 @@ public class LoggingAspect extends AspectPointcuts  {
 
     @Nonnull
     private static String joinArgs(@Nonnull final Object[] args) {
-        return Arrays.stream(args).map(Objects::toString).collect(Collectors.joining(""));
+        return Arrays.stream(args).map(Objects::toString).collect(Collectors.joining(", "));
     }
 }

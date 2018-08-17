@@ -52,7 +52,7 @@ public class InvoiceDetail extends VerticalLayout {
         invoice.getAttachments()
                 .forEach(attachment -> {
                     addComponent(keyValue("Príloha", attachment.getName()));
-                    addComponent(keyValue("Typ súboru", FormatterUtils.formatAttachmentType(attachment.getType())));
+                    addComponent(keyValue("Typ súboru", FormatterUtils.formatAttachmentType(attachment.getAttachmentType())));
                     addComponent(new AttachmentPreview(attachment));
                 });
     }

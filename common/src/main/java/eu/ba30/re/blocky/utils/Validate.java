@@ -32,6 +32,12 @@ public class Validate {
         }
     }
 
+    @Nonnull
+    public static <T> T validateResult(T result) {
+        notNull(result, "Result should not be null!");
+        return result;
+    }
+
     public static void notEmpty(Collection<?> collection) {
         notNull(collection);
         if (collection.isEmpty()) {

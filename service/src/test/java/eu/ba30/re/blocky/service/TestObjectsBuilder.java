@@ -107,7 +107,7 @@ public class TestObjectsBuilder {
         attachment.setId(1);
         attachment.setName("Name#1");
         attachment.setMimeType("MimeType#1");
-        attachment.setType(AttachmentType.IMAGE);
+        attachment.setAttachmentType(AttachmentType.IMAGE);
         attachment.setFileName("FileName#1");
         attachment.setContent("AHOJ1".getBytes());
         return this;
@@ -119,7 +119,7 @@ public class TestObjectsBuilder {
         attachment.setId(2);
         attachment.setName("Name#2");
         attachment.setMimeType("MimeType#2");
-        attachment.setType(AttachmentType.PDF);
+        attachment.setAttachmentType(AttachmentType.PDF);
         attachment.setFileName("FileName#2");
         attachment.setContent("AHOJ2".getBytes());
         return this;
@@ -131,7 +131,7 @@ public class TestObjectsBuilder {
         attachment.setId(3);
         attachment.setName("Name#3");
         attachment.setMimeType("MimeType3");
-        attachment.setType(AttachmentType.TEXT);
+        attachment.setAttachmentType(AttachmentType.TEXT);
         attachment.setFileName("FileName#3");
         attachment.setContent("AHOJ3".getBytes());
         return this;

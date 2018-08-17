@@ -6,11 +6,11 @@
     <parent>
         <groupId>blocky</groupId>
         <artifactId>blocky</artifactId>
-        <version>1.0.</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>blocky-service</artifactId>
-    <version>1.0.</version>
+    <version>1.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

@@ -15,8 +15,8 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
+import eu.ba30.re.blocky.service.impl.config.RepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
-import eu.ba30.re.blocky.service.impl.db.RepositoryTestConfiguration;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -31,8 +31,10 @@ public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTe
 
     @Test
     public void getNextItemId() {
-        assertEquals(attachmentsRepository.getNextItemId(), 10);
-        assertEquals(attachmentsRepository.getNextItemId(), 11);
+        final int sequenceBegin = 10;
+        for (int i = 0; i < 100; ++i) {
+            assertEquals(attachmentsRepository.getNextItemId(), sequenceBegin + i);
+        }
     }
 
     @Test(priority = 1)
