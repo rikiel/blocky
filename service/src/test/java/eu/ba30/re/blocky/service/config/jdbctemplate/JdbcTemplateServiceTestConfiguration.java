@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.config;
+package eu.ba30.re.blocky.service.config.jdbctemplate;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.google.common.collect.Lists;
 
 @Configuration
-public class ServiceTestConfiguration extends AbstractTestConfiguration {
+public class JdbcTemplateServiceTestConfiguration extends AbstractJdbcTemplateTestConfiguration {
     @Nonnull
     @Override
     protected List<String> getSqlScripts() {

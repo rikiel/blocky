@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
+import eu.ba30.re.blocky.service.config.jdbctemplate.JdbcTemplateServiceTestConfiguration;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
