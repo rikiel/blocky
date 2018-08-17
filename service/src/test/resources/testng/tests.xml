@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<!--TODO BLOCKY-13 zistit preco sa nespustaju vsetky testy zo suity (niektore MyBatis testy su vynechane)-->
+<suite name="All tests suite" verbose="1">
+    <test name="JdbcTemplate tests">
+        <packages>
+            <package name="eu.ba30.re.blocky.service.jdbctemplate.*"/>
+        </packages>
+    </test>
+    <test name="MyBatis tests">
+        <packages>
+            <package name="eu.ba30.re.blocky.service.mybatis.*"/>
+        </packages>
+    </test>
+</suite>
