@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl;
+package eu.ba30.re.blocky.service.mybatis.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,7 +12,7 @@ import eu.ba30.re.blocky.service.config.mybatis.MyBatisServiceTestConfiguration;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { MyBatisServiceTestConfiguration.class })
-public class CstManagerImplTest extends AbstractTestNGSpringContextTests {
+public class MyBatisCstManagerImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private CstManager cstManager;
 

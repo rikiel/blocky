@@ -59,14 +59,14 @@ public class JdbcTemplateAttachmentsRepositoryImpl implements JdbcTemplateAttach
         final List<Object[]> sqlArgs = attachments
                 .stream()
                 .map(item -> {
-                    Validate.notNull(item.getId(), item.getType(), item.getContent());
+                    Validate.notNull(item.getId(), item.getAttachmentType(), item.getContent());
                     return new Object[] {
                             item.getId(),
                             invoiceId,
                             item.getName(),
                             item.getFileName(),
                             item.getMimeType(),
-                            item.getType().getId(),
+                            item.getAttachmentType().getId(),
                             item.getContent()
                     };
                 })
@@ -115,7 +115,7 @@ public class JdbcTemplateAttachmentsRepositoryImpl implements JdbcTemplateAttach
             attachment.setName(rs.getString("NAME"));
             attachment.setFileName(rs.getString("FILE_NAME"));
             attachment.setMimeType(rs.getString("MIME_TYPE"));
-            attachment.setType(AttachmentType.forId(rs.getInt("TYPE")));
+            attachment.setAttachmentType(AttachmentType.forId(rs.getInt("TYPE")));
             attachment.setContent(rs.getBytes("FILE_CONTENT"));
 
             log.debug("Loaded attachment: {}", attachment);

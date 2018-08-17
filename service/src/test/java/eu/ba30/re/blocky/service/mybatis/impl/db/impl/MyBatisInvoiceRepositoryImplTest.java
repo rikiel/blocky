@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.jdbctemplate.impl.db.impl;
+package eu.ba30.re.blocky.service.mybatis.impl.db.impl;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.DataProvider;
@@ -15,42 +16,41 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
-import eu.ba30.re.blocky.service.config.jdbctemplate.JdbcTemplateRepositoryTestConfiguration;
-import eu.ba30.re.blocky.service.jdbctemplate.impl.db.JdbcTemplateInvoiceRepository;
+import eu.ba30.re.blocky.service.config.mybatis.MyBatisRepositoryTestConfiguration;
+import eu.ba30.re.blocky.service.mybatis.impl.db.MyBatisCstCategoryRepository;
+import eu.ba30.re.blocky.service.mybatis.impl.db.MyBatisInvoiceRepository;
 import mockit.Capturing;
-import mockit.Expectations;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-@ContextConfiguration(classes = { JdbcTemplateInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
-public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = { MyBatisInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class MyBatisInvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests {
     @Capturing
-    private CstManager cstManager;
+    private MyBatisCstCategoryRepository cstCategoryRepository;
 
     @Autowired
-    private JdbcTemplateInvoiceRepository invoiceRepository;
+    private MyBatisInvoiceRepository invoiceRepository;
 
     @Test
     public void getNextItemId() {
-        assertEquals(invoiceRepository.getNextItemId(), 10);
-        assertEquals(invoiceRepository.getNextItemId(), 11);
+        final int sequenceBegin = 10;
+        for (int i = 0; i < 100; ++i) {
+            assertEquals(invoiceRepository.getNextItemId(), sequenceBegin + i);
+        }
     }
 
     @Test(priority = 1)
     public void getInvoices() {
-        initCstExpectations();
-
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
                 invoiceRepository.getInvoices());
     }
 
     @Test(priority = 2)
     public void create() {
-        initCstExpectations();
         invoiceRepository.create(new TestObjectsBuilder().category1().invoice2().buildSingleInvoice());
 
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1()
@@ -61,10 +61,9 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
 
     @Test(priority = 3)
     public void remove() {
-        initCstExpectations();
-        invoiceRepository.remove(new TestObjectsBuilder().category1().invoice2().buildInvoices());
+        invoiceRepository.remove(new TestObjectsBuilder().category1().invoice1().buildInvoices());
 
-        assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
+        assertReflectionEquals(Lists.newArrayList(),
                 invoiceRepository.getInvoices());
     }
 
@@ -97,13 +96,6 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
         }
     }
 
-    private void initCstExpectations() {
-        new Expectations() {{
-            cstManager.getCategory(1);
-            result = new TestObjectsBuilder().category1().buildSingleCategory();
-        }};
-    }
-
     @DataProvider
     private Object[][] createErrorDataProvider() {
         return new Object[][] {
@@ -127,11 +119,13 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
     }
 
     @Configuration
-    public static class InvoiceRepositoryConfiguration extends JdbcTemplateRepositoryTestConfiguration {
+    public static class InvoiceRepositoryConfiguration extends MyBatisRepositoryTestConfiguration {
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
-            return Lists.newArrayList("db/repositoryTests/test-data-invoices.sql");
+            return Lists.newArrayList(
+                    "db/repositoryTests/test-data-invoices.sql",
+                    "db/repositoryTests/test-data-cst-category.sql");
         }
     }
 }

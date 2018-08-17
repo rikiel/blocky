@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl;
+package eu.ba30.re.blocky.service.mybatis.impl;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +16,7 @@ import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.mybatis.MyBatisServiceTestConfiguration;
-import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
+import eu.ba30.re.blocky.service.mybatis.impl.db.MyBatisAttachmentsRepository;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -24,11 +24,11 @@ import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { MyBatisServiceTestConfiguration.class })
-public class InvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
+public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private InvoiceService invoiceService;
     @Autowired
-    private AttachmentsRepository attachmentsRepository;
+    private MyBatisAttachmentsRepository attachmentsRepository;
 
     @Test(priority = 1)
     public void getInvoices() {

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.google.common.collect.Lists;
 
 @Configuration
-public class ServiceTestConfiguration extends AbstractMyBatisTestConfiguration {
+public class MyBatisServiceTestConfiguration extends AbstractMyBatisTestConfiguration {
     @Nonnull
     @Override
     protected List<String> getSqlScripts() {

@@ -15,7 +15,7 @@ import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.jdbctemplate.JdbcTemplateServiceTestConfiguration;
-import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
+import eu.ba30.re.blocky.service.jdbctemplate.impl.db.JdbcTemplateAttachmentsRepository;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -26,7 +26,7 @@ public class JdbcTemplateInvoiceServiceTransactionsTest extends AbstractTestNGSp
     @Autowired
     private InvoiceService invoiceService;
     @Autowired
-    private AttachmentsRepository attachmentsRepository;
+    private JdbcTemplateAttachmentsRepository attachmentsRepository;
 
     @Test(dataProvider = "failTransactionForCreateDataProvider")
     public void failTransactionForCreate(Invoice invoice) {

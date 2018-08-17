@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.jdbctemplate.impl.db.impl;
+package eu.ba30.re.blocky.service.mybatis.impl.db.impl;
 
 import java.util.List;
 
@@ -12,17 +12,18 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
+import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
-import eu.ba30.re.blocky.service.config.jdbctemplate.JdbcTemplateRepositoryTestConfiguration;
-import eu.ba30.re.blocky.service.jdbctemplate.impl.db.JdbcTemplateCstCategoryRepository;
+import eu.ba30.re.blocky.service.config.mybatis.MyBatisRepositoryTestConfiguration;
+import eu.ba30.re.blocky.service.mybatis.impl.db.MyBatisCstCategoryRepository;
 
 import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-@ContextConfiguration(classes = { JdbcTemplateCstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
-public class JdbcTemplateCstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = { MyBatisCstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
+public class MyBatisCstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
-    private JdbcTemplateCstCategoryRepository cstCategoryRepository;
+    private MyBatisCstCategoryRepository cstCategoryRepository;
 
     @Test
     public void getAllCategories() {
@@ -36,18 +37,14 @@ public class JdbcTemplateCstCategoryRepositoryImplTest extends AbstractTestNGSpr
                 cstCategoryRepository.getById(1));
     }
 
-    @Test
+    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "Result should not be null!")
     public void getByIdError() {
-        try {
-            cstCategoryRepository.getById(999);
-            fail("getById should not pass!");
-        } catch (Exception e) {
-            // nothing to do
-        }
+        final Category category = cstCategoryRepository.getById(999);
+        fail("getById should not pass! Found " + category);
     }
 
     @Configuration
-    public static class CstCategoryRepositoryConfiguration extends JdbcTemplateRepositoryTestConfiguration {
+    public static class CstCategoryRepositoryConfiguration extends MyBatisRepositoryTestConfiguration {
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {

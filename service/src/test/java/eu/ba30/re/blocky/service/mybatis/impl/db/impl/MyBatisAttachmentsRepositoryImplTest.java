@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.db.impl;
+package eu.ba30.re.blocky.service.mybatis.impl.db.impl;
 
 import java.util.List;
 
@@ -16,18 +16,18 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.mybatis.MyBatisRepositoryTestConfiguration;
-import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
+import eu.ba30.re.blocky.service.mybatis.impl.db.MyBatisAttachmentsRepository;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-@ContextConfiguration(classes = { AttachmentsRepositoryImplTest.AttachmentRepositoryConfiguration.class })
-public class AttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTests {
+@ContextConfiguration(classes = { MyBatisAttachmentsRepositoryImplTest.AttachmentRepositoryConfiguration.class })
+public class MyBatisAttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTests {
     private static final int INVOICE_ID = 1;
 
     @Autowired
-    private AttachmentsRepository attachmentsRepository;
+    private MyBatisAttachmentsRepository attachmentsRepository;
 
     @Test
     public void getNextItemId() {
