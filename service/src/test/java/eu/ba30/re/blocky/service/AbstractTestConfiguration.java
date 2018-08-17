@@ -16,7 +16,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan({ "eu.ba30.re.blocky.service", "eu.ba30.re.blocky.aspects" })
+@ComponentScan({ "eu.ba30.re.blocky.aspects" })
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement
 public abstract class AbstractTestConfiguration {
