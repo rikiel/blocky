@@ -1,8 +1,7 @@
 package eu.ba30.re.blocky.service.impl;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -10,26 +9,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.service.impl.db.AttachmentsRepository;
-import eu.ba30.re.blocky.service.impl.db.InvoiceRepository;
 import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
-    @Autowired
-    private InvoiceRepository invoiceRepository;
-    @Autowired
-    private AttachmentsRepository attachmentsRepository;
-
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -42,63 +31,54 @@ public class InvoiceServiceImpl implements InvoiceService {
         return Validate.validateResult(entityManager.createQuery(query).getResultList());
     }
 
+    @Nonnull
+    @Transactional(readOnly = true)
+    @Override
+    public Invoice getInvoice(final int id) {
+        final List<Invoice> invoices = getInvoices().stream()
+                .filter(invoice -> Objects.equals(invoice.getId(), id))
+                .collect(Collectors.toList());
+        Validate.equals(invoices.size(), 1, String.format("Expecting 1 invoice with id=%s. Found %s", id, invoices));
+        return Validate.validateResult(invoices.get(0));
+    }
+
+    @Nonnull
+    @Override
+    public List<Attachment> getAttachments() {
+        final CriteriaQuery<Attachment> query = entityManager.getCriteriaBuilder().createQuery(Attachment.class);
+        query.select(query.from(Attachment.class));
+        return Validate.validateResult(entityManager.createQuery(query).getResultList());
+    }
+
     @Transactional
     @Override
     public void remove(@Nonnull final List<Invoice> invoices) {
         Validate.notEmpty(invoices);
 
-        invoiceRepository.remove(invoices);
-        final Set<Attachment> attachments = invoices
-                .stream()
-                .flatMap(invoice -> attachmentsRepository.getAttachmentList(invoice.getId()).stream())
-                .collect(Collectors.toSet());
-        if (!attachments.isEmpty()) {
-            attachmentsRepository.removeAttachments(Lists.newArrayList(attachments));
-        }
+        invoices.forEach(invoice -> {
+            Validate.notNull(invoice.getId());
+            entityManager.remove(invoice);
+        });
     }
 
     @Transactional
     @Override
     public void create(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
-        Validate.isNull(invoice.getId());
+        Validate.isNull(invoice.getId(), "ID should NOT BE filled on new instances!");
 
-        invoice.setId(invoiceRepository.getNextItemId());
-        invoice.setCreationDate(LocalDate.now());
-        invoiceRepository.create(invoice);
-
-        final List<Attachment> attachments = invoice.getAttachments();
-        if (!attachments.isEmpty()) {
-            attachments.forEach(attachment -> {
-                Validate.isNull(attachment.getId());
-                attachment.setId(attachmentsRepository.getNextItemId());
-            });
-            attachmentsRepository.createAttachments(invoice.getId(), attachments);
-        }
+        entityManager.persist(invoice);
     }
 
     @Transactional
     @Override
-    public void update(@Nonnull final Invoice invoice) {
+    public Invoice update(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
-        Validate.notNull(invoice.getId());
+        Validate.notNull(invoice.getId(), "ID should BE filled for update instances!");
 
-        invoiceRepository.remove(Lists.newArrayList(invoice));
-        invoice.setModificationDate(LocalDate.now());
-        invoiceRepository.create(invoice);
-
-        // instead of update, do remove all from db and then insert all from model
-        final List<Attachment> actualDbAttachments = attachmentsRepository.getAttachmentList(invoice.getId());
-        if (!actualDbAttachments.isEmpty()) {
-            attachmentsRepository.removeAttachments(actualDbAttachments);
+        for (Attachment attachment : invoice.getAttachments()) {
+            attachment.setInvoice(invoice);
         }
-        if (!invoice.getAttachments().isEmpty()) {
-            invoice.getAttachments().forEach(attachment -> {
-                if (attachment.getId() == null) {
-                    attachment.setId(attachmentsRepository.getNextItemId());
-                }
-            });
-            attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
-        }
+        return Validate.validateResult(entityManager.merge(invoice));
     }
 }

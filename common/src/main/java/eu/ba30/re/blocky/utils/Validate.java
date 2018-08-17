@@ -53,6 +53,12 @@ public class Validate {
         throw new IllegalStateException(msg);
     }
 
+    public static void isNull(Object arg, String msg) {
+        if (arg != null) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
     public static void isNull(Object arg) {
         if (arg != null) {
             throw new IllegalArgumentException("Argument should be null");

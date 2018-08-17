@@ -2,15 +2,16 @@ package eu.ba30.re.blocky.model;
 
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.common.base.MoreObjects;
@@ -21,7 +22,8 @@ import eu.ba30.re.blocky.model.cst.AttachmentType;
 @Table(name = "T_ATTACHMENTS")
 public class Attachment {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_INVOICE_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DUAL_ATTACHMENT_ID")
+    @SequenceGenerator(name = "DUAL_ATTACHMENT_ID", sequenceName = "S_ATTACHMENT_ID", allocationSize = 1)
     @Column(name = "ID")
     private Integer id;
     @Column(name = "NAME")
@@ -36,8 +38,11 @@ public class Attachment {
     @Column(name = "FILE_CONTENT")
     @Lob
     private byte[] content;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "INVOICE_ID")
     private Invoice invoice;
+
+    transient private boolean inToString;
 
     public Integer getId() {
         return id;
@@ -97,14 +102,28 @@ public class Attachment {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("name", name)
-                .add("fileName", fileName)
-                .add("mimeType", mimeType)
-                .add("attachmentType", attachmentType)
-                .add("invoice.id", invoice == null ? null : invoice.getId())
-                .toString();
+        if (inToString) {
+            return MoreObjects.toStringHelper(this)
+                    .add("id", id)
+                    .add("name", name)
+                    .add("fileName", fileName)
+                    .add("mimeType", mimeType)
+                    .add("attachmentType", attachmentType)
+                    .add("invoice.id", invoice == null ? null : invoice.getId())
+                    .toString();
+        } else {
+            inToString = true;
+            final String result = MoreObjects.toStringHelper(this)
+                    .add("id", id)
+                    .add("name", name)
+                    .add("fileName", fileName)
+                    .add("mimeType", mimeType)
+                    .add("attachmentType", attachmentType)
+                    .add("invoice", invoice)
+                    .toString();
+            inToString = false;
+            return result;
+        }
     }
 
     @Override

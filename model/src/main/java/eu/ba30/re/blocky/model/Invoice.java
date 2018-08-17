@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.common.base.MoreObjects;
@@ -26,7 +27,8 @@ import eu.ba30.re.blocky.model.cst.Category;
 @Table(name = "T_INVOICES")
 public class Invoice {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_ATTACHMENT_ID")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DUAL_INVOICE_ID")
+    @SequenceGenerator(name = "DUAL_INVOICE_ID", sequenceName = "S_INVOICE_ID", allocationSize = 1)
     @Column(name = "ID")
     private Integer id;
     @Column(name = "NAME")
@@ -41,7 +43,7 @@ public class Invoice {
     @Column(name = "LAST_MODIFICATION")
     private LocalDate modificationDate;
     @Column(name = "ATTACHMENT_ID")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice", orphanRemoval = true, fetch = FetchType.EAGER)
     private final List<Attachment> attachments = Lists.newArrayList();
 
     public Integer getId() {
