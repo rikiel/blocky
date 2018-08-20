@@ -2,6 +2,7 @@ package eu.ba30.re.blocky.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -19,9 +20,20 @@ public class TestObjectsBuilder {
     public static final int ATTACHMENT_ID_1 = 1;
     public static final int ATTACHMENT_ID_2 = 10;
     public static final int ATTACHMENT_ID_3 = 11;
+
+    private final boolean buildForHibernate;
+
     private List<Invoice> invoices = Lists.newArrayList();
     private List<Attachment> attachments = Lists.newArrayList();
     private List<Category> categories = Lists.newArrayList();
+
+    public TestObjectsBuilder() {
+        this(false);
+    }
+
+    public TestObjectsBuilder(boolean buildForHibernate) {
+        this.buildForHibernate = buildForHibernate;
+    }
 
     public TestObjectsBuilder invoice1() {
         final Invoice invoice = new Invoice();
@@ -36,7 +48,9 @@ public class TestObjectsBuilder {
             Validate.equals(categories.size(), 1, "Expected 1 category");
             invoice.setCategory(categories.get(0));
         }
-        attachments.forEach(attachment -> attachment.setInvoice(invoice));
+        if (buildForHibernate) {
+            attachments.stream().filter(Objects::nonNull).forEach(attachment -> attachment.setInvoice(invoice));
+        }
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
@@ -56,15 +70,17 @@ public class TestObjectsBuilder {
             Validate.equals(categories.size(), 1, "Expected 1 category");
             invoice.setCategory(categories.get(0));
         }
-        attachments.forEach(attachment -> attachment.setInvoice(invoice));
+        if (buildForHibernate) {
+            attachments.stream().filter(Objects::nonNull).forEach(attachment -> attachment.setInvoice(invoice));
+        }
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
         return this;
     }
 
-    public TestObjectsBuilder invoiceWithoutId() {
-        invoices.get(invoices.size() - 1).setId(null);
+    public TestObjectsBuilder invoiceId(Integer id) {
+        invoices.get(invoices.size() - 1).setId(id);
         return this;
     }
 
