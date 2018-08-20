@@ -81,12 +81,12 @@ public class MockDb {
                 1, "Darčeky na vianoce", 4, "Vianoce 2017", Date.valueOf(LocalDate.parse("2017-12-20")), Date.valueOf(LocalDate.parse("2017-12-22")));
 
         jdbc.update(INSERT_INVOICE_SQL_REQUEST,
-                2, "Dobitie kreditu", 3, "Vodafone", Date.valueOf(LocalDate.parse("2018-03-25")), null);
+                2, "Dobitie kreditu", 3, "Vodafone", Date.valueOf(LocalDate.parse("2018-03-25")), Date.valueOf(LocalDate.parse("2018-03-25")));
 
         for (int i = 3; i < 10; ++i) {
             LocalDate date = LocalDate.parse("2018-01-15").plusWeeks(i);
             jdbc.update(INSERT_INVOICE_SQL_REQUEST,
-                    i, "Albert", 1, "Potraviny", Date.valueOf(date), null);
+                    i, "Albert", 1, "Potraviny", Date.valueOf(date), Date.valueOf(date));
         }
     }
 
