@@ -4,12 +4,12 @@
 <suite name="All tests suite" verbose="1">
     <test name="JdbcTemplate tests">
         <packages>
-            <package name="eu.ba30.re.blocky.service.jdbctemplate.*"/>
+            <package name="eu.ba30.re.blocky.service.impl.jdbctemplate.*"/>
         </packages>
     </test>
     <test name="MyBatis tests">
         <packages>
-            <package name="eu.ba30.re.blocky.service.mybatis.*"/>
+            <package name="eu.ba30.re.blocky.service.impl.mybatis.*"/>
         </packages>
     </test>
 </suite>
