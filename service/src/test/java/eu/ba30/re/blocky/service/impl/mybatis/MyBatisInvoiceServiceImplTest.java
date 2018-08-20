@@ -54,7 +54,7 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
 
     @Test
     public void updateWithoutAttachments() {
-        final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_1).buildSingleInvoice();
+        final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice2().invoiceId(TestObjectsBuilder.INVOICE_ID_1).buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
 
@@ -72,7 +72,7 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
         final Invoice actualInvoice = new TestObjectsBuilder().category2()
                 .attachment2()
                 .attachmentWithoutId()
-                .invoice3()
+                .invoice2()
                 .invoiceId(TestObjectsBuilder.INVOICE_ID_1)
                 .buildSingleInvoice();
 

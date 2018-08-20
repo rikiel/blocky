@@ -3,7 +3,7 @@
 <suite name="JdbcTemplate suite" verbose="1">
     <test name="JdbcTemplate tests">
         <packages>
-            <package name="eu.ba30.re.blocky.service.jdbctemplate.*"/>
+            <package name="eu.ba30.re.blocky.service.impl.jdbctemplate.*"/>
         </packages>
     </test>
 </suite>

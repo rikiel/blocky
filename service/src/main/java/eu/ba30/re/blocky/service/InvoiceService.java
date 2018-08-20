@@ -1,11 +1,16 @@
 package eu.ba30.re.blocky.service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.utils.Validate;
 
 public interface InvoiceService {
     /**
@@ -13,13 +18,6 @@ public interface InvoiceService {
      */
     @Nonnull
     List<Invoice> getInvoices();
-
-    /**
-     * @param id ID of invoice to be found
-     * @return Invoice
-     */
-    @Nonnull
-    Invoice getInvoice(final int id);
 
     /**
      * @return all attachments stored in DB
@@ -43,4 +41,18 @@ public interface InvoiceService {
      */
     @Nonnull
     Invoice update(@Nonnull Invoice invoice);
+
+    /**
+     * @param id ID of invoice to be found
+     * @return Invoice
+     */
+    @Nonnull
+    @Transactional(readOnly = true)
+    default Invoice getInvoice(final int id) {
+        final List<Invoice> invoices = getInvoices().stream()
+                .filter(invoice -> Objects.equals(invoice.getId(), id))
+                .collect(Collectors.toList());
+        Validate.equals(invoices.size(), 1, String.format("Expecting 1 invoice with id=%s. Found %s", id, invoices));
+        return Validate.validateResult(invoices.get(0));
+    }
 }

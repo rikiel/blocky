@@ -123,7 +123,6 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
                 { new Invoice() },
                 // not exist
                 { new TestObjectsBuilder().invoice2().buildSingleInvoice() },
-                { new TestObjectsBuilder().invoice3().buildSingleInvoice() },
                 };
     }
 

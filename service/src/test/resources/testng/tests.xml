@@ -1,15 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<!--TODO BLOCKY-13 zistit preco sa nespustaju vsetky testy zo suity (niektore MyBatis testy su vynechane)-->
 <suite name="All tests suite" verbose="1">
-    <test name="JdbcTemplate tests">
-        <packages>
-            <package name="eu.ba30.re.blocky.service.impl.jdbctemplate.*"/>
-        </packages>
-    </test>
-    <test name="MyBatis tests">
-        <packages>
-            <package name="eu.ba30.re.blocky.service.impl.mybatis.*"/>
-        </packages>
-    </test>
+    <suite-files>
+        <suite-file path="tests-JdbcTemplate.xml"/>
+        <suite-file path="tests-MyBatis.xml"/>
+        <suite-file path="tests-Hibernate.xml"/>
+    </suite-files>
 </suite>

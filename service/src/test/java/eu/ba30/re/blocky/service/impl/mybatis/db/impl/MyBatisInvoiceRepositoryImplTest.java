@@ -107,7 +107,6 @@ public class MyBatisInvoiceRepositoryImplTest extends AbstractTestNGSpringContex
                 { new Invoice() },
                 // not exist
                 { new TestObjectsBuilder().invoice2().buildSingleInvoice() },
-                { new TestObjectsBuilder().invoice3().buildSingleInvoice() },
                 };
     }
 

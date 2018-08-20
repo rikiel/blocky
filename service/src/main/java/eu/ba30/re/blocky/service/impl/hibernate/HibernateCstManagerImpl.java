@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl;
+package eu.ba30.re.blocky.service.impl.hibernate;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.utils.Validate;
 
 @Service
-public class CstManagerImpl implements CstManager {
+public class HibernateCstManagerImpl implements CstManager {
     @PersistenceContext
     private EntityManager entityManager;
 

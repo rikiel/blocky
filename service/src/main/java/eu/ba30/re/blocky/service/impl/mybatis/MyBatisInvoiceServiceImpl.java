@@ -42,6 +42,12 @@ public class MyBatisInvoiceServiceImpl implements InvoiceService {
                 .collect(Collectors.toList());
     }
 
+    @Nonnull
+    @Override
+    public List<Attachment> getAttachments() {
+        return attachmentsRepository.getAllAttachments();
+    }
+
     @Transactional
     @Override
     public void remove(@Nonnull final List<Invoice> invoices) {
@@ -77,9 +83,10 @@ public class MyBatisInvoiceServiceImpl implements InvoiceService {
         }
     }
 
+    @Nonnull
     @Transactional
     @Override
-    public void update(@Nonnull final Invoice invoice) {
+    public Invoice update(@Nonnull final Invoice invoice) {
         Validate.notNull(invoice);
         Validate.notNull(invoice.getId());
 
@@ -100,5 +107,6 @@ public class MyBatisInvoiceServiceImpl implements InvoiceService {
             });
             attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
         }
+        return invoice;
     }
 }
