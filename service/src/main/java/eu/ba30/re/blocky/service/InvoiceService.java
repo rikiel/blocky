@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 
 public interface InvoiceService {
@@ -12,6 +13,19 @@ public interface InvoiceService {
      */
     @Nonnull
     List<Invoice> getInvoices();
+
+    /**
+     * @param id ID of invoice to be found
+     * @return Invoice
+     */
+    @Nonnull
+    Invoice getInvoice(final int id);
+
+    /**
+     * @return all attachments stored in DB
+     */
+    @Nonnull
+    List<Attachment> getAttachments();
 
     /**
      * @param invoices invoice to be removed
@@ -25,6 +39,8 @@ public interface InvoiceService {
 
     /**
      * @param invoice invoice to be updated in DB
+     * @return Updated invoice. Argument object should not be used anymore.
      */
-    void update(@Nonnull Invoice invoice);
+    @Nonnull
+    Invoice update(@Nonnull Invoice invoice);
 }

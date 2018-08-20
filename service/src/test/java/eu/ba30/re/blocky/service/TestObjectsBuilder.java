@@ -16,7 +16,9 @@ import eu.ba30.re.blocky.utils.Validate;
 public class TestObjectsBuilder {
     public static final int INVOICE_ID_1 = 1;
     public static final int INVOICE_ID_2 = 10;
-    public static final int INVOICE_ID_3 = 11;
+    public static final int ATTACHMENT_ID_1 = 1;
+    public static final int ATTACHMENT_ID_2 = 10;
+    public static final int ATTACHMENT_ID_3 = 11;
     private List<Invoice> invoices = Lists.newArrayList();
     private List<Attachment> attachments = Lists.newArrayList();
     private List<Category> categories = Lists.newArrayList();
@@ -34,6 +36,7 @@ public class TestObjectsBuilder {
             Validate.equals(categories.size(), 1, "Expected 1 category");
             invoice.setCategory(categories.get(0));
         }
+        attachments.forEach(attachment -> attachment.setInvoice(invoice));
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
@@ -53,33 +56,15 @@ public class TestObjectsBuilder {
             Validate.equals(categories.size(), 1, "Expected 1 category");
             invoice.setCategory(categories.get(0));
         }
+        attachments.forEach(attachment -> attachment.setInvoice(invoice));
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
         return this;
     }
 
-    public TestObjectsBuilder invoice3() {
-        final Invoice invoice = new Invoice();
-        invoices.add(invoice);
-        invoice.setId(INVOICE_ID_3);
-        invoice.setName("Nazov#3");
-        invoice.setDetails("Detail#3");
-        invoice.setCreationDate(LocalDate.parse("2018-03-13"));
-        invoice.setModificationDate(LocalDate.parse("2018-03-13"));
-
-        if (!categories.isEmpty()) {
-            Validate.equals(categories.size(), 1, "Expected 1 category");
-            invoice.setCategory(categories.get(0));
-        }
-        invoice.setAttachments(attachments);
-        categories = Lists.newArrayList();
-        attachments = Lists.newArrayList();
-        return this;
-    }
-
-    public TestObjectsBuilder invoiceId(Integer id) {
-        invoices.get(invoices.size() - 1).setId(id);
+    public TestObjectsBuilder invoiceWithoutId() {
+        invoices.get(invoices.size() - 1).setId(null);
         return this;
     }
 
@@ -109,7 +94,7 @@ public class TestObjectsBuilder {
     public TestObjectsBuilder attachment1() {
         final Attachment attachment = new Attachment();
         attachments.add(attachment);
-        attachment.setId(1);
+        attachment.setId(ATTACHMENT_ID_1);
         attachment.setName("Name#1");
         attachment.setMimeType("MimeType#1");
         attachment.setAttachmentType(AttachmentType.IMAGE);
@@ -121,7 +106,7 @@ public class TestObjectsBuilder {
     public TestObjectsBuilder attachment2() {
         final Attachment attachment = new Attachment();
         attachments.add(attachment);
-        attachment.setId(2);
+        attachment.setId(ATTACHMENT_ID_2);
         attachment.setName("Name#2");
         attachment.setMimeType("MimeType#2");
         attachment.setAttachmentType(AttachmentType.PDF);
@@ -133,7 +118,7 @@ public class TestObjectsBuilder {
     public TestObjectsBuilder attachment3() {
         final Attachment attachment = new Attachment();
         attachments.add(attachment);
-        attachment.setId(3);
+        attachment.setId(ATTACHMENT_ID_3);
         attachment.setName("Name#3");
         attachment.setMimeType("MimeType3");
         attachment.setAttachmentType(AttachmentType.TEXT);

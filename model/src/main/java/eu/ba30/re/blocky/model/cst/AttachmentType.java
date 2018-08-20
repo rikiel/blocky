@@ -1,6 +1,8 @@
 package eu.ba30.re.blocky.model.cst;
 
 import javax.annotation.Nonnull;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 import eu.ba30.re.blocky.utils.Validate;
 
@@ -62,5 +64,18 @@ public enum AttachmentType {
             }
         }
         throw new IllegalArgumentException("AttachmentType does not exist for id " + id);
+    }
+
+    @Converter
+    public static class AttachmentTypeConverter implements AttributeConverter<AttachmentType, Integer> {
+        @Override
+        public Integer convertToDatabaseColumn(AttachmentType attribute) {
+            return attribute.getId();
+        }
+
+        @Override
+        public AttachmentType convertToEntityAttribute(Integer dbData) {
+            return forId(dbData);
+        }
     }
 }
