@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
@@ -20,6 +21,7 @@ import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { JdbcTemplateCstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JdbcTemplateCstCategoryRepositoryImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private JdbcTemplateCstCategoryRepository cstCategoryRepository;

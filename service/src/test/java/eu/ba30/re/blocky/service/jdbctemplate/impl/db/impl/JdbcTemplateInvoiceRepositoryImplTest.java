@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import org.jsoup.helper.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.DataProvider;
@@ -27,6 +28,7 @@ import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { JdbcTemplateInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests {
     @Capturing
     private CstManager cstManager;
@@ -36,11 +38,13 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
 
     @Test
     public void getNextItemId() {
-        assertEquals(invoiceRepository.getNextItemId(), 10);
-        assertEquals(invoiceRepository.getNextItemId(), 11);
+        final int sequenceBegin = 10;
+        for (int i = 0; i < 100; ++i) {
+            assertEquals(invoiceRepository.getNextItemId(), sequenceBegin + i);
+        }
     }
 
-    @Test(priority = 1)
+    @Test
     public void getInvoices() {
         initCstExpectations();
 
@@ -48,7 +52,7 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
                 invoiceRepository.getInvoices());
     }
 
-    @Test(priority = 2)
+    @Test
     public void create() {
         initCstExpectations();
         invoiceRepository.create(new TestObjectsBuilder().category1().invoice2().buildSingleInvoice());
@@ -59,17 +63,15 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
                 invoiceRepository.getInvoices());
     }
 
-    @Test(priority = 3)
+    @Test
     public void remove() {
-        initCstExpectations();
-        invoiceRepository.remove(new TestObjectsBuilder().category1().invoice2().buildInvoices());
+        invoiceRepository.remove(new TestObjectsBuilder().category1().invoice1().buildInvoices());
 
-        assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
+        assertReflectionEquals(Lists.newArrayList(),
                 invoiceRepository.getInvoices());
     }
 
-    @Test(priority = 4,
-            dataProvider = "createErrorDataProvider")
+    @Test(dataProvider = "createErrorDataProvider")
     public void createError(Invoice toCreate) {
         final List<Invoice> allInvoices = invoiceRepository.getInvoices();
         try {
@@ -82,8 +84,7 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractTestNGSpringC
         }
     }
 
-    @Test(priority = 4,
-            dataProvider = "removeErrorDataProvider")
+    @Test(dataProvider = "removeErrorDataProvider")
     public void removeError(Invoice toRemove) {
         final List<Invoice> allInvoices = invoiceRepository.getInvoices();
         Validate.isFalse(allInvoices.contains(toRemove), "Invoice exists in db");

@@ -4,30 +4,40 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Lists;
+
+import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.jdbctemplate.JdbcTemplateServiceTestConfiguration;
+import eu.ba30.re.blocky.service.jdbctemplate.impl.db.JdbcTemplateAttachmentsRepository;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { JdbcTemplateServiceTestConfiguration.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JdbcTemplateInvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private InvoiceService invoiceService;
+    @Autowired
+    private JdbcTemplateAttachmentsRepository attachmentsRepository;
 
-    @Test(priority = 1)
+    @Test
     public void getInvoices() {
         invoiceService.getInvoices();
     }
 
-    @Test(priority = 2)
+    @Test
     public void create() {
         final Invoice newInvoice = new TestObjectsBuilder().category1().attachment1().attachmentWithoutId().invoice2().buildSingleInvoice();
         newInvoice.setId(null);
@@ -42,9 +52,9 @@ public class JdbcTemplateInvoiceServiceImplTest extends AbstractTestNGSpringCont
         assertReflectionEquals(newInvoice, createdInvoice);
     }
 
-    @Test(priority = 3)
+    @Test
     public void updateWithoutAttachments() {
-        final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice2().buildSingleInvoice();
+        final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_1).buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
 
@@ -57,13 +67,13 @@ public class JdbcTemplateInvoiceServiceImplTest extends AbstractTestNGSpringCont
         assertReflectionEquals(actualInvoice, updatedInvoice);
     }
 
-    @Test(priority = 3)
+    @Test
     public void updateWithAttachments() {
-        final Invoice actualInvoice = new TestObjectsBuilder().category1()
-                .attachment3()
+        final Invoice actualInvoice = new TestObjectsBuilder().category2()
+                .attachment2()
                 .attachmentWithoutId()
                 .invoice3()
-                .invoiceId(TestObjectsBuilder.INVOICE_ID_2)
+                .invoiceId(TestObjectsBuilder.INVOICE_ID_1)
                 .buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
@@ -79,13 +89,83 @@ public class JdbcTemplateInvoiceServiceImplTest extends AbstractTestNGSpringCont
         assertReflectionEquals(actualInvoice, updatedInvoice);
     }
 
-    @Test(priority = 4)
+    @Test
     public void remove() {
-        int size = invoiceService.getInvoices().size();
-        List<Invoice> invoices = new TestObjectsBuilder().category1().attachment3().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildInvoices();
-        invoiceService.remove(invoices);
-        assertEquals(invoiceService.getInvoices().size(), size - 1);
         invoiceService.remove(invoiceService.getInvoices());
         assertEquals(invoiceService.getInvoices().size(), 0);
+    }
+
+    @Test(dataProvider = "failTransactionForCreateDataProvider")
+    public void failTransactionForCreate(Invoice invoice) {
+        try {
+            invoiceService.create(invoice);
+            fail("create should not pass!");
+        } catch (Exception e) {
+            assertEquals(invoiceService.getInvoices().size(), 1);
+            assertEquals(attachmentsRepository.getAllAttachments().size(), 3);
+        }
+    }
+
+    @Test(dataProvider = "failTransactionForRemoveDataProvider")
+    public void failTransactionForRemove(Invoice invoice) {
+        try {
+            invoiceService.remove(Lists.newArrayList(invoice));
+            fail("remove should not pass!");
+        } catch (Exception e) {
+            assertEquals(invoiceService.getInvoices().size(), 1);
+            assertEquals(attachmentsRepository.getAllAttachments().size(), 3);
+        }
+    }
+
+    @Test(dataProvider = "failTransactionForUpdateDataProvider")
+    public void failTransactionForUpdate(Invoice invoice) {
+        final List<Invoice> invoicesStart = invoiceService.getInvoices();
+        List<Attachment> attachmentsStart = attachmentsRepository.getAllAttachments();
+        try {
+            invoiceService.update(invoice);
+            fail("update should not pass!");
+        } catch (Exception e) {
+            assertReflectionEquals(invoicesStart,
+                    invoiceService.getInvoices());
+            assertReflectionEquals(attachmentsStart,
+                    attachmentsRepository.getAllAttachments());
+        }
+    }
+
+    @DataProvider
+    private Object[][] failTransactionForCreateDataProvider() {
+        return new Object[][] {
+                { null },
+                // name is null
+                { new Invoice() },
+                // fail for id=1
+                { new TestObjectsBuilder().attachment1().invoice1().buildSingleInvoice() },
+                // fail for existing attachment
+                { new TestObjectsBuilder().attachmentNull().attachmentNull().invoice1().invoiceId(null).buildSingleInvoice() },
+                { new TestObjectsBuilder().attachment1().invoice1().invoiceId(null).buildSingleInvoice() },
+                };
+    }
+
+    @DataProvider
+    private Object[][] failTransactionForRemoveDataProvider() {
+        return new Object[][] {
+                { null },
+                // null id
+                { new Invoice() },
+                // nonexisting id
+                { new TestObjectsBuilder().invoice1().invoiceId(999).buildSingleInvoice() },
+                };
+    }
+
+    @DataProvider
+    private Object[][] failTransactionForUpdateDataProvider() {
+        return new Object[][] {
+                { null },
+                // null id
+                { new Invoice() },
+                // nonexisting id
+                { new TestObjectsBuilder().invoice1().invoiceId(null).buildSingleInvoice() },
+                { new TestObjectsBuilder().invoice1().invoiceId(999).buildSingleInvoice() },
+                };
     }
 }

@@ -78,7 +78,7 @@ public class TestObjectsBuilder {
         return this;
     }
 
-    public TestObjectsBuilder invoiceId(int id) {
+    public TestObjectsBuilder invoiceId(Integer id) {
         invoices.get(invoices.size() - 1).setId(id);
         return this;
     }
@@ -98,6 +98,11 @@ public class TestObjectsBuilder {
         category.setId(2);
         category.setName("CategoryName#2");
         category.setDescription("CategoryDescription#2");
+        return this;
+    }
+
+    public TestObjectsBuilder attachmentNull() {
+        attachments.add(null);
         return this;
     }
 

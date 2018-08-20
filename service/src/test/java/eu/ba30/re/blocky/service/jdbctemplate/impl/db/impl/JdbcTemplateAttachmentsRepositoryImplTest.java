@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.DataProvider;
@@ -23,6 +24,7 @@ import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { JdbcTemplateAttachmentsRepositoryImplTest.AttachmentRepositoryConfiguration.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JdbcTemplateAttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTests {
     private static final int INVOICE_ID = 1;
 
@@ -31,29 +33,31 @@ public class JdbcTemplateAttachmentsRepositoryImplTest extends AbstractTestNGSpr
 
     @Test
     public void getNextItemId() {
-        assertEquals(attachmentsRepository.getNextItemId(), 10);
-        assertEquals(attachmentsRepository.getNextItemId(), 11);
+        final int sequenceBegin = 10;
+        for (int i = 0; i < 100; ++i) {
+            assertEquals(attachmentsRepository.getNextItemId(), sequenceBegin + i);
+        }
     }
 
-    @Test(priority = 1)
+    @Test
     public void getAttachmentList() {
         assertReflectionEquals(new TestObjectsBuilder().attachment1().buildAttachments(),
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 
-    @Test(priority = 1)
+    @Test
     public void getAttachmentListEmpty() {
         assertReflectionEquals(Lists.newArrayList(),
                 attachmentsRepository.getAttachmentList(999));
     }
 
-    @Test(priority = 1)
+    @Test
     public void getAttachmentWithInvoiceIdList() {
         assertReflectionEquals(Lists.newArrayList(new TestObjectsBuilder().attachment1().buildSingleAttachment()),
                 attachmentsRepository.getAllAttachments());
     }
 
-    @Test(priority = 2)
+    @Test
     public void createAttachments() {
         attachmentsRepository.createAttachments(INVOICE_ID,
                 new TestObjectsBuilder().attachment2().attachment3().buildAttachments());
@@ -62,16 +66,15 @@ public class JdbcTemplateAttachmentsRepositoryImplTest extends AbstractTestNGSpr
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 
-    @Test(priority = 3)
+    @Test
     public void removeAttachments() {
-        attachmentsRepository.removeAttachments(new TestObjectsBuilder().attachment2().attachment3().buildAttachments());
+        attachmentsRepository.removeAttachments(new TestObjectsBuilder().attachment1().buildAttachments());
 
-        assertReflectionEquals(new TestObjectsBuilder().attachment1().buildAttachments(),
+        assertReflectionEquals(Lists.newArrayList(),
                 attachmentsRepository.getAttachmentList(INVOICE_ID));
     }
 
-    @Test(priority = 4,
-            dataProvider = "createAttachmentsErrorDataProvider")
+    @Test(dataProvider = "createAttachmentsErrorDataProvider")
     public void createAttachmentsError(Attachment toCreate) {
         final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
         try {
@@ -84,8 +87,7 @@ public class JdbcTemplateAttachmentsRepositoryImplTest extends AbstractTestNGSpr
         }
     }
 
-    @Test(priority = 4,
-            dataProvider = "removeAttachmentsErrorDataProvider")
+    @Test(dataProvider = "removeAttachmentsErrorDataProvider")
     public void removeAttachmentsError(Attachment toRemove) {
         final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
         try {

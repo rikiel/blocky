@@ -18,9 +18,7 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.mybatis.MyBatisRepositoryTestConfiguration;
-import eu.ba30.re.blocky.service.mybatis.impl.db.MyBatisCstCategoryRepository;
 import eu.ba30.re.blocky.service.mybatis.impl.db.MyBatisInvoiceRepository;
-import mockit.Capturing;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -29,9 +27,6 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @ContextConfiguration(classes = { MyBatisInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MyBatisInvoiceRepositoryImplTest extends AbstractTestNGSpringContextTests {
-    @Capturing
-    private MyBatisCstCategoryRepository cstCategoryRepository;
-
     @Autowired
     private MyBatisInvoiceRepository invoiceRepository;
 
@@ -43,13 +38,13 @@ public class MyBatisInvoiceRepositoryImplTest extends AbstractTestNGSpringContex
         }
     }
 
-    @Test(priority = 1)
+    @Test
     public void getInvoices() {
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
                 invoiceRepository.getInvoices());
     }
 
-    @Test(priority = 2)
+    @Test
     public void create() {
         invoiceRepository.create(new TestObjectsBuilder().category1().invoice2().buildSingleInvoice());
 
@@ -59,7 +54,7 @@ public class MyBatisInvoiceRepositoryImplTest extends AbstractTestNGSpringContex
                 invoiceRepository.getInvoices());
     }
 
-    @Test(priority = 3)
+    @Test
     public void remove() {
         invoiceRepository.remove(new TestObjectsBuilder().category1().invoice1().buildInvoices());
 
@@ -67,8 +62,7 @@ public class MyBatisInvoiceRepositoryImplTest extends AbstractTestNGSpringContex
                 invoiceRepository.getInvoices());
     }
 
-    @Test(priority = 4,
-            dataProvider = "createErrorDataProvider")
+    @Test(dataProvider = "createErrorDataProvider")
     public void createError(Invoice toCreate) {
         final List<Invoice> allInvoices = invoiceRepository.getInvoices();
         try {
@@ -81,8 +75,7 @@ public class MyBatisInvoiceRepositoryImplTest extends AbstractTestNGSpringContex
         }
     }
 
-    @Test(priority = 4,
-            dataProvider = "removeErrorDataProvider")
+    @Test(dataProvider = "removeErrorDataProvider")
     public void removeError(Invoice toRemove) {
         final List<Invoice> allInvoices = invoiceRepository.getInvoices();
         Validate.isFalse(allInvoices.contains(toRemove), "Invoice exists in db");

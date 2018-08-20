@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.DataProvider;
@@ -24,18 +25,19 @@ import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @ContextConfiguration(classes = { MyBatisServiceTestConfiguration.class })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private InvoiceService invoiceService;
     @Autowired
     private MyBatisAttachmentsRepository attachmentsRepository;
 
-    @Test(priority = 1)
+    @Test
     public void getInvoices() {
         invoiceService.getInvoices();
     }
 
-    @Test(priority = 2)
+    @Test
     public void create() {
         final Invoice newInvoice = new TestObjectsBuilder().category1().attachment1().attachmentWithoutId().invoice2().buildSingleInvoice();
         newInvoice.setId(null);
@@ -50,9 +52,9 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
         assertReflectionEquals(newInvoice, createdInvoice);
     }
 
-    @Test(priority = 3)
+    @Test
     public void updateWithoutAttachments() {
-        final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice2().buildSingleInvoice();
+        final Invoice actualInvoice = new TestObjectsBuilder().category2().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_1).buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
 
@@ -65,13 +67,13 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
         assertReflectionEquals(actualInvoice, updatedInvoice);
     }
 
-    @Test(priority = 3)
+    @Test
     public void updateWithAttachments() {
-        final Invoice actualInvoice = new TestObjectsBuilder().category1()
-                .attachment3()
+        final Invoice actualInvoice = new TestObjectsBuilder().category2()
+                .attachment2()
                 .attachmentWithoutId()
                 .invoice3()
-                .invoiceId(TestObjectsBuilder.INVOICE_ID_2)
+                .invoiceId(TestObjectsBuilder.INVOICE_ID_1)
                 .buildSingleInvoice();
 
         invoiceService.update(actualInvoice);
@@ -87,17 +89,13 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
         assertReflectionEquals(actualInvoice, updatedInvoice);
     }
 
-    @Test(priority = 4)
+    @Test
     public void remove() {
-        int size = invoiceService.getInvoices().size();
-        List<Invoice> invoices = new TestObjectsBuilder().category1().attachment3().invoice3().invoiceId(TestObjectsBuilder.INVOICE_ID_2).buildInvoices();
-        invoiceService.remove(invoices);
-        assertEquals(invoiceService.getInvoices().size(), size - 1);
         invoiceService.remove(invoiceService.getInvoices());
         assertEquals(invoiceService.getInvoices().size(), 0);
     }
 
-    @Test(priority = 5, dataProvider = "failTransactionForCreateDataProvider")
+    @Test(dataProvider = "failTransactionForCreateDataProvider")
     public void failTransactionForCreate(Invoice invoice) {
         final int originalInvoicesCount = invoiceService.getInvoices().size();
         final int originalAttachmentsCount = attachmentsRepository.getAllAttachments().size();
@@ -110,7 +108,7 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
         }
     }
 
-    @Test(priority = 5, dataProvider = "failTransactionForRemoveDataProvider")
+    @Test(dataProvider = "failTransactionForRemoveDataProvider")
     public void failTransactionForRemove(Invoice invoice) {
         final int originalInvoicesCount = invoiceService.getInvoices().size();
         final int originalAttachmentsCount = attachmentsRepository.getAllAttachments().size();
@@ -123,7 +121,7 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
         }
     }
 
-    @Test(priority = 5, dataProvider = "failTransactionForUpdateDataProvider")
+    @Test(dataProvider = "failTransactionForUpdateDataProvider")
     public void failTransactionForUpdate(Invoice invoice) {
         final List<Invoice> invoicesStart = invoiceService.getInvoices();
         List<Attachment> attachmentsStart = attachmentsRepository.getAllAttachments();
@@ -140,16 +138,15 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
 
     @DataProvider
     private Object[][] failTransactionForCreateDataProvider() {
-        final Attachment attachmentWithId = new TestObjectsBuilder().attachment1().buildSingleAttachment();
         return new Object[][] {
                 { null },
                 // name is null
                 { new Invoice() },
                 // fail for id=1
-                { createInvoice(1, attachmentWithId) },
+                { new TestObjectsBuilder().attachment1().invoice1().buildSingleInvoice() },
                 // fail for existing attachment
-                { createInvoice(null, null, null) },
-                { createInvoice(null, attachmentWithId) },
+                { new TestObjectsBuilder().attachmentNull().attachmentNull().invoice1().invoiceId(null).buildSingleInvoice() },
+                { new TestObjectsBuilder().attachment1().invoice1().invoiceId(null).buildSingleInvoice() },
                 };
     }
 
@@ -160,7 +157,7 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
                 // null id
                 { new Invoice() },
                 // nonexisting id
-                { createInvoice(999) },
+                { new TestObjectsBuilder().invoice1().invoiceId(999).buildSingleInvoice() },
                 };
     }
 
@@ -171,17 +168,8 @@ public class MyBatisInvoiceServiceImplTest extends AbstractTestNGSpringContextTe
                 // null id
                 { new Invoice() },
                 // nonexisting id
-                { createInvoice(null) },
-                { createInvoice(999) },
+                { new TestObjectsBuilder().invoice1().invoiceId(null).buildSingleInvoice() },
+                { new TestObjectsBuilder().invoice1().invoiceId(999).buildSingleInvoice() },
                 };
-    }
-
-    private static Invoice createInvoice(Integer id, Attachment... attachments) {
-        final Invoice invoice = new Invoice();
-        invoice.setId(id);
-        invoice.setName("Name");
-        invoice.setDetails("Details");
-        invoice.setAttachments(Lists.newArrayList(attachments));
-        return invoice;
     }
 }
