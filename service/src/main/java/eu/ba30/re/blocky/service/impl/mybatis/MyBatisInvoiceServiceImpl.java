@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisAttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisInvoiceRepository;
-import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class MyBatisInvoiceServiceImpl implements InvoiceService {

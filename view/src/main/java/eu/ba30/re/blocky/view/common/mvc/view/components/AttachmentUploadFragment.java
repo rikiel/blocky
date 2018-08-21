@@ -20,8 +20,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
-import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 
 /**

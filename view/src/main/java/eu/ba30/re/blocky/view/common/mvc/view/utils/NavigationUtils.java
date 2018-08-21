@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.UI;
 
-import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 
 public class NavigationUtils {

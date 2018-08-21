@@ -11,8 +11,8 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextArea;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
-import eu.ba30.re.blocky.utils.Validate;
 
 /**
  * Preview for {@link Attachment}.

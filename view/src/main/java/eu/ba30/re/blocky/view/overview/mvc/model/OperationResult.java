@@ -2,7 +2,7 @@ package eu.ba30.re.blocky.view.overview.mvc.model;
 
 import javax.annotation.Nonnull;
 
-import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.common.utils.Validate;
 
 public class OperationResult {
     private final Result result;

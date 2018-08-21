@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.exception;
+package eu.ba30.re.blocky.common.exception;
 
 public class DatabaseException extends RuntimeException {
     public DatabaseException(String s) {

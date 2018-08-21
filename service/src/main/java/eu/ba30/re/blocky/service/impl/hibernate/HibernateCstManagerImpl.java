@@ -10,9 +10,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
-import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class HibernateCstManagerImpl implements CstManager {

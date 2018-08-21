@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.aspects;
+package eu.ba30.re.blocky.common.aspects;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import eu.ba30.re.blocky.exception.DatabaseException;
+import eu.ba30.re.blocky.common.exception.DatabaseException;
 
 /**
  * Aspect that changes exception type that was thrown from service.

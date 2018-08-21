@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 
 import com.vaadin.ui.Notification;
 
-import eu.ba30.re.blocky.exception.DatabaseException;
+import eu.ba30.re.blocky.common.exception.DatabaseException;
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.utils.Validate;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
 import eu.ba30.re.blocky.view.overview.mvc.model.InvoiceCreateModel;

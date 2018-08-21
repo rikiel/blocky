@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.common.utils.Validate;
 
 public enum AttachmentType {
     IMAGE(1) {

@@ -8,11 +8,11 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Lists;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.utils.Validate;
 
 public class TestObjectsBuilder {
     public static final int INVOICE_ID_1 = 1;

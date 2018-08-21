@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl;
+package eu.ba30.re.blocky.service.mock;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.io.ByteStreams;
 
-import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.common.utils.Validate;
 
 @Component
 public class MockDb {

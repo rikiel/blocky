@@ -1,11 +1,15 @@
-package eu.ba30.re.blocky.service.impl;
+package eu.ba30.re.blocky.service.mock;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
@@ -22,5 +26,11 @@ public class MockConfiguration {
     public JdbcTemplate jdbcTemplate(MockDb mockDb) {
         mockDb.initDb();
         return mockDb.getJdbcTemplate();
+    }
+
+    @Bean
+    @Autowired
+    public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 }

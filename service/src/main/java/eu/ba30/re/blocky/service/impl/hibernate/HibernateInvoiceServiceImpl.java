@@ -10,10 +10,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class HibernateInvoiceServiceImpl implements InvoiceService {

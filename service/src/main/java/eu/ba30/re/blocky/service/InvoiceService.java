@@ -8,9 +8,9 @@ import javax.annotation.Nonnull;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.utils.Validate;
 
 public interface InvoiceService {
     /**

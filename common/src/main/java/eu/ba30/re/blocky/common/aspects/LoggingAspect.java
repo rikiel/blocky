@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.aspects;
+package eu.ba30.re.blocky.common.aspects;
 
 import java.util.Arrays;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.utils;
+package eu.ba30.re.blocky.common.utils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import eu.ba30.re.blocky.exception.DatabaseException;
+import eu.ba30.re.blocky.common.exception.DatabaseException;
 
 public class Validate {
     private Validate() {

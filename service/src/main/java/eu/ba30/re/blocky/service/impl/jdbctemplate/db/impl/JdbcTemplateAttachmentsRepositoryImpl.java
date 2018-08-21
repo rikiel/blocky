@@ -14,10 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.service.impl.jdbctemplate.db.JdbcTemplateAttachmentsRepository;
-import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class JdbcTemplateAttachmentsRepositoryImpl implements JdbcTemplateAttachmentsRepository {

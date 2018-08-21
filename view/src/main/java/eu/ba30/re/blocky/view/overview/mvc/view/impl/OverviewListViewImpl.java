@@ -11,7 +11,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Notification;
 
-import eu.ba30.re.blocky.utils.Validate;
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.view.common.mvc.view.Style;
 import eu.ba30.re.blocky.view.common.mvc.view.components.Header;
 import eu.ba30.re.blocky.view.common.mvc.view.components.InvoiceTable;

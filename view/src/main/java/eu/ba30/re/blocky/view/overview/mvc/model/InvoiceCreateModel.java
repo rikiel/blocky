@@ -6,8 +6,8 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.MoreObjects;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.utils.Validate;
 
 public class InvoiceCreateModel {
     @Nonnull

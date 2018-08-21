@@ -7,10 +7,10 @@ import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisAttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper.MyBatisAttachmentMapper;
-import eu.ba30.re.blocky.utils.Validate;
 
 @Service
 public class MyBatisAttachmentsRepositoryImpl implements MyBatisAttachmentsRepository {

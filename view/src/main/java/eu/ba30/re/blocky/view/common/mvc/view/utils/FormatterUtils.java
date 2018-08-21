@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.utils.Validate;
 
 public class FormatterUtils {
     private FormatterUtils() {
