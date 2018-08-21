@@ -118,7 +118,7 @@ public class MockDb {
                 2,
                 2,
                 "Západ slnka - 2",
-                attachment1.getFilename(),
+                attachment2.getFilename(),
                 "image/jpeg",
                 1,
                 readInput(attachment2));
@@ -127,7 +127,7 @@ public class MockDb {
                 3,
                 1,
                 "Nákupný zoznam",
-                attachment1.getFilename(),
+                attachment3.getFilename(),
                 "text/text",
                 3,
                 readInput(attachment3));
