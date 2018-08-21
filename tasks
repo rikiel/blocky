@@ -1,5 +1,5 @@
 # TO BE DONE
-BLOCKY-13 ORM cez jdbcTemplate, myBatis, hibernate
+BLOCKY-14 JDBC implementacia
 
 # DONE
 BLOCKY-1 Inicializacia projektu
@@ -14,3 +14,4 @@ BLOCKY-9 EventBus - propagovat vysledky akcii z handlera do view
 BLOCKY-10 Technicke veci
 BLOCKY-11 MyBatis
 BLOCKY-12 Hibernate
+BLOCKY-13 ORM cez jdbcTemplate, myBatis, hibernate
