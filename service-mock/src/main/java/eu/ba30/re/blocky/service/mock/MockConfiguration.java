@@ -2,6 +2,7 @@ package eu.ba30.re.blocky.service.mock;
 
 import javax.sql.DataSource;
 
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ public class MockConfiguration {
 
     @Bean
     public JdbcTemplate jdbcTemplate(MockDb mockDb) {
-        mockDb.initDb();
         return mockDb.getJdbcTemplate();
     }
 
@@ -32,5 +32,13 @@ public class MockConfiguration {
     @Autowired
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
+    @Autowired
+    public SqlSessionFactoryBean sqlSessionFactory(DataSource dataSource) {
+        final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
+        sqlSessionFactoryBean.setDataSource(dataSource);
+        return sqlSessionFactoryBean;
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.jdbctemplate.db.JdbcTemplateCstCategoryRepository;
 
 @Service
+@Primary
 public class JdbcTemplateCstManagerImpl implements CstManager {
     @Autowired
     private JdbcTemplateCstCategoryRepository cstCategoryRepository;
