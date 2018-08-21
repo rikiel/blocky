@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.mock;
+package eu.ba30.re.blocky.service.mock.spring;
 
 import java.io.IOException;
 import java.sql.Date;
