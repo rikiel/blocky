@@ -79,7 +79,8 @@ public class JdbcInvoiceRepositoryImpl implements JdbcInvoiceRepository {
                 try (final PreparedStatement statement = connection.prepareStatement(REMOVE_INVOICE_SQL_REQUEST)) {
                     statement.setInt(1, invoice.getId());
 
-                    Validate.isTrue(statement.execute(), "Execution of statement failed!");
+                    statement.execute();
+                    Validate.equals(statement.getUpdateCount(), 1, "Should remove one row. Found " + statement.getUpdateCount());
                 }
             }
         } catch (SQLException e) {
@@ -101,7 +102,8 @@ public class JdbcInvoiceRepositoryImpl implements JdbcInvoiceRepository {
                 statement.setDate(5, Date.valueOf(invoice.getCreationDate()));
                 statement.setDate(6, Date.valueOf(invoice.getModificationDate()));
 
-                Validate.isTrue(statement.execute(), "Execution of statement failed!");
+                statement.execute();
+                Validate.equals(statement.getUpdateCount(), 1, "Should create one row. Found " + statement.getUpdateCount());
             }
         } catch (SQLException e) {
             throw new DatabaseException("SqlException was thrown", e);
@@ -115,7 +117,7 @@ public class JdbcInvoiceRepositoryImpl implements JdbcInvoiceRepository {
                 Integer id = null;
                 while (resultSet.next()) {
                     Validate.isNull(id, "More IDs was returned!");
-                    id = resultSet.getInt(0);
+                    id = resultSet.getInt(1);
                 }
                 Validate.notNull(id, "No ID was returned!");
                 return id;

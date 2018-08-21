@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Jdbc suite" verbose="1">
+    <test name="Jdbc tests">
+        <packages>
+            <package name="eu.ba30.re.blocky.service.impl.jdbc.*"/>
+        </packages>
+    </test>
+</suite>

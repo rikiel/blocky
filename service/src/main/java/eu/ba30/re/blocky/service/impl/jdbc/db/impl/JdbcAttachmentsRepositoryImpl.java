@@ -76,14 +76,15 @@ public class JdbcAttachmentsRepositoryImpl implements JdbcAttachmentsRepository 
             for (Attachment attachment : attachments) {
                 try (final PreparedStatement statement = connection.prepareStatement(CREATE_ATTACHMENT_SQL_REQUEST)) {
                     statement.setInt(1, attachment.getId());
-                    statement.setInt(2, attachment.getInvoice().getId());
+                    statement.setInt(2, invoiceId);
                     statement.setString(3, attachment.getName());
                     statement.setString(4, attachment.getFileName());
                     statement.setString(5, attachment.getMimeType());
                     statement.setInt(6, attachment.getAttachmentType().getId());
                     statement.setBlob(7, new ByteArrayInputStream(attachment.getContent()));
 
-                    Validate.isTrue(statement.execute(), "Execution of statement failed!");
+                    statement.execute();
+                    Validate.equals(statement.getUpdateCount(), 1, "Should create one row. Found " + statement.getUpdateCount());
                 }
             }
         } catch (SQLException e) {
@@ -100,7 +101,8 @@ public class JdbcAttachmentsRepositoryImpl implements JdbcAttachmentsRepository 
                 try (final PreparedStatement statement = connection.prepareStatement(REMOVE_ATTACHMENTS_SQL_REQUEST)) {
                     statement.setInt(1, attachment.getId());
 
-                    Validate.isTrue(statement.execute(), "Execution of statement failed!");
+                    statement.execute();
+                    Validate.equals(statement.getUpdateCount(), 1, "Should remove one row. Found " + statement.getUpdateCount());
                 }
             }
         } catch (SQLException e) {
@@ -115,7 +117,7 @@ public class JdbcAttachmentsRepositoryImpl implements JdbcAttachmentsRepository 
                 Integer id = null;
                 while (resultSet.next()) {
                     Validate.isNull(id, "More IDs was returned!");
-                    id = resultSet.getInt(0);
+                    id = resultSet.getInt(1);
                 }
                 Validate.notNull(id, "No ID was returned!");
                 return id;

@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.jdbctemplate;
+package eu.ba30.re.blocky.service.impl.jdbc;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,16 +16,16 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
-import eu.ba30.re.blocky.service.config.jdbctemplate.JdbcTemplateServiceTestConfiguration;
+import eu.ba30.re.blocky.service.config.jdbc.JdbcServiceTestConfiguration;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-@ContextConfiguration(classes = { JdbcTemplateServiceTestConfiguration.class })
+@ContextConfiguration(classes = { JdbcServiceTestConfiguration.class })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class JdbcTemplateInvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
+public class JdbcInvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private InvoiceService invoiceService;
 
