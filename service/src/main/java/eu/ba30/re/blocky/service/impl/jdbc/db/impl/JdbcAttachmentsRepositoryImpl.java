@@ -73,8 +73,8 @@ public class JdbcAttachmentsRepositoryImpl implements JdbcAttachmentsRepository 
         Validate.notEmpty(attachments);
 
         try {
-            for (Attachment attachment : attachments) {
-                try (final PreparedStatement statement = connection.prepareStatement(CREATE_ATTACHMENT_SQL_REQUEST)) {
+            try (final PreparedStatement statement = connection.prepareStatement(CREATE_ATTACHMENT_SQL_REQUEST)) {
+                for (Attachment attachment : attachments) {
                     statement.setInt(1, attachment.getId());
                     statement.setInt(2, invoiceId);
                     statement.setString(3, attachment.getName());
@@ -83,9 +83,10 @@ public class JdbcAttachmentsRepositoryImpl implements JdbcAttachmentsRepository 
                     statement.setInt(6, attachment.getAttachmentType().getId());
                     statement.setBlob(7, new ByteArrayInputStream(attachment.getContent()));
 
-                    statement.execute();
-                    Validate.equals(statement.getUpdateCount(), 1, "Should create one row. Found " + statement.getUpdateCount());
+                    statement.addBatch();
                 }
+                final int[] affectedRows = statement.executeBatch();
+                Validate.validateOneRowAffectedInDbCall(affectedRows);
             }
         } catch (SQLException e) {
             throw new DatabaseException("SqlException was thrown", e);
@@ -97,13 +98,14 @@ public class JdbcAttachmentsRepositoryImpl implements JdbcAttachmentsRepository 
         Validate.notEmpty(attachments);
 
         try {
-            for (Attachment attachment : attachments) {
-                try (final PreparedStatement statement = connection.prepareStatement(REMOVE_ATTACHMENTS_SQL_REQUEST)) {
+            try (final PreparedStatement statement = connection.prepareStatement(REMOVE_ATTACHMENTS_SQL_REQUEST)) {
+                for (Attachment attachment : attachments) {
                     statement.setInt(1, attachment.getId());
 
-                    statement.execute();
-                    Validate.equals(statement.getUpdateCount(), 1, "Should remove one row. Found " + statement.getUpdateCount());
+                    statement.addBatch();
                 }
+                final int[] affectedRows = statement.executeBatch();
+                Validate.validateOneRowAffectedInDbCall(affectedRows);
             }
         } catch (SQLException e) {
             throw new DatabaseException("SqlException was thrown", e);

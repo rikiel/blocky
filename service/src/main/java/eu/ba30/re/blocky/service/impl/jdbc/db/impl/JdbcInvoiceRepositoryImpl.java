@@ -75,13 +75,13 @@ public class JdbcInvoiceRepositoryImpl implements JdbcInvoiceRepository {
         Validate.notEmpty(invoices);
 
         try {
-            for (final Invoice invoice : invoices) {
-                try (final PreparedStatement statement = connection.prepareStatement(REMOVE_INVOICE_SQL_REQUEST)) {
+            try (final PreparedStatement statement = connection.prepareStatement(REMOVE_INVOICE_SQL_REQUEST)) {
+                for (final Invoice invoice : invoices) {
                     statement.setInt(1, invoice.getId());
-
-                    statement.execute();
-                    Validate.equals(statement.getUpdateCount(), 1, "Should remove one row. Found " + statement.getUpdateCount());
+                    statement.addBatch();
                 }
+                final int[] affectedRows = statement.executeBatch();
+                Validate.validateOneRowAffectedInDbCall(affectedRows);
             }
         } catch (SQLException e) {
             throw new DatabaseException("SqlException was thrown", e);
