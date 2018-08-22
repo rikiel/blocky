@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisCstCategoryRepository;
 import eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper.MyBatisCategoryMapper;
+import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
-public class MyBatisCstCategoryRepositoryImpl implements MyBatisCstCategoryRepository {
+public class MyBatisCstCategoryRepositoryImpl implements CstCategoryRepository {
     @Autowired
     private MyBatisCategoryMapper categoryMapper;
 

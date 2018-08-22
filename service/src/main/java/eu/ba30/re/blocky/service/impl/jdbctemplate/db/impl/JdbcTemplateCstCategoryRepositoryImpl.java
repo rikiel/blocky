@@ -14,10 +14,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.service.impl.jdbctemplate.db.JdbcTemplateCstCategoryRepository;
+import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
-public class JdbcTemplateCstCategoryRepositoryImpl implements JdbcTemplateCstCategoryRepository {
+public class JdbcTemplateCstCategoryRepositoryImpl implements CstCategoryRepository {
     private static final Logger log = LoggerFactory.getLogger(JdbcTemplateCstCategoryRepositoryImpl.class);
 
     private static final String GET_ALL_CATEGORIES_SQL_REQUEST = ""

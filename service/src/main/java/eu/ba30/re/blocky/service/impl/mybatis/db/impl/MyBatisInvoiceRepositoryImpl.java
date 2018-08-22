@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisInvoiceRepository;
 import eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper.MyBatisInvoiceMapper;
+import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
-public class MyBatisInvoiceRepositoryImpl implements MyBatisInvoiceRepository {
+public class MyBatisInvoiceRepositoryImpl implements InvoiceRepository {
     @Autowired
     private MyBatisInvoiceMapper invoiceMapper;
 

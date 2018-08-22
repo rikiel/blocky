@@ -19,10 +19,10 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.common.exception.DatabaseException;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.service.impl.jdbc.db.JdbcCstCategoryRepository;
+import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
-public class JdbcCstCategoryRepositoryImpl implements JdbcCstCategoryRepository {
+public class JdbcCstCategoryRepositoryImpl implements CstCategoryRepository {
     private static final Logger log = LoggerFactory.getLogger(JdbcCstCategoryRepositoryImpl.class);
 
     private static final String GET_ALL_CATEGORIES_SQL_REQUEST = ""

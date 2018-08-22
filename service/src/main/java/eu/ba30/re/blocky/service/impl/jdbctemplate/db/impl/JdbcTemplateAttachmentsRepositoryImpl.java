@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
-import eu.ba30.re.blocky.service.impl.jdbctemplate.db.JdbcTemplateAttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 
 @Service
-public class JdbcTemplateAttachmentsRepositoryImpl implements JdbcTemplateAttachmentsRepository {
+public class JdbcTemplateAttachmentsRepositoryImpl implements AttachmentsRepository {
     private static final Logger log = LoggerFactory.getLogger(JdbcTemplateAttachmentsRepositoryImpl.class);
 
     private static final String CREATE_ATTACHMENT_SQL_REQUEST = ""

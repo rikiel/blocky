@@ -19,16 +19,16 @@ import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.service.impl.jdbctemplate.db.JdbcTemplateAttachmentsRepository;
-import eu.ba30.re.blocky.service.impl.jdbctemplate.db.JdbcTemplateInvoiceRepository;
+import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
 @Primary
 public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
     @Autowired
-    private JdbcTemplateInvoiceRepository invoiceRepository;
+    private InvoiceRepository invoiceRepository;
     @Autowired
-    private JdbcTemplateAttachmentsRepository attachmentsRepository;
+    private AttachmentsRepository attachmentsRepository;
 
     @Nonnull
     @Transactional(readOnly = true)

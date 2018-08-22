@@ -18,15 +18,15 @@ import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.service.impl.jdbc.db.JdbcAttachmentsRepository;
-import eu.ba30.re.blocky.service.impl.jdbc.db.JdbcInvoiceRepository;
+import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
 public class JdbcInvoiceServiceImpl implements InvoiceService {
     @Autowired
-    private JdbcInvoiceRepository invoiceRepository;
+    private InvoiceRepository invoiceRepository;
     @Autowired
-    private JdbcAttachmentsRepository attachmentsRepository;
+    private AttachmentsRepository attachmentsRepository;
 
     @Nonnull
     @Transactional(readOnly = true)

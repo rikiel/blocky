@@ -11,13 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
-import eu.ba30.re.blocky.service.impl.jdbctemplate.db.JdbcTemplateCstCategoryRepository;
+import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
 @Primary
 public class JdbcTemplateCstManagerImpl implements CstManager {
     @Autowired
-    private JdbcTemplateCstCategoryRepository cstCategoryRepository;
+    private CstCategoryRepository cstCategoryRepository;
 
     @Nonnull
     @Transactional(readOnly = true)

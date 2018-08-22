@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.jdbc.db;
+package eu.ba30.re.blocky.service.impl.repository;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 
 import eu.ba30.re.blocky.model.Attachment;
 
-public interface JdbcAttachmentsRepository {
+public interface AttachmentsRepository {
     /**
      * @param invoiceId id of invoice that attachments should be searched for
      * @return all attachments for invoice

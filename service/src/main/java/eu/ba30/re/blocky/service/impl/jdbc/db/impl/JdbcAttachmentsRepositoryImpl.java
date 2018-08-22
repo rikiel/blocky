@@ -21,10 +21,10 @@ import eu.ba30.re.blocky.common.exception.DatabaseException;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
-import eu.ba30.re.blocky.service.impl.jdbc.db.JdbcAttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 
 @Service
-public class JdbcAttachmentsRepositoryImpl implements JdbcAttachmentsRepository {
+public class JdbcAttachmentsRepositoryImpl implements AttachmentsRepository {
     private static final Logger log = LoggerFactory.getLogger(JdbcAttachmentsRepositoryImpl.class);
 
     private static final String CREATE_ATTACHMENT_SQL_REQUEST = ""

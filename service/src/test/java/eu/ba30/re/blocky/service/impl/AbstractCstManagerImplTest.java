@@ -13,7 +13,7 @@ import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public abstract class CstManagerImplTest extends AbstractTestNGSpringContextTests {
+public abstract class AbstractCstManagerImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private CstManager cstManager;
 

@@ -24,10 +24,10 @@ import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
-import eu.ba30.re.blocky.service.impl.jdbc.db.JdbcInvoiceRepository;
+import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
-public class JdbcInvoiceRepositoryImpl implements JdbcInvoiceRepository {
+public class JdbcInvoiceRepositoryImpl implements InvoiceRepository {
     private static final Logger log = LoggerFactory.getLogger(JdbcInvoiceRepositoryImpl.class);
 
     private static final String GET_ALL_INVOICES_SQL_REQUEST = ""

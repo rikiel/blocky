@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.db;
+package eu.ba30.re.blocky.service.impl.repository;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 
 import eu.ba30.re.blocky.model.Invoice;
 
-public interface MyBatisInvoiceRepository {
+public interface InvoiceRepository {
     /**
      * @return all invoices stored in DB
      */

@@ -18,15 +18,15 @@ import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisAttachmentsRepository;
-import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisInvoiceRepository;
+import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
 public class MyBatisInvoiceServiceImpl implements InvoiceService {
     @Autowired
-    private MyBatisInvoiceRepository invoiceRepository;
+    private InvoiceRepository invoiceRepository;
     @Autowired
-    private MyBatisAttachmentsRepository attachmentsRepository;
+    private AttachmentsRepository attachmentsRepository;
 
     @Nonnull
     @Transactional(readOnly = true)

@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.service.CstManager;
-import eu.ba30.re.blocky.service.impl.mybatis.db.MyBatisCstCategoryRepository;
+import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
 public class MyBatisCstManagerImpl implements CstManager {
     @Autowired
-    private MyBatisCstCategoryRepository cstCategoryRepository;
+    private CstCategoryRepository cstCategoryRepository;
 
     @Nonnull
     @Transactional(readOnly = true)
