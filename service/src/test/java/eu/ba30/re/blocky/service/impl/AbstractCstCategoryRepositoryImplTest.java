@@ -18,24 +18,24 @@ public abstract class AbstractCstCategoryRepositoryImplTest extends AbstractTest
     private CstCategoryRepository cstCategoryRepository;
 
     @Test
-    public void getAllCategories() {
+    public void getCategoryList() {
         assertReflectionEquals(new TestObjectsBuilder().category1().category2().buildCategories(),
-                cstCategoryRepository.getAllCategories());
+                cstCategoryRepository.getCategoryList());
     }
 
     @Test
-    public void getById() {
+    public void getCategoryById() {
         assertReflectionEquals(new TestObjectsBuilder().category1().buildSingleCategory(),
-                cstCategoryRepository.getById(1));
+                cstCategoryRepository.getCategoryById(1));
     }
 
     @Test
-    public void getByIdError() {
+    public void getErrorForNotExistingCategoryId() {
         try {
-            final Category category = cstCategoryRepository.getById(999);
-            fail("getById should not pass! Found " + category);
+            final Category category = cstCategoryRepository.getCategoryById(999);
+            fail("getCategoryById should not pass! Found " + category);
         } catch (Exception e) {
-            // nothing to do
+            // test OK
         }
     }
 }

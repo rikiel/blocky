@@ -23,7 +23,7 @@ public class HibernateInvoiceServiceImpl implements InvoiceService {
     @Nonnull
     @Transactional(readOnly = true)
     @Override
-    public List<Invoice> getInvoices() {
+    public List<Invoice> getInvoiceList() {
         final CriteriaQuery<Invoice> query = entityManager.getCriteriaBuilder().createQuery(Invoice.class);
         query.select(query.from(Invoice.class));
         return Validate.validateResult(entityManager.createQuery(query).getResultList());
@@ -31,7 +31,7 @@ public class HibernateInvoiceServiceImpl implements InvoiceService {
 
     @Nonnull
     @Override
-    public List<Attachment> getAttachments() {
+    public List<Attachment> getAttachmentList() {
         final CriteriaQuery<Attachment> query = entityManager.getCriteriaBuilder().createQuery(Attachment.class);
         query.select(query.from(Attachment.class));
         return Validate.validateResult(entityManager.createQuery(query).getResultList());

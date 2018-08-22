@@ -12,13 +12,19 @@ public interface AttachmentsRepository {
      * @return all attachments for invoice
      */
     @Nonnull
-    List<Attachment> getAttachmentList(int invoiceId);
+    List<Attachment> getAttachmentsByInvoiceId(int invoiceId);
+
+    /**
+     * @return all attachments stored in DB
+     */
+    @Nonnull
+    List<Attachment> getAttachmentList();
 
     /**
      * @param invoiceId   id of invoice that attachment is created for
      * @param attachments list of attachments to be created
      */
-    void createAttachments(int invoiceId, @Nonnull List<Attachment> attachments);
+    void createAttachmentsForInvoice(int invoiceId, @Nonnull List<Attachment> attachments);
 
     /**
      * @param attachments list of attachments to be removed
@@ -29,10 +35,4 @@ public interface AttachmentsRepository {
      * @return next id that should be used as attachmentId in DB
      */
     int getNextItemId();
-
-    /**
-     * @return all attachments stored in DB
-     */
-    @Nonnull
-    List<Attachment> getAllAttachments();
 }

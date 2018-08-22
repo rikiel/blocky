@@ -165,8 +165,8 @@ public class InvoiceCreateViewImpl extends AbstractViewImpl implements InvoiceCr
     }
 
     private class CategoryDataProvider extends ListDataProvider<Category> {
-        public CategoryDataProvider() {
-            super(cstManager.getCategories());
+        CategoryDataProvider() {
+            super(cstManager.getCategoryList());
         }
     }
 }

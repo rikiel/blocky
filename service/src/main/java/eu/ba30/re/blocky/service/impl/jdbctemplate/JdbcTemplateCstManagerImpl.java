@@ -22,14 +22,14 @@ public class JdbcTemplateCstManagerImpl implements CstManager {
     @Nonnull
     @Transactional(readOnly = true)
     @Override
-    public List<Category> getCategories() {
-        return cstCategoryRepository.getAllCategories();
+    public List<Category> getCategoryList() {
+        return cstCategoryRepository.getCategoryList();
     }
 
     @Nonnull
     @Transactional(readOnly = true)
     @Override
-    public Category getCategory(int categoryId) {
-        return cstCategoryRepository.getById(categoryId);
+    public Category getCategoryById(int categoryId) {
+        return cstCategoryRepository.getCategoryById(categoryId);
     }
 }

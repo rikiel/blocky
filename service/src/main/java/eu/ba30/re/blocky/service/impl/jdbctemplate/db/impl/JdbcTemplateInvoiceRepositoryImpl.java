@@ -51,7 +51,7 @@ public class JdbcTemplateInvoiceRepositoryImpl implements InvoiceRepository {
 
     @Nonnull
     @Override
-    public List<Invoice> getInvoices() {
+    public List<Invoice> getInvoiceList() {
         return jdbc.query(GET_ALL_INVOICES_SQL_REQUEST, new InvoiceRowMapper());
     }
 
@@ -118,7 +118,7 @@ public class JdbcTemplateInvoiceRepositoryImpl implements InvoiceRepository {
         private Category getCategory(@Nullable final Integer id) {
             return id == null
                     ? null
-                    : cstManager.getCategory(id);
+                    : cstManager.getCategoryById(id);
         }
 
         @Nullable

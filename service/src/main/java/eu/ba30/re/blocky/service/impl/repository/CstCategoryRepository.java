@@ -11,12 +11,12 @@ public interface CstCategoryRepository {
      * @return all categories stored in DB
      */
     @Nonnull
-    List<Category> getAllCategories();
+    List<Category> getCategoryList();
 
     /**
      * @param categoryId id of category
      * @return category
      */
     @Nonnull
-    Category getById(int categoryId);
+    Category getCategoryById(int categoryId);
 }

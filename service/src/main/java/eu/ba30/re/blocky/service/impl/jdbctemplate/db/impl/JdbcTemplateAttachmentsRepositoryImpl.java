@@ -46,14 +46,14 @@ public class JdbcTemplateAttachmentsRepositoryImpl implements AttachmentsReposit
 
     @Nonnull
     @Override
-    public List<Attachment> getAttachmentList(final int invoiceId) {
+    public List<Attachment> getAttachmentsByInvoiceId(final int invoiceId) {
         return jdbc.query(GET_ATTACHMENT_LIST_BY_ID_SQL_REQUEST,
                 new Object[] { invoiceId },
                 new AttachmentMapper());
     }
 
     @Override
-    public void createAttachments(final int invoiceId, @Nonnull final List<Attachment> attachments) {
+    public void createAttachmentsForInvoice(final int invoiceId, @Nonnull final List<Attachment> attachments) {
         Validate.notEmpty(attachments);
 
         final List<Object[]> sqlArgs = attachments
@@ -101,7 +101,7 @@ public class JdbcTemplateAttachmentsRepositoryImpl implements AttachmentsReposit
 
     @Nonnull
     @Override
-    public List<Attachment> getAllAttachments() {
+    public List<Attachment> getAttachmentList() {
         return jdbc.query(GET_ATTACHMENT_LIST_SQL_REQUEST,
                 new AttachmentMapper());
     }

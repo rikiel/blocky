@@ -32,30 +32,27 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
     }
 
     @Test
-    public void getAttachmentList() {
+    public void getAttachmentsByInvoiceId() {
         assertReflectionEquals(new TestObjectsBuilder().attachment1().buildAttachments(),
-                attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
-    }
+                attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
 
-    @Test
-    public void getAttachmentListEmpty() {
         assertReflectionEquals(Lists.newArrayList(),
-                attachmentsRepository.getAttachmentList(999));
+                attachmentsRepository.getAttachmentsByInvoiceId(999));
     }
 
     @Test
-    public void getAttachmentWithInvoiceIdList() {
+    public void getAttachmentList() {
         assertReflectionEquals(Lists.newArrayList(new TestObjectsBuilder().attachment1().buildSingleAttachment()),
-                attachmentsRepository.getAllAttachments());
+                attachmentsRepository.getAttachmentList());
     }
 
     @Test
-    public void createAttachments() {
-        attachmentsRepository.createAttachments(TestObjectsBuilder.INVOICE_ID_1,
+    public void createAttachmentsForInvoice() {
+        attachmentsRepository.createAttachmentsForInvoice(TestObjectsBuilder.INVOICE_ID_1,
                 new TestObjectsBuilder().attachment2().attachment3().buildAttachments());
 
         assertReflectionEquals(new TestObjectsBuilder().attachment1().attachment2().attachment3().buildAttachments(),
-                attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
+                attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
     }
 
     @Test
@@ -63,32 +60,32 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
         attachmentsRepository.removeAttachments(new TestObjectsBuilder().attachment1().buildAttachments());
 
         assertReflectionEquals(Lists.newArrayList(),
-                attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
+                attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
     }
 
     @Test(dataProvider = "createAttachmentsErrorDataProvider")
-    public void createAttachmentsError(Attachment toCreate) {
-        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1);
+    public void createAttachmentsForInvoiceWithError(Attachment toCreate) {
+        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1);
         try {
-            attachmentsRepository.createAttachments(1, Lists.newArrayList(toCreate));
-            fail("createAttachments should not pass");
+            attachmentsRepository.createAttachmentsForInvoice(1, Lists.newArrayList(toCreate));
+            fail("createAttachmentsForInvoice should not pass");
         } catch (Exception e) {
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
-                    attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
+                    attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
         }
     }
 
     @Test(dataProvider = "removeAttachmentsErrorDataProvider")
-    public void removeAttachmentsError(Attachment toRemove) {
-        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1);
+    public void removeAttachmentsWithError(Attachment toRemove) {
+        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1);
         try {
             attachmentsRepository.removeAttachments(Lists.newArrayList(toRemove));
             fail("removeAttachments should not pass!");
         } catch (Exception e) {
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
-                    attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
+                    attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
         }
     }
 

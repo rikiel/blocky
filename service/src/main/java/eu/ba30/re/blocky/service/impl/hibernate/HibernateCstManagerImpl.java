@@ -22,7 +22,7 @@ public class HibernateCstManagerImpl implements CstManager {
     @Nonnull
     @Transactional(readOnly = true)
     @Override
-    public List<Category> getCategories() {
+    public List<Category> getCategoryList() {
         final CriteriaQuery<Category> query = entityManager.getCriteriaBuilder().createQuery(Category.class);
         query.select(query.from(Category.class));
         return Validate.validateResult(entityManager.createQuery(query).getResultList());
@@ -31,7 +31,7 @@ public class HibernateCstManagerImpl implements CstManager {
     @Nonnull
     @Transactional(readOnly = true)
     @Override
-    public Category getCategory(int categoryId) {
+    public Category getCategoryById(int categoryId) {
         return Validate.validateResult(entityManager.find(Category.class, categoryId));
     }
 }

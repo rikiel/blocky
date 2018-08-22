@@ -18,22 +18,22 @@ public abstract class AbstractCstManagerImplTest extends AbstractTestNGSpringCon
     private CstManager cstManager;
 
     @Test
-    public void getCategories() {
+    public void getCategoryList() {
         assertReflectionEquals(new TestObjectsBuilder().category1().category2().buildCategories(),
-                cstManager.getCategories());
+                cstManager.getCategoryList());
     }
 
     @Test
-    public void getCategory() {
+    public void getCategoryById() {
         assertReflectionEquals(new TestObjectsBuilder().category1().buildSingleCategory(),
-                cstManager.getCategory(1));
+                cstManager.getCategoryById(1));
     }
 
     @Test
-    public void getNotExistingCategoryError() {
+    public void getErrorForNotExistingCategoryId() {
         try {
-            final Category category = cstManager.getCategory(999);
-            fail("getById should not pass! Found " + category);
+            final Category category = cstManager.getCategoryById(999);
+            fail("getCategoryById should not pass! Found " + category);
         } catch (Exception e) {
             // test OK
         }

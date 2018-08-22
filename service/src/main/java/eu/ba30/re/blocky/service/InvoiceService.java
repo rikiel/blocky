@@ -17,13 +17,13 @@ public interface InvoiceService {
      * @return all invoices stored in DB
      */
     @Nonnull
-    List<Invoice> getInvoices();
+    List<Invoice> getInvoiceList();
 
     /**
      * @return all attachments stored in DB
      */
     @Nonnull
-    List<Attachment> getAttachments();
+    List<Attachment> getAttachmentList();
 
     /**
      * @param invoices invoice to be removed
@@ -48,8 +48,8 @@ public interface InvoiceService {
      */
     @Nonnull
     @Transactional(readOnly = true)
-    default Invoice getInvoice(final int id) {
-        final List<Invoice> invoices = getInvoices().stream()
+    default Invoice getInvoiceById(final int id) {
+        final List<Invoice> invoices = getInvoiceList().stream()
                 .filter(invoice -> Objects.equals(invoice.getId(), id))
                 .collect(Collectors.toList());
         Validate.equals(invoices.size(), 1, String.format("Expecting 1 invoice with id=%s. Found %s", id, invoices));

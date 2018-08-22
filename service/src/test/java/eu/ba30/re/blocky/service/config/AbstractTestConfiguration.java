@@ -20,9 +20,9 @@ public abstract class AbstractTestConfiguration {
 
     @Bean
     public DataSource dataSource() {
-        final EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-        builder.addScript("db/test-data-db-schema.sql");
-        getSqlScripts().forEach(builder::addScript);
-        return builder.build();
+        return new EmbeddedDatabaseBuilder()
+                .addScript("db/test-data-db-schema.sql")
+                .addScripts(getSqlScripts().toArray(new String[0]))
+                .build();
     }
 }

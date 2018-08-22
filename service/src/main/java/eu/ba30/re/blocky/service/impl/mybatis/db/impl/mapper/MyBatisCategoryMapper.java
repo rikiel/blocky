@@ -13,7 +13,7 @@ import eu.ba30.re.blocky.model.cst.Category;
 
 public interface MyBatisCategoryMapper {
     @Nullable
-    @Results(id = "getCategory", value = {
+    @Results(id = "getCategoryById", value = {
             @Result(property = "id", column = "ID", id = true),
             @Result(property = "name", column = "NAME"),
             @Result(property = "description", column = "DESCR")
@@ -23,10 +23,10 @@ public interface MyBatisCategoryMapper {
             "FROM T_CST_CATEGORY",
             "WHERE ID = #{categoryId}",
     })
-    Category getCategory(@Param("categoryId") int categoryId);
+    Category getCategoryById(@Param("categoryId") int categoryId);
 
     @Nullable
-    @Results(id = "getAllCategories", value = {
+    @Results(id = "getCategoryList", value = {
             @Result(property = "id", column = "ID", id = true),
             @Result(property = "name", column = "NAME"),
             @Result(property = "description", column = "DESCR")
@@ -35,5 +35,5 @@ public interface MyBatisCategoryMapper {
             "SELECT *",
             "FROM T_CST_CATEGORY",
     })
-    List<Category> getAllCategories();
+    List<Category> getCategoryList();
 }

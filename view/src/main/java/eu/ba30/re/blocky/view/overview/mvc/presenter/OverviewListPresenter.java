@@ -111,6 +111,6 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
     }
 
     private void fillInvoicesFromService() {
-        model.setInvoices(invoiceService.getInvoices());
+        model.setInvoices(invoiceService.getInvoiceList());
     }
 }

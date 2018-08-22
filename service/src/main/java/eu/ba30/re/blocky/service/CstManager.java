@@ -11,12 +11,12 @@ public interface CstManager {
      * @return all categories stored in DB
      */
     @Nonnull
-    List<Category> getCategories();
+    List<Category> getCategoryList();
 
     /**
      * @param categoryId id of category
      * @return category
      */
     @Nonnull
-    Category getCategory(int categoryId);
+    Category getCategoryById(int categoryId);
 }

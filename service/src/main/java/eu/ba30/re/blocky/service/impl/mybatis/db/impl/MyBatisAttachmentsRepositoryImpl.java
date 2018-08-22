@@ -19,17 +19,17 @@ public class MyBatisAttachmentsRepositoryImpl implements AttachmentsRepository {
 
     @Nonnull
     @Override
-    public List<Attachment> getAttachmentList(final int invoiceId) {
+    public List<Attachment> getAttachmentsByInvoiceId(final int invoiceId) {
         return Validate.validateResult(attachmentMapper.getAttachmentsByInvoiceId(invoiceId));
     }
 
     @Override
-    public void createAttachments(final int invoiceId, @Nonnull final List<Attachment> attachments) {
+    public void createAttachmentsForInvoice(final int invoiceId, @Nonnull final List<Attachment> attachments) {
         Validate.notEmpty(attachments);
         attachments.forEach(item ->
                 Validate.notNull(item.getId(), item.getAttachmentType(), item.getContent()));
 
-        final int rowsAffected = attachmentMapper.createAttachmentsForInvoiceId(invoiceId, attachments);
+        final int rowsAffected = attachmentMapper.createAttachmentsForInvoice(invoiceId, attachments);
         Validate.equals(rowsAffected, attachments.size(), "Rows count does not match!");
     }
 
@@ -48,7 +48,7 @@ public class MyBatisAttachmentsRepositoryImpl implements AttachmentsRepository {
 
     @Nonnull
     @Override
-    public List<Attachment> getAllAttachments() {
-        return Validate.validateResult(attachmentMapper.getAllAttachments());
+    public List<Attachment> getAttachmentList() {
+        return Validate.validateResult(attachmentMapper.getAttachmentList());
     }
 }

@@ -24,7 +24,7 @@ public class JdbcInvoiceRepositoryImplTest extends AbstractInvoiceRepositoryImpl
     @Override
     protected void initCstExpectations() {
         new Expectations() {{
-            cstManager.getCategory(1);
+            cstManager.getCategoryById(1);
             result = new TestObjectsBuilder().category1().buildSingleCategory();
         }};
     }

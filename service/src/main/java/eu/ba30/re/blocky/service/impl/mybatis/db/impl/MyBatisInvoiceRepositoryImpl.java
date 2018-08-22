@@ -19,8 +19,8 @@ public class MyBatisInvoiceRepositoryImpl implements InvoiceRepository {
 
     @Nonnull
     @Override
-    public List<Invoice> getInvoices() {
-        return Validate.validateResult(invoiceMapper.getAllInvoices());
+    public List<Invoice> getInvoiceList() {
+        return Validate.validateResult(invoiceMapper.getInvoiceList());
     }
 
     @Override

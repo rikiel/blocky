@@ -52,7 +52,7 @@ public class JdbcAttachmentsRepositoryImpl implements AttachmentsRepository {
 
     @Nonnull
     @Override
-    public List<Attachment> getAttachmentList(final int invoiceId) {
+    public List<Attachment> getAttachmentsByInvoiceId(final int invoiceId) {
         final List<Attachment> results = Lists.newArrayList();
         try (final PreparedStatement statement = connection.prepareStatement(GET_ATTACHMENT_LIST_BY_ID_SQL_REQUEST)) {
             statement.setInt(1, invoiceId);
@@ -69,7 +69,7 @@ public class JdbcAttachmentsRepositoryImpl implements AttachmentsRepository {
     }
 
     @Override
-    public void createAttachments(final int invoiceId, @Nonnull final List<Attachment> attachments) {
+    public void createAttachmentsForInvoice(final int invoiceId, @Nonnull final List<Attachment> attachments) {
         Validate.notEmpty(attachments);
 
         try {
@@ -131,7 +131,7 @@ public class JdbcAttachmentsRepositoryImpl implements AttachmentsRepository {
 
     @Nonnull
     @Override
-    public List<Attachment> getAllAttachments() {
+    public List<Attachment> getAttachmentList() {
         final List<Attachment> results = Lists.newArrayList();
         try (final Statement statement = connection.createStatement()) {
             try (final ResultSet resultSet = statement.executeQuery(GET_ATTACHMENT_LIST_SQL_REQUEST)) {

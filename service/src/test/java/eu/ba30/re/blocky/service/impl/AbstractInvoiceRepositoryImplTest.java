@@ -33,11 +33,11 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     }
 
     @Test
-    public void getInvoices() {
+    public void getInvoiceList() {
         initCstExpectations();
 
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
-                invoiceRepository.getInvoices());
+                invoiceRepository.getInvoiceList());
     }
 
     @Test
@@ -49,7 +49,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
         assertReflectionEquals(new TestObjectsBuilder().category1().invoice1()
                         .category1().invoice2()
                         .buildInvoices(),
-                invoiceRepository.getInvoices());
+                invoiceRepository.getInvoiceList());
     }
 
     @Test
@@ -57,25 +57,25 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
         invoiceRepository.remove(new TestObjectsBuilder().category1().invoice1().buildInvoices());
 
         assertReflectionEquals(Lists.newArrayList(),
-                invoiceRepository.getInvoices());
+                invoiceRepository.getInvoiceList());
     }
 
-    @Test(dataProvider = "createErrorDataProvider")
-    public void createError(Invoice toCreate) {
-        final List<Invoice> allInvoices = invoiceRepository.getInvoices();
+    @Test(dataProvider = "createWithErrorDataProvider")
+    public void createWithError(Invoice toCreate) {
+        final List<Invoice> allInvoices = invoiceRepository.getInvoiceList();
         try {
             invoiceRepository.create(toCreate);
             fail("create should not pass!");
         } catch (Exception e) {
             assertReflectionEquals("Should not create any invoice",
                     allInvoices,
-                    invoiceRepository.getInvoices());
+                    invoiceRepository.getInvoiceList());
         }
     }
 
-    @Test(dataProvider = "removeErrorDataProvider")
-    public void removeError(Invoice toRemove) {
-        final List<Invoice> allInvoices = invoiceRepository.getInvoices();
+    @Test(dataProvider = "removeWithErrorDataProvider")
+    public void removeWithError(Invoice toRemove) {
+        final List<Invoice> allInvoices = invoiceRepository.getInvoiceList();
         Validate.isFalse(allInvoices.contains(toRemove), "Invoice exists in db");
         try {
             invoiceRepository.remove(Lists.newArrayList(toRemove));
@@ -83,7 +83,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
         } catch (Exception e) {
             assertReflectionEquals("Should not remove any invoice",
                     allInvoices,
-                    invoiceRepository.getInvoices());
+                    invoiceRepository.getInvoiceList());
         }
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     }
 
     @DataProvider
-    protected Object[][] createErrorDataProvider() {
+    protected Object[][] createWithErrorDataProvider() {
         return new Object[][] {
                 // null values
                 { null },
@@ -103,7 +103,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     }
 
     @DataProvider
-    protected Object[][] removeErrorDataProvider() {
+    protected Object[][] removeWithErrorDataProvider() {
         return new Object[][] {
                 { null },
                 { new Invoice() },

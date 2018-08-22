@@ -40,7 +40,7 @@ public class JdbcCstCategoryRepositoryImpl implements CstCategoryRepository {
 
     @Nonnull
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getCategoryList() {
         final List<Category> results = Lists.newArrayList();
         try (final Statement statement = connection.createStatement()) {
             try (final ResultSet resultSet = statement.executeQuery(GET_ALL_CATEGORIES_SQL_REQUEST)) {
@@ -56,7 +56,7 @@ public class JdbcCstCategoryRepositoryImpl implements CstCategoryRepository {
 
     @Nonnull
     @Override
-    public Category getById(int categoryId) {
+    public Category getCategoryById(int categoryId) {
         try (final PreparedStatement statement = connection.prepareStatement(GET_CATEGORY_BY_ID_SQL_REQUEST)) {
             statement.setInt(1, categoryId);
             try (final ResultSet resultSet = statement.executeQuery()) {

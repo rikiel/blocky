@@ -33,9 +33,9 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
     protected abstract TestObjectsBuilder createBuilder();
 
     @Test
-    public void getInvoices() {
+    public void getInvoiceList() {
         assertReflectionEquals(createBuilder().category1().attachment1().invoice1().buildInvoices(),
-                invoiceService.getInvoices());
+                invoiceService.getInvoiceList());
     }
 
     @Test
@@ -51,16 +51,16 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
         invoiceService.create(newInvoice);
         assertEquals(newInvoice.getId(), (Integer) TestObjectsBuilder.INVOICE_ID_2);
 
-        final Invoice createdInvoice = invoiceService.getInvoice(TestObjectsBuilder.INVOICE_ID_2);
+        final Invoice createdInvoice = invoiceService.getInvoiceById(TestObjectsBuilder.INVOICE_ID_2);
         assertReflectionEquals(newInvoice, createdInvoice);
     }
 
     @Test
     public void updateWithoutAttachments() {
-        final Invoice actualInvoice = invoiceService.getInvoice(TestObjectsBuilder.INVOICE_ID_1);
+        final Invoice actualInvoice = invoiceService.getInvoiceById(TestObjectsBuilder.INVOICE_ID_1);
         actualInvoice.setDetails("updateWithoutAttachments: Details");
         actualInvoice.setName("updateWithoutAttachments: Name");
-        actualInvoice.setCategory(cstManager.getCategory(1));
+        actualInvoice.setCategory(cstManager.getCategoryById(1));
         actualInvoice.setCreationDate(LocalDate.now());
         actualInvoice.setModificationDate(LocalDate.now());
         actualInvoice.setAttachments(Lists.newArrayList());
@@ -68,7 +68,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
         final Invoice actualUpdatedInvoice = invoiceService.update(actualInvoice);
         assertEquals(actualUpdatedInvoice.getId(), (Integer) TestObjectsBuilder.INVOICE_ID_1);
 
-        final Invoice updatedInvoice = invoiceService.getInvoice(TestObjectsBuilder.INVOICE_ID_1);
+        final Invoice updatedInvoice = invoiceService.getInvoiceById(TestObjectsBuilder.INVOICE_ID_1);
 
         assertReflectionEquals(actualInvoice, actualUpdatedInvoice);
         assertReflectionEquals(actualUpdatedInvoice, updatedInvoice);
@@ -76,10 +76,10 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
 
     @Test
     public void updateWithAttachments() {
-        final Invoice actualInvoice = invoiceService.getInvoice(TestObjectsBuilder.INVOICE_ID_1);
+        final Invoice actualInvoice = invoiceService.getInvoiceById(TestObjectsBuilder.INVOICE_ID_1);
         actualInvoice.setDetails("updateWithAttachments: Details");
         actualInvoice.setName("updateWithAttachments: Name");
-        actualInvoice.setCategory(cstManager.getCategory(2));
+        actualInvoice.setCategory(cstManager.getCategoryById(2));
         actualInvoice.setCreationDate(LocalDate.now().plusDays(1));
         actualInvoice.setModificationDate(LocalDate.now().plusWeeks(1));
         actualInvoice.setAttachments(createBuilder().attachment2().attachmentWithoutId().attachment3().attachmentWithoutId().buildAttachments());
@@ -87,7 +87,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
         final Invoice actualUpdatedInvoice = invoiceService.update(actualInvoice);
         assertEquals(actualUpdatedInvoice.getId(), (Integer) TestObjectsBuilder.INVOICE_ID_1);
 
-        final Invoice updatedInvoice = invoiceService.getInvoice(TestObjectsBuilder.INVOICE_ID_1);
+        final Invoice updatedInvoice = invoiceService.getInvoiceById(TestObjectsBuilder.INVOICE_ID_1);
 
         actualInvoice.getAttachments().get(0).setId(TestObjectsBuilder.ATTACHMENT_ID_2);
         actualInvoice.getAttachments().get(1).setId(TestObjectsBuilder.ATTACHMENT_ID_3);
@@ -99,57 +99,57 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
     @Test
     public void remove() {
         invoiceService.create(createBuilder().category2().attachment2().attachmentWithoutId().invoice2().invoiceId(null).buildSingleInvoice());
-        final int size = invoiceService.getInvoices().size();
-        invoiceService.remove(Lists.newArrayList(invoiceService.getInvoice(TestObjectsBuilder.INVOICE_ID_1)));
+        final int size = invoiceService.getInvoiceList().size();
+        invoiceService.remove(Lists.newArrayList(invoiceService.getInvoiceById(TestObjectsBuilder.INVOICE_ID_1)));
         try {
-            final Invoice removedInvoice = invoiceService.getInvoice(TestObjectsBuilder.INVOICE_ID_1);
+            final Invoice removedInvoice = invoiceService.getInvoiceById(TestObjectsBuilder.INVOICE_ID_1);
             fail("Removed invoice was found: " + removedInvoice);
         } catch (Exception e) {
             // continue
         }
-        final List<Invoice> invoices = invoiceService.getInvoices();
+        final List<Invoice> invoices = invoiceService.getInvoiceList();
         assertFalse(invoices.isEmpty());
         assertEquals(invoices.size(), size - 1);
         invoiceService.remove(invoices);
-        assertTrue(invoiceService.getInvoices().isEmpty());
+        assertTrue(invoiceService.getInvoiceList().isEmpty());
     }
 
     @Test(dataProvider = "failTransactionForCreateDataProvider")
     public void failTransactionForCreate(Invoice invoice) {
-        final List<Invoice> originalInvoices = invoiceService.getInvoices();
-        final List<Attachment> originalAttachments = invoiceService.getAttachments();
+        final List<Invoice> originalInvoices = invoiceService.getInvoiceList();
+        final List<Attachment> originalAttachments = invoiceService.getAttachmentList();
         try {
             invoiceService.create(invoice);
             fail("create should not pass!");
         } catch (Exception e) {
-            assertReflectionEquals(originalInvoices, invoiceService.getInvoices());
-            assertReflectionEquals(originalAttachments, invoiceService.getAttachments());
+            assertReflectionEquals(originalInvoices, invoiceService.getInvoiceList());
+            assertReflectionEquals(originalAttachments, invoiceService.getAttachmentList());
         }
     }
 
     @Test(dataProvider = "failTransactionForRemoveDataProvider")
     public void failTransactionForRemove(List<Invoice> invoices) {
-        final List<Invoice> originalInvoices = invoiceService.getInvoices();
-        final List<Attachment> originalAttachments = invoiceService.getAttachments();
+        final List<Invoice> originalInvoices = invoiceService.getInvoiceList();
+        final List<Attachment> originalAttachments = invoiceService.getAttachmentList();
         try {
             invoiceService.remove(invoices);
             fail("remove should not pass!");
         } catch (Exception e) {
-            assertReflectionEquals(originalInvoices, invoiceService.getInvoices());
-            assertReflectionEquals(originalAttachments, invoiceService.getAttachments());
+            assertReflectionEquals(originalInvoices, invoiceService.getInvoiceList());
+            assertReflectionEquals(originalAttachments, invoiceService.getAttachmentList());
         }
     }
 
     @Test(dataProvider = "failTransactionForUpdateDataProvider")
     public void failTransactionForUpdate(Invoice invoice) {
-        final List<Invoice> originalInvoices = invoiceService.getInvoices();
-        final List<Attachment> originalAttachments = invoiceService.getAttachments();
+        final List<Invoice> originalInvoices = invoiceService.getInvoiceList();
+        final List<Attachment> originalAttachments = invoiceService.getAttachmentList();
         try {
             invoiceService.update(invoice);
             fail("update should not pass!");
         } catch (Exception e) {
-            assertReflectionEquals(originalInvoices, invoiceService.getInvoices());
-            assertReflectionEquals(originalAttachments, invoiceService.getAttachments());
+            assertReflectionEquals(originalInvoices, invoiceService.getInvoiceList());
+            assertReflectionEquals(originalAttachments, invoiceService.getAttachmentList());
         }
     }
 

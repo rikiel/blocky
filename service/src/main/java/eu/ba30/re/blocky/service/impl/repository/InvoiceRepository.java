@@ -11,7 +11,7 @@ public interface InvoiceRepository {
      * @return all invoices stored in DB
      */
     @Nonnull
-    List<Invoice> getInvoices();
+    List<Invoice> getInvoiceList();
 
     /**
      * @param invoices invoice to be removed

@@ -33,10 +33,10 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
     @Nonnull
     @Transactional(readOnly = true)
     @Override
-    public List<Invoice> getInvoices() {
-        return invoiceRepository.getInvoices()
+    public List<Invoice> getInvoiceList() {
+        return invoiceRepository.getInvoiceList()
                 .stream()
-                .peek(invoice -> invoice.setAttachments(attachmentsRepository.getAttachmentList(invoice.getId())))
+                .peek(invoice -> invoice.setAttachments(attachmentsRepository.getAttachmentsByInvoiceId(invoice.getId())))
                 .sorted(Comparator.<Invoice, LocalDate>comparing(invoice -> invoice.getModificationDate() != null
                         ? invoice.getModificationDate()
                         : invoice.getCreationDate())
@@ -46,8 +46,8 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
 
     @Nonnull
     @Override
-    public List<Attachment> getAttachments() {
-        return attachmentsRepository.getAllAttachments();
+    public List<Attachment> getAttachmentList() {
+        return attachmentsRepository.getAttachmentList();
     }
 
     @Transactional
@@ -58,7 +58,7 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
         invoiceRepository.remove(invoices);
         final Set<Attachment> attachments = invoices
                 .stream()
-                .flatMap(invoice -> attachmentsRepository.getAttachmentList(invoice.getId()).stream())
+                .flatMap(invoice -> attachmentsRepository.getAttachmentsByInvoiceId(invoice.getId()).stream())
                 .collect(Collectors.toSet());
         if (!attachments.isEmpty()) {
             attachmentsRepository.removeAttachments(Lists.newArrayList(attachments));
@@ -81,7 +81,7 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
                 Validate.isNull(attachment.getId());
                 attachment.setId(attachmentsRepository.getNextItemId());
             });
-            attachmentsRepository.createAttachments(invoice.getId(), attachments);
+            attachmentsRepository.createAttachmentsForInvoice(invoice.getId(), attachments);
         }
     }
 
@@ -97,7 +97,7 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
         invoiceRepository.create(invoice);
 
         // instead of update, do remove all from db and then insert all from model
-        final List<Attachment> actualDbAttachments = attachmentsRepository.getAttachmentList(invoice.getId());
+        final List<Attachment> actualDbAttachments = attachmentsRepository.getAttachmentsByInvoiceId(invoice.getId());
         if (!actualDbAttachments.isEmpty()) {
             attachmentsRepository.removeAttachments(actualDbAttachments);
         }
@@ -107,7 +107,7 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
                     attachment.setId(attachmentsRepository.getNextItemId());
                 }
             });
-            attachmentsRepository.createAttachments(invoice.getId(), invoice.getAttachments());
+            attachmentsRepository.createAttachmentsForInvoice(invoice.getId(), invoice.getAttachments());
         }
         return invoice;
     }

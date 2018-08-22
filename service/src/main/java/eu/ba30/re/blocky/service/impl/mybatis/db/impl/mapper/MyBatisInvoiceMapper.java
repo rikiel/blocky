@@ -16,10 +16,10 @@ import eu.ba30.re.blocky.model.Invoice;
 
 public interface MyBatisInvoiceMapper {
     @Nullable
-    @Results(id = "getAllInvoices", value = {
+    @Results(id = "getInvoiceList", value = {
             @Result(property = "id", column = "ID", id = true),
             @Result(property = "name", column = "NAME"),
-            @Result(property = "category", column = "CATEGORY_ID", one = @One(select = "eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper.MyBatisCategoryMapper.getCategory")),
+            @Result(property = "category", column = "CATEGORY_ID", one = @One(select = "eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper.MyBatisCategoryMapper.getCategoryById")),
             @Result(property = "details", column = "DETAILS"),
             @Result(property = "creationDate", column = "CREATION"),
             @Result(property = "modificationDate", column = "LAST_MODIFICATION"),
@@ -28,7 +28,7 @@ public interface MyBatisInvoiceMapper {
             "SELECT *",
             "FROM T_INVOICES",
     })
-    List<Invoice> getAllInvoices();
+    List<Invoice> getInvoiceList();
 
     @Delete({
             "<script>",

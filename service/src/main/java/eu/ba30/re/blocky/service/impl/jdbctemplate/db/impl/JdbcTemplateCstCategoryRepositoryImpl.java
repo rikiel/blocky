@@ -33,14 +33,14 @@ public class JdbcTemplateCstCategoryRepositoryImpl implements CstCategoryReposit
 
     @Nonnull
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getCategoryList() {
         return jdbc.query(GET_ALL_CATEGORIES_SQL_REQUEST,
                 new CategoryMapper());
     }
 
     @Nonnull
     @Override
-    public Category getById(int categoryId) {
+    public Category getCategoryById(int categoryId) {
         return jdbc.queryForObject(GET_CATEGORY_BY_ID_SQL_REQUEST,
                 new Object[] { categoryId },
                 new CategoryMapper());

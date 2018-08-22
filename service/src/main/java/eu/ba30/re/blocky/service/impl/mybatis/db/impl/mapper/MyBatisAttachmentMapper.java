@@ -15,7 +15,7 @@ import eu.ba30.re.blocky.model.Attachment;
 
 public interface MyBatisAttachmentMapper {
     @Nullable
-    @Results(id = "getAllAttachments", value = {
+    @Results(id = "getAttachmentList", value = {
             @Result(property = "id", column = "ID", id = true),
             @Result(property = "name", column = "NAME"),
             @Result(property = "fileName", column = "FILE_NAME"),
@@ -27,7 +27,7 @@ public interface MyBatisAttachmentMapper {
             "SELECT *",
             "FROM T_ATTACHMENTS",
     })
-    List<Attachment> getAllAttachments();
+    List<Attachment> getAttachmentList();
 
     @Nullable
     @Results(id = "getAttachmentsByInvoiceId", value = {
@@ -55,7 +55,7 @@ public interface MyBatisAttachmentMapper {
             "</foreach>",
             "</script>",
     })
-    int createAttachmentsForInvoiceId(@Param("invoiceId") int invoiceId, @Param("attachments") List<Attachment> attachments);
+    int createAttachmentsForInvoice(@Param("invoiceId") int invoiceId, @Param("attachments") List<Attachment> attachments);
 
     @Delete({
             "<script>",

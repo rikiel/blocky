@@ -19,13 +19,13 @@ public class MyBatisCstCategoryRepositoryImpl implements CstCategoryRepository {
 
     @Nonnull
     @Override
-    public List<Category> getAllCategories() {
-        return Validate.validateResult(categoryMapper.getAllCategories());
+    public List<Category> getCategoryList() {
+        return Validate.validateResult(categoryMapper.getCategoryList());
     }
 
     @Nonnull
     @Override
-    public Category getById(int categoryId) {
-        return Validate.validateResult(categoryMapper.getCategory(categoryId));
+    public Category getCategoryById(int categoryId) {
+        return Validate.validateResult(categoryMapper.getCategoryById(categoryId));
     }
 }
