@@ -6,12 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.test.annotation.DirtiesContext;
 
 import eu.ba30.re.blocky.service.config.AbstractTestConfiguration;
 
 @ComponentScan({ "eu.ba30.re.blocky.service.impl.hibernate" })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 abstract class AbstractHibernateTestConfiguration extends AbstractTestConfiguration {
     @Bean
     public JpaTransactionManager jpaTransactionManager() {

@@ -2,7 +2,8 @@ package eu.ba30.re.blocky.service.config.mybatis;
 
 import javax.sql.DataSource;
 
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.LocalCacheScope;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,12 @@ abstract class AbstractMyBatisTestConfiguration extends AbstractTestConfiguratio
 
     @Bean
     @Autowired
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+    public SqlSessionFactoryBean sqlSessionFactory(DataSource dataSource) {
         final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
-        return sqlSessionFactoryBean.getObject();
+        final Configuration configuration = new Configuration();
+        configuration.setLocalCacheScope(LocalCacheScope.STATEMENT);
+        sqlSessionFactoryBean.setConfiguration(configuration);
+        return sqlSessionFactoryBean;
     }
 }

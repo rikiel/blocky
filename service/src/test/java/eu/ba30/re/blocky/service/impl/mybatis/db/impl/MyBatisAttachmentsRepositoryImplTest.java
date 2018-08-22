@@ -26,8 +26,6 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @ContextConfiguration(classes = { MyBatisAttachmentsRepositoryImplTest.AttachmentRepositoryConfiguration.class })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MyBatisAttachmentsRepositoryImplTest extends AbstractTestNGSpringContextTests {
-    private static final int INVOICE_ID = 1;
-
     @Autowired
     private MyBatisAttachmentsRepository attachmentsRepository;
 
@@ -42,7 +40,7 @@ public class MyBatisAttachmentsRepositoryImplTest extends AbstractTestNGSpringCo
     @Test
     public void getAttachmentList() {
         assertReflectionEquals(new TestObjectsBuilder().attachment1().buildAttachments(),
-                attachmentsRepository.getAttachmentList(INVOICE_ID));
+                attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
     }
 
     @Test
@@ -59,11 +57,11 @@ public class MyBatisAttachmentsRepositoryImplTest extends AbstractTestNGSpringCo
 
     @Test
     public void createAttachments() {
-        attachmentsRepository.createAttachments(INVOICE_ID,
+        attachmentsRepository.createAttachments(TestObjectsBuilder.INVOICE_ID_1,
                 new TestObjectsBuilder().attachment2().attachment3().buildAttachments());
 
         assertReflectionEquals(new TestObjectsBuilder().attachment1().attachment2().attachment3().buildAttachments(),
-                attachmentsRepository.getAttachmentList(INVOICE_ID));
+                attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
     }
 
     @Test
@@ -71,32 +69,32 @@ public class MyBatisAttachmentsRepositoryImplTest extends AbstractTestNGSpringCo
         attachmentsRepository.removeAttachments(new TestObjectsBuilder().attachment1().buildAttachments());
 
         assertReflectionEquals(Lists.newArrayList(),
-                attachmentsRepository.getAttachmentList(INVOICE_ID));
+                attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
     }
 
     @Test(dataProvider = "createAttachmentsErrorDataProvider")
     public void createAttachmentsError(Attachment toCreate) {
-        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
+        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1);
         try {
             attachmentsRepository.createAttachments(1, Lists.newArrayList(toCreate));
             fail("createAttachments should not pass");
         } catch (Exception e) {
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
-                    attachmentsRepository.getAttachmentList(1));
+                    attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
         }
     }
 
     @Test(dataProvider = "removeAttachmentsErrorDataProvider")
     public void removeAttachmentsError(Attachment toRemove) {
-        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(1);
+        final List<Attachment> allAttachments = attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1);
         try {
             attachmentsRepository.removeAttachments(Lists.newArrayList(toRemove));
             fail("removeAttachments should not pass!");
         } catch (Exception e) {
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
-                    attachmentsRepository.getAttachmentList(1));
+                    attachmentsRepository.getAttachmentList(TestObjectsBuilder.INVOICE_ID_1));
         }
     }
 

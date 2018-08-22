@@ -40,7 +40,14 @@ public abstract class InvoiceServiceImplTest extends AbstractTestNGSpringContext
 
     @Test
     public void create() {
-        final Invoice newInvoice = createBuilder().category2().attachment2().attachmentWithoutId().invoice2().invoiceId(null).buildSingleInvoice();
+        final Invoice newInvoice = createBuilder().category2()
+                .attachment2()
+                .attachmentWithoutId()
+                .attachment3()
+                .attachmentWithoutId()
+                .invoice2()
+                .invoiceId(null)
+                .buildSingleInvoice();
         invoiceService.create(newInvoice);
         assertEquals(newInvoice.getId(), (Integer) TestObjectsBuilder.INVOICE_ID_2);
 
