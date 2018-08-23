@@ -111,7 +111,7 @@ public class JdbcInvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
-    public int getNextItemId() {
+    public int getNextInvoiceId() {
         try (final Statement statement = connection.createStatement()) {
             try (final ResultSet resultSet = statement.executeQuery(GET_NEXT_INVOICE_ID_SQL_REQUEST)) {
                 Integer id = null;

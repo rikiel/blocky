@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository.mapper;
+package eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
 
 import eu.ba30.re.blocky.model.cst.Category;
 
-public interface MyBatisCategoryMapper {
+public interface MyBatisAnnotationCategoryMapper {
     @Nullable
     @Results(id = "getCategoryById", value = {
             @Result(property = "id", column = "ID", id = true),

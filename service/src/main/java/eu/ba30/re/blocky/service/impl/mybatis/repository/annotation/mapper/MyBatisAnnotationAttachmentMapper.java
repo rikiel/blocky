@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository.mapper;
+package eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper;
 
 import java.util.List;
 
@@ -12,8 +12,9 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import eu.ba30.re.blocky.model.Attachment;
+import eu.ba30.re.blocky.service.impl.mybatis.repository.MyBatisAttachmentTypeHandler;
 
-public interface MyBatisAttachmentMapper {
+public interface MyBatisAnnotationAttachmentMapper {
     @Nullable
     @Results(id = "getAttachmentList", value = {
             @Result(property = "id", column = "ID", id = true),
@@ -74,5 +75,5 @@ public interface MyBatisAttachmentMapper {
             "SELECT NEXT VALUE FOR S_ATTACHMENT_ID",
             "FROM DUAL_ATTACHMENT_ID",
     })
-    int getNextId();
+    int getNextAttachmentId();
 }

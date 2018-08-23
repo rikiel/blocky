@@ -93,7 +93,7 @@ public class JdbcTemplateInvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
-    public int getNextItemId() {
+    public int getNextInvoiceId() {
         return jdbc.queryForObject(GET_NEXT_INVOICE_ID_SQL_REQUEST, Integer.class);
     }
 

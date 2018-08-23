@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository;
+package eu.ba30.re.blocky.service.impl.mybatis.repository.annotation;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
-import eu.ba30.re.blocky.service.impl.mybatis.repository.mapper.MyBatisAttachmentMapper;
+import eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper.MyBatisAnnotationAttachmentMapper;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 
 @Service
-public class MyBatisAttachmentsRepositoryImpl implements AttachmentsRepository {
+public class MyBatisAnnotationAttachmentsRepositoryImpl implements AttachmentsRepository {
     @Autowired
-    private MyBatisAttachmentMapper attachmentMapper;
+    private MyBatisAnnotationAttachmentMapper attachmentMapper;
 
     @Nonnull
     @Override
@@ -42,8 +42,8 @@ public class MyBatisAttachmentsRepositoryImpl implements AttachmentsRepository {
     }
 
     @Override
-    public int getNextItemId() {
-        return attachmentMapper.getNextId();
+    public int getNextAttachmentId() {
+        return attachmentMapper.getNextAttachmentId();
     }
 
     @Nonnull

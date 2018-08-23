@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository;
+package eu.ba30.re.blocky.service.impl.mybatis.repository.xml;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
-import eu.ba30.re.blocky.service.impl.mybatis.repository.mapper.MyBatisInvoiceMapper;
+import eu.ba30.re.blocky.service.impl.mybatis.repository.xml.mapper.MyBatisXmlInvoiceMapper;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
-public class MyBatisInvoiceRepositoryImpl implements InvoiceRepository {
+public class MyBatisXmlInvoiceRepositoryImpl implements InvoiceRepository {
     @Autowired
-    private MyBatisInvoiceMapper invoiceMapper;
+    private MyBatisXmlInvoiceMapper invoiceMapper;
 
     @Nonnull
     @Override
@@ -41,7 +41,7 @@ public class MyBatisInvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
-    public int getNextItemId() {
-        return invoiceMapper.getNextId();
+    public int getNextInvoiceId() {
+        return invoiceMapper.getNextInvoiceId();
     }
 }

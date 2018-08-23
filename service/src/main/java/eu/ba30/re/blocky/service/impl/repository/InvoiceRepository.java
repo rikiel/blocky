@@ -26,5 +26,5 @@ public interface InvoiceRepository {
     /**
      * @return next id that should be used as invoiceId in DB
      */
-    int getNextItemId();
+    int getNextInvoiceId();
 }

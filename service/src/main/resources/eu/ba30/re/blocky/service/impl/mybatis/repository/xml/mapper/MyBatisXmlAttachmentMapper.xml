@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eu.ba30.re.blocky.service.impl.mybatis.repository.xml.mapper.MyBatisXmlAttachmentMapper">
+
+    <resultMap id="AttachmentResultMap" type="eu.ba30.re.blocky.model.Attachment">
+        <result column="ID" property="id"/>
+        <result column="NAME" property="name"/>
+        <result column="FILE_NAME" property="fileName"/>
+        <result column="MIME_TYPE" property="mimeType"/>
+        <result column="TYPE" property="attachmentType" typeHandler="eu.ba30.re.blocky.service.impl.mybatis.repository.MyBatisAttachmentTypeHandler"/>
+        <result column="FILE_CONTENT" property="content"/>
+    </resultMap>
+
+    <select id="getAttachmentList" resultMap="AttachmentResultMap">
+        SELECT *
+        FROM T_ATTACHMENTS
+    </select>
+
+    <select id="getAttachmentsByInvoiceId" resultMap="AttachmentResultMap">
+        SELECT *
+        FROM T_ATTACHMENTS
+        WHERE INVOICE_ID = #{invoiceId}
+    </select>
+
+    <insert id="createAttachmentsForInvoice">
+        INSERT INTO T_ATTACHMENTS
+        (ID, INVOICE_ID, NAME, FILE_NAME, MIME_TYPE, TYPE, FILE_CONTENT)
+        VALUES
+        <foreach collection="attachments" item="a" separator=",">
+            (#{a.id}, #{invoiceId}, #{a.name}, #{a.fileName}, #{a.mimeType}, #{a.attachmentType.id}, #{a.content})
+        </foreach>
+    </insert>
+
+    <delete id="removeAttachments">
+        DELETE FROM T_ATTACHMENTS
+        WHERE ID IN
+        (
+        <foreach collection='attachments' item='a' separator=','>
+            #{a.id}
+        </foreach>
+        )
+    </delete>
+
+    <select id="getNextAttachmentId" resultType="int">
+        SELECT NEXT VALUE FOR S_ATTACHMENT_ID
+        FROM DUAL_ATTACHMENT_ID
+    </select>
+</mapper>

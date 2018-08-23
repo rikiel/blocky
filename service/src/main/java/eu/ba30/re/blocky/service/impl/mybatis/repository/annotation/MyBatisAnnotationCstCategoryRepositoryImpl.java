@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository;
+package eu.ba30.re.blocky.service.impl.mybatis.repository.annotation;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.service.impl.mybatis.repository.mapper.MyBatisCategoryMapper;
+import eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper.MyBatisAnnotationCategoryMapper;
 import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
-public class MyBatisCstCategoryRepositoryImpl implements CstCategoryRepository {
+public class MyBatisAnnotationCstCategoryRepositoryImpl implements CstCategoryRepository {
     @Autowired
-    private MyBatisCategoryMapper categoryMapper;
+    private MyBatisAnnotationCategoryMapper categoryMapper;
 
     @Nonnull
     @Override

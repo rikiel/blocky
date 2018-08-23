@@ -113,7 +113,7 @@ public class JdbcAttachmentsRepositoryImpl implements AttachmentsRepository {
     }
 
     @Override
-    public int getNextItemId() {
+    public int getNextAttachmentId() {
         try (final Statement statement = connection.createStatement()) {
             try (final ResultSet resultSet = statement.executeQuery(GET_NEXT_ATTACHMENT_ID_SQL_REQUEST)) {
                 Integer id = null;

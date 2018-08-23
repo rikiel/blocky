@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository.mapper;
+package eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import org.apache.ibatis.annotations.Update;
 
 import eu.ba30.re.blocky.model.Invoice;
 
-public interface MyBatisInvoiceMapper {
+public interface MyBatisAnnotationInvoiceMapper {
     @Nullable
     @Results(id = "getInvoiceList", value = {
             @Result(property = "id", column = "ID", id = true),
             @Result(property = "name", column = "NAME"),
-            @Result(property = "category", column = "CATEGORY_ID", one = @One(select = "eu.ba30.re.blocky.service.impl.mybatis.repository.mapper.MyBatisCategoryMapper.getCategoryById")),
+            @Result(property = "category", column = "CATEGORY_ID", one = @One(select = "eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper.MyBatisAnnotationCategoryMapper.getCategoryById")),
             @Result(property = "details", column = "DETAILS"),
             @Result(property = "creationDate", column = "CREATION"),
             @Result(property = "modificationDate", column = "LAST_MODIFICATION"),
@@ -54,5 +54,5 @@ public interface MyBatisInvoiceMapper {
             "SELECT NEXT VALUE FOR S_INVOICE_ID",
             "FROM DUAL_INVOICE_ID",
     })
-    int getNextId();
+    int getNextInvoiceId();
 }

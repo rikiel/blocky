@@ -95,7 +95,7 @@ public class JdbcTemplateAttachmentsRepositoryImpl implements AttachmentsReposit
     }
 
     @Override
-    public int getNextItemId() {
+    public int getNextAttachmentId() {
         return jdbc.queryForObject(GET_NEXT_ATTACHMENT_ID_SQL_REQUEST, Integer.class);
     }
 

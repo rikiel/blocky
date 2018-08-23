@@ -71,7 +71,7 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
         Validate.notNull(invoice);
         Validate.isNull(invoice.getId());
 
-        invoice.setId(invoiceRepository.getNextItemId());
+        invoice.setId(invoiceRepository.getNextInvoiceId());
         invoice.setCreationDate(LocalDate.now());
         invoiceRepository.create(invoice);
 
@@ -79,7 +79,7 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
         if (!attachments.isEmpty()) {
             attachments.forEach(attachment -> {
                 Validate.isNull(attachment.getId());
-                attachment.setId(attachmentsRepository.getNextItemId());
+                attachment.setId(attachmentsRepository.getNextAttachmentId());
             });
             attachmentsRepository.createAttachmentsForInvoice(invoice.getId(), attachments);
         }
@@ -104,7 +104,7 @@ public class JdbcTemplateInvoiceServiceImpl implements InvoiceService {
         if (!invoice.getAttachments().isEmpty()) {
             invoice.getAttachments().forEach(attachment -> {
                 if (attachment.getId() == null) {
-                    attachment.setId(attachmentsRepository.getNextItemId());
+                    attachment.setId(attachmentsRepository.getNextAttachmentId());
                 }
             });
             attachmentsRepository.createAttachmentsForInvoice(invoice.getId(), invoice.getAttachments());

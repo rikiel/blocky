@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="eu.ba30.re.blocky.service.impl.mybatis.repository.xml.mapper.MyBatisXmlInvoiceMapper">
+
+    <resultMap id="InvoiceResultMap" type="eu.ba30.re.blocky.model.Invoice">
+        <result column="ID" property="id"/>
+        <result column="NAME" property="name"/>
+        <result column="DETAILS" property="details"/>
+        <result column="CREATION" property="creationDate"/>
+        <result column="LAST_MODIFICATION" property="modificationDate"/>
+        <association column="CATEGORY_ID" property="category"
+                     select="eu.ba30.re.blocky.service.impl.mybatis.repository.xml.mapper.MyBatisXmlCategoryMapper.getCategoryById"/>
+    </resultMap>
+
+    <select id="getInvoiceList" resultMap="InvoiceResultMap">
+        SELECT *
+        FROM T_INVOICES
+    </select>
+
+    <delete id="remove">
+        DELETE FROM T_INVOICES
+        WHERE ID IN
+        (
+        <foreach collection='invoices' item='i' separator=','>
+            #{i.id}
+        </foreach>
+        )
+    </delete>
+
+    <insert id="create">
+        INSERT INTO T_INVOICES
+        (ID, NAME, CATEGORY_ID, DETAILS, CREATION, LAST_MODIFICATION)
+        VALUES (#{invoice.id}, #{invoice.name}, #{invoice.category.id}, #{invoice.details}, #{invoice.creationDate}, #{invoice.modificationDate})
+    </insert>
+
+    <select id="getNextInvoiceId" resultType="int">
+        SELECT NEXT VALUE FOR S_INVOICE_ID
+        FROM DUAL_INVOICE_ID
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.config.mybatis;
+package eu.ba30.re.blocky.service.config.mybatis.annotation;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import com.google.common.collect.Lists;
 
 @Configuration
-public class MyBatisServiceTestConfiguration extends AbstractMyBatisTestConfiguration {
+public class MyBatisServiceAnnotationTestConfiguration extends AbstractMyBatisAnnotationTestConfiguration {
     @Nonnull
     @Override
     protected List<String> getSqlScripts() {

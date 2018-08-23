@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository.mapper;
+package eu.ba30.re.blocky.service.impl.mybatis.repository;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

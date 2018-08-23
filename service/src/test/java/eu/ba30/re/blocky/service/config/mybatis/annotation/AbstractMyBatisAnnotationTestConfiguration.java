@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.config.mybatis;
+package eu.ba30.re.blocky.service.config.mybatis.annotation;
 
 import javax.sql.DataSource;
 
@@ -12,11 +12,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import eu.ba30.re.blocky.service.CstManager;
+import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.service.config.AbstractTestConfiguration;
+import eu.ba30.re.blocky.service.impl.mybatis.MyBatisCstManagerImpl;
+import eu.ba30.re.blocky.service.impl.mybatis.MyBatisInvoiceServiceImpl;
 
-@ComponentScan({ "eu.ba30.re.blocky.service.impl.mybatis" })
-@MapperScan("eu.ba30.re.blocky.service.impl.mybatis.repository.mapper")
-abstract class AbstractMyBatisTestConfiguration extends AbstractTestConfiguration {
+@ComponentScan({ "eu.ba30.re.blocky.service.impl.mybatis.repository.annotation" })
+@MapperScan("eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper")
+abstract class AbstractMyBatisAnnotationTestConfiguration extends AbstractTestConfiguration {
     @Bean
     @Autowired
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
@@ -38,5 +42,15 @@ abstract class AbstractMyBatisTestConfiguration extends AbstractTestConfiguratio
         configuration.setLocalCacheScope(LocalCacheScope.STATEMENT);
         sqlSessionFactoryBean.setConfiguration(configuration);
         return sqlSessionFactoryBean;
+    }
+
+    @Bean
+    public CstManager cstManager() {
+        return new MyBatisCstManagerImpl();
+    }
+
+    @Bean
+    public InvoiceService invoiceService() {
+        return new MyBatisInvoiceServiceImpl();
     }
 }

@@ -34,5 +34,5 @@ public interface AttachmentsRepository {
     /**
      * @return next id that should be used as attachmentId in DB
      */
-    int getNextItemId();
+    int getNextAttachmentId();
 }
