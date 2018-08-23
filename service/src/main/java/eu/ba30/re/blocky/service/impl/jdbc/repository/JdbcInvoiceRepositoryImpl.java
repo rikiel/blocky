@@ -1,11 +1,13 @@
-package eu.ba30.re.blocky.service.impl.jdbctemplate.db.impl;
+package eu.ba30.re.blocky.service.impl.jdbc.repository;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,10 +15,11 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
+
+import eu.ba30.re.blocky.common.exception.DatabaseException;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
@@ -24,8 +27,8 @@ import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
-public class JdbcTemplateInvoiceRepositoryImpl implements InvoiceRepository {
-    private static final Logger log = LoggerFactory.getLogger(JdbcTemplateInvoiceRepositoryImpl.class);
+public class JdbcInvoiceRepositoryImpl implements InvoiceRepository {
+    private static final Logger log = LoggerFactory.getLogger(JdbcInvoiceRepositoryImpl.class);
 
     private static final String GET_ALL_INVOICES_SQL_REQUEST = ""
                                                                + " SELECT * "
@@ -43,33 +46,46 @@ public class JdbcTemplateInvoiceRepositoryImpl implements InvoiceRepository {
                                                                   " SELECT NEXT VALUE FOR S_INVOICE_ID " +
                                                                   " FROM DUAL_INVOICE_ID ";
 
+    private final InvoiceRowMapper MAPPER = new InvoiceRowMapper();
+
     @Autowired
     private CstManager cstManager;
 
     @Autowired
-    private JdbcTemplate jdbc;
+    private Connection connection;
 
     @Nonnull
     @Override
     public List<Invoice> getInvoiceList() {
-        return jdbc.query(GET_ALL_INVOICES_SQL_REQUEST, new InvoiceRowMapper());
+        final List<Invoice> results = Lists.newArrayList();
+        try (final Statement statement = connection.createStatement()) {
+            try (final ResultSet resultSet = statement.executeQuery(GET_ALL_INVOICES_SQL_REQUEST)) {
+                while (resultSet.next()) {
+                    results.add(MAPPER.mapRow(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("SqlException was thrown", e);
+        }
+        return results;
     }
 
     @Override
     public void remove(@Nonnull final List<Invoice> invoices) {
         Validate.notEmpty(invoices);
 
-        final List<Object[]> invoiceIds = invoices
-                .stream()
-                .map(invoice -> {
-                    Validate.notNull(invoice.getId());
-                    return new Object[] { invoice.getId() };
-                })
-                .collect(Collectors.toList());
-
-        final int[] removedPerItem = jdbc.batchUpdate(REMOVE_INVOICE_SQL_REQUEST, invoiceIds);
-
-        Validate.validateOneRowAffectedInDbCall(removedPerItem);
+        try {
+            try (final PreparedStatement statement = connection.prepareStatement(REMOVE_INVOICE_SQL_REQUEST)) {
+                for (final Invoice invoice : invoices) {
+                    statement.setInt(1, invoice.getId());
+                    statement.addBatch();
+                }
+                final int[] affectedRows = statement.executeBatch();
+                Validate.validateOneRowAffectedInDbCall(affectedRows);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("SqlException was thrown", e);
+        }
     }
 
     @Override
@@ -77,29 +93,43 @@ public class JdbcTemplateInvoiceRepositoryImpl implements InvoiceRepository {
         Validate.notNull(invoice);
         Validate.notNull(invoice.getId(), invoice.getName(), invoice.getCreationDate());
 
-        final int created = jdbc.update(CREATE_INVOICE_SQL_REQUEST,
-                invoice.getId(),
-                invoice.getName(),
-                invoice.getCategory() == null
-                        ? null
-                        : invoice.getCategory().getId(),
-                invoice.getDetails(),
-                Date.valueOf(invoice.getCreationDate()),
-                invoice.getModificationDate() == null
-                        ? null
-                        : Date.valueOf(invoice.getModificationDate()));
+        try {
+            try (final PreparedStatement statement = connection.prepareStatement(CREATE_INVOICE_SQL_REQUEST)) {
+                statement.setInt(1, invoice.getId());
+                statement.setString(2, invoice.getName());
+                statement.setInt(3, invoice.getCategory().getId());
+                statement.setString(4, invoice.getDetails());
+                statement.setDate(5, Date.valueOf(invoice.getCreationDate()));
+                statement.setDate(6, Date.valueOf(invoice.getModificationDate()));
 
-        Validate.validateOneRowAffectedInDbCall(new int[] { created });
+                statement.execute();
+                Validate.equals(statement.getUpdateCount(), 1, "Should create one row. Found " + statement.getUpdateCount());
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("SqlException was thrown", e);
+        }
     }
 
     @Override
     public int getNextItemId() {
-        return jdbc.queryForObject(GET_NEXT_INVOICE_ID_SQL_REQUEST, Integer.class);
+        try (final Statement statement = connection.createStatement()) {
+            try (final ResultSet resultSet = statement.executeQuery(GET_NEXT_INVOICE_ID_SQL_REQUEST)) {
+                Integer id = null;
+                while (resultSet.next()) {
+                    Validate.isNull(id, "More IDs was returned!");
+                    id = resultSet.getInt(1);
+                }
+                Validate.notNull(id, "No ID was returned!");
+                return id;
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("SqlException was thrown", e);
+        }
     }
 
-    private class InvoiceRowMapper implements RowMapper<Invoice> {
-        @Override
-        public Invoice mapRow(ResultSet resultSet, int i) throws SQLException {
+    private class InvoiceRowMapper {
+        @Nonnull
+        Invoice mapRow(ResultSet resultSet) throws SQLException {
             final Invoice invoice = new Invoice();
 
             final int id = resultSet.getInt("ID");

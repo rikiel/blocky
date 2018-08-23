@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.jdbc.db.impl;
+package eu.ba30.re.blocky.service.impl.jdbc.repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

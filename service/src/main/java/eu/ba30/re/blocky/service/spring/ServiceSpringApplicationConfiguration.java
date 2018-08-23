@@ -6,6 +6,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan({ "eu.ba30.re.blocky.service.impl.jdbctemplate" })
-@MapperScan({ "eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper" })
+@MapperScan({ "eu.ba30.re.blocky.service.impl.mybatis.repository.mapper" })
 public class ServiceSpringApplicationConfiguration {
 }

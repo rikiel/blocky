@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.jdbctemplate.db.impl;
+package eu.ba30.re.blocky.service.impl.jdbctemplate.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

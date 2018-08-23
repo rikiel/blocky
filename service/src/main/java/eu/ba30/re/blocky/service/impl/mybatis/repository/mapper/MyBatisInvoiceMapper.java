@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper;
+package eu.ba30.re.blocky.service.impl.mybatis.repository.mapper;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface MyBatisInvoiceMapper {
     @Results(id = "getInvoiceList", value = {
             @Result(property = "id", column = "ID", id = true),
             @Result(property = "name", column = "NAME"),
-            @Result(property = "category", column = "CATEGORY_ID", one = @One(select = "eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper.MyBatisCategoryMapper.getCategoryById")),
+            @Result(property = "category", column = "CATEGORY_ID", one = @One(select = "eu.ba30.re.blocky.service.impl.mybatis.repository.mapper.MyBatisCategoryMapper.getCategoryById")),
             @Result(property = "details", column = "DETAILS"),
             @Result(property = "creationDate", column = "CREATION"),
             @Result(property = "modificationDate", column = "LAST_MODIFICATION"),

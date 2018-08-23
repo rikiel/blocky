@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.db.impl;
+package eu.ba30.re.blocky.service.impl.mybatis.repository;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
-import eu.ba30.re.blocky.service.impl.mybatis.db.impl.mapper.MyBatisCategoryMapper;
+import eu.ba30.re.blocky.service.impl.mybatis.repository.mapper.MyBatisCategoryMapper;
 import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
