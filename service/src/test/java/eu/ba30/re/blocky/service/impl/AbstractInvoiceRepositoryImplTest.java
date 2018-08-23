@@ -28,7 +28,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     public void getNextItemId() {
         final int sequenceBegin = 10;
         for (int i = 0; i < 100; ++i) {
-            assertEquals(invoiceRepository.getNextItemId(), sequenceBegin + i);
+            assertEquals(invoiceRepository.getNextInvoiceId(), sequenceBegin + i);
         }
     }
 

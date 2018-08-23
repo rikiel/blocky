@@ -27,7 +27,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
     public void getNextItemId() {
         final int sequenceBegin = 10;
         for (int i = 0; i < 100; ++i) {
-            assertEquals(attachmentsRepository.getNextItemId(), sequenceBegin + i);
+            assertEquals(attachmentsRepository.getNextAttachmentId(), sequenceBegin + i);
         }
     }
 

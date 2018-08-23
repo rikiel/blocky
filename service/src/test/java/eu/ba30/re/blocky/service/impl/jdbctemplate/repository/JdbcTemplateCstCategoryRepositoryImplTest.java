@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.jdbc.impl;
+package eu.ba30.re.blocky.service.impl.jdbctemplate.repository;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.google.common.collect.Lists;
 
-import eu.ba30.re.blocky.service.config.jdbc.JdbcRepositoryTestConfiguration;
+import eu.ba30.re.blocky.service.config.jdbctemplate.JdbcTemplateRepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.AbstractCstCategoryRepositoryImplTest;
 
-@ContextConfiguration(classes = { JdbcCstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
-public class JdbcCstCategoryRepositoryImplTest extends AbstractCstCategoryRepositoryImplTest {
+@ContextConfiguration(classes = { JdbcTemplateCstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
+public class JdbcTemplateCstCategoryRepositoryImplTest extends AbstractCstCategoryRepositoryImplTest {
     @Configuration
-    public static class CstCategoryRepositoryConfiguration extends JdbcRepositoryTestConfiguration {
+    public static class CstCategoryRepositoryConfiguration extends JdbcTemplateRepositoryTestConfiguration {
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
