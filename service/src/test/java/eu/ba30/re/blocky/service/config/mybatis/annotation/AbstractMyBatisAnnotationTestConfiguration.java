@@ -21,6 +21,7 @@ abstract class AbstractMyBatisAnnotationTestConfiguration extends AbstractMyBati
         final SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         final Configuration configuration = new Configuration();
+        // Bez tohoto 2x po sebe vykonane selecty pocas 1 transakcie vzdy vratia rovnaku hodnotu z cache
         configuration.setLocalCacheScope(LocalCacheScope.STATEMENT);
         sqlSessionFactoryBean.setConfiguration(configuration);
         return sqlSessionFactoryBean;

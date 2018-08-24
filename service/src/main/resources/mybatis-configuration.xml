@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <settings>
+        <!--Bez tohoto 2x po sebe vykonane selecty pocas 1 transakcie vzdy vratia rovnaku hodnotu z cache-->
         <setting name="localCacheScope" value="STATEMENT"/>
     </settings>
     <mappers>
