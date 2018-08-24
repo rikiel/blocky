@@ -1,5 +1,10 @@
 # Bločky
 
+## 0. Úloha branche ORM
+Úlohou tejto branche bolo vyskúšať si použitie rôznych nástrojov pri práci s DB.
+Nástroje sa využívajú iba v module service, zvyšné časti sú rovnaké s pôvodnou master branchou.
+Odporúčam pozrieť si hlavne testy, z ktorých je vidieť použitie nástrojov - hibernate/jdbc/jdbcTemplate/MyBatis.
+
 ## 1. Úloha programu
 Hlavnou úlohou aplikácie Bločky je spravovať rôzne výdaje jedného užívateľa,
 alebo spoločné výdaje viacerých užívateľov.
