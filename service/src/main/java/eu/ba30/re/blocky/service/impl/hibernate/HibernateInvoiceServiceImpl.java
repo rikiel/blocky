@@ -10,9 +10,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.model.impl.hibernate.HibernateAttachmentImpl;
+import eu.ba30.re.blocky.model.impl.hibernate.HibernateInvoiceImpl;
 import eu.ba30.re.blocky.service.InvoiceService;
 
 @Service
@@ -24,17 +28,17 @@ public class HibernateInvoiceServiceImpl implements InvoiceService {
     @Transactional(readOnly = true)
     @Override
     public List<Invoice> getInvoiceList() {
-        final CriteriaQuery<Invoice> query = entityManager.getCriteriaBuilder().createQuery(Invoice.class);
-        query.select(query.from(Invoice.class));
-        return Validate.validateResult(entityManager.createQuery(query).getResultList());
+        final CriteriaQuery<HibernateInvoiceImpl> query = entityManager.getCriteriaBuilder().createQuery(HibernateInvoiceImpl.class);
+        query.select(query.from(HibernateInvoiceImpl.class));
+        return Lists.newArrayList(Validate.validateResult(entityManager.createQuery(query).getResultList()));
     }
 
     @Nonnull
     @Override
     public List<Attachment> getAttachmentList() {
-        final CriteriaQuery<Attachment> query = entityManager.getCriteriaBuilder().createQuery(Attachment.class);
-        query.select(query.from(Attachment.class));
-        return Validate.validateResult(entityManager.createQuery(query).getResultList());
+        final CriteriaQuery<HibernateAttachmentImpl> query = entityManager.getCriteriaBuilder().createQuery(HibernateAttachmentImpl.class);
+        query.select(query.from(HibernateAttachmentImpl.class));
+        return Lists.newArrayList(Validate.validateResult(entityManager.createQuery(query).getResultList()));
     }
 
     @Transactional

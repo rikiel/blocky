@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl;
 
 public interface MyBatisXmlCategoryMapper {
     @Nullable
-    Category getCategoryById(int categoryId);
+    CategoryImpl getCategoryById(int categoryId);
 
     @Nullable
-    List<Category> getCategoryList();
+    List<CategoryImpl> getCategoryList();
 }

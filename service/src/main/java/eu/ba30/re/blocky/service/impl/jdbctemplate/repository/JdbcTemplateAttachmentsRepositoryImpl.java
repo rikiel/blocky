@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
+import eu.ba30.re.blocky.model.impl.other.AttachmentImpl;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 
 @Service
@@ -109,7 +110,7 @@ public class JdbcTemplateAttachmentsRepositoryImpl implements AttachmentsReposit
     private static class AttachmentMapper implements RowMapper<Attachment> {
         @Override
         public Attachment mapRow(ResultSet rs, int rowNum) throws SQLException {
-            final Attachment attachment = new Attachment();
+            final Attachment attachment = new AttachmentImpl();
 
             attachment.setId(rs.getInt("ID"));
             attachment.setName(rs.getString("NAME"));

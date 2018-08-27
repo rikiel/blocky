@@ -7,13 +7,14 @@ import javax.annotation.Nullable;
 import org.apache.ibatis.annotations.Param;
 
 import eu.ba30.re.blocky.model.Attachment;
+import eu.ba30.re.blocky.model.impl.other.AttachmentImpl;
 
 public interface MyBatisXmlAttachmentMapper {
     @Nullable
-    List<Attachment> getAttachmentList();
+    List<AttachmentImpl> getAttachmentList();
 
     @Nullable
-    List<Attachment> getAttachmentsByInvoiceId(@Param("invoiceId") int invoiceId);
+    List<AttachmentImpl> getAttachmentsByInvoiceId(@Param("invoiceId") int invoiceId);
 
     int createAttachmentsForInvoice(@Param("invoiceId") int invoiceId, @Param("attachments") List<Attachment> attachments);
 

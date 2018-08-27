@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl;
 import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
@@ -49,7 +50,7 @@ public class JdbcTemplateCstCategoryRepositoryImpl implements CstCategoryReposit
     private static class CategoryMapper implements RowMapper<Category> {
         @Override
         public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
-            final Category category = new Category();
+            final Category category = new CategoryImpl();
 
             category.setId(rs.getInt("ID"));
             category.setDescription(rs.getString("DESCR"));

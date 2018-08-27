@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="eu.ba30.re.blocky.service.impl.mybatis.repository.xml.mapper.MyBatisXmlCategoryMapper">
 
-    <resultMap id="CategoryResultMap" type="eu.ba30.re.blocky.model.cst.Category">
+    <resultMap id="CategoryResultMap" type="eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl">
         <result column="ID" property="id"/>
         <result column="NAME" property="name"/>
         <result column="DESCR" property="description"/>

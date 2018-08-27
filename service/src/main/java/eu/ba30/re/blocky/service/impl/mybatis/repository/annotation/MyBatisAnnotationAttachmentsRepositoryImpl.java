@@ -7,6 +7,8 @@ import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
+
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper.MyBatisAnnotationAttachmentMapper;
@@ -20,7 +22,7 @@ public class MyBatisAnnotationAttachmentsRepositoryImpl implements AttachmentsRe
     @Nonnull
     @Override
     public List<Attachment> getAttachmentsByInvoiceId(final int invoiceId) {
-        return Validate.validateResult(attachmentMapper.getAttachmentsByInvoiceId(invoiceId));
+        return Lists.newArrayList(Validate.validateResult(attachmentMapper.getAttachmentsByInvoiceId(invoiceId)));
     }
 
     @Override
@@ -49,6 +51,6 @@ public class MyBatisAnnotationAttachmentsRepositoryImpl implements AttachmentsRe
     @Nonnull
     @Override
     public List<Attachment> getAttachmentList() {
-        return Validate.validateResult(attachmentMapper.getAttachmentList());
+        return Lists.newArrayList(Validate.validateResult(attachmentMapper.getAttachmentList()));
     }
 }

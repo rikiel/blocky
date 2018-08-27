@@ -7,6 +7,8 @@ import javax.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
+
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.impl.mybatis.repository.annotation.mapper.MyBatisAnnotationInvoiceMapper;
@@ -20,7 +22,7 @@ public class MyBatisAnnotationInvoiceRepositoryImpl implements InvoiceRepository
     @Nonnull
     @Override
     public List<Invoice> getInvoiceList() {
-        return Validate.validateResult(invoiceMapper.getInvoiceList());
+        return Lists.newArrayList(Validate.validateResult(invoiceMapper.getInvoiceList()));
     }
 
     @Override

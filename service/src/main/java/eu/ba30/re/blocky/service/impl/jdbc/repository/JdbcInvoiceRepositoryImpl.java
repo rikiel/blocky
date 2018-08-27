@@ -23,6 +23,7 @@ import eu.ba30.re.blocky.common.exception.DatabaseException;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
@@ -130,7 +131,7 @@ public class JdbcInvoiceRepositoryImpl implements InvoiceRepository {
     private class InvoiceRowMapper {
         @Nonnull
         Invoice mapRow(ResultSet resultSet) throws SQLException {
-            final Invoice invoice = new Invoice();
+            final Invoice invoice = new InvoiceImpl();
 
             final int id = resultSet.getInt("ID");
             invoice.setId(id);

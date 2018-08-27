@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
-import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl;
 
 public interface MyBatisAnnotationCategoryMapper {
     @Nullable
@@ -23,7 +23,7 @@ public interface MyBatisAnnotationCategoryMapper {
             "FROM T_CST_CATEGORY",
             "WHERE ID = #{categoryId}",
     })
-    Category getCategoryById(@Param("categoryId") int categoryId);
+    CategoryImpl getCategoryById(@Param("categoryId") int categoryId);
 
     @Nullable
     @Results(id = "getCategoryList", value = {
@@ -35,5 +35,5 @@ public interface MyBatisAnnotationCategoryMapper {
             "SELECT *",
             "FROM T_CST_CATEGORY",
     })
-    List<Category> getCategoryList();
+    List<CategoryImpl> getCategoryList();
 }

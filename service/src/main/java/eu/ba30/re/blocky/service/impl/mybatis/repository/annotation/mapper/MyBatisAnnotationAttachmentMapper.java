@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import eu.ba30.re.blocky.model.Attachment;
+import eu.ba30.re.blocky.model.impl.other.AttachmentImpl;
 import eu.ba30.re.blocky.service.impl.mybatis.repository.MyBatisAttachmentTypeHandler;
 
 public interface MyBatisAnnotationAttachmentMapper {
@@ -28,7 +29,7 @@ public interface MyBatisAnnotationAttachmentMapper {
             "SELECT *",
             "FROM T_ATTACHMENTS",
     })
-    List<Attachment> getAttachmentList();
+    List<AttachmentImpl> getAttachmentList();
 
     @Nullable
     @Results(id = "getAttachmentsByInvoiceId", value = {
@@ -44,7 +45,7 @@ public interface MyBatisAnnotationAttachmentMapper {
             "FROM T_ATTACHMENTS",
             "WHERE INVOICE_ID = #{invoiceId}",
     })
-    List<Attachment> getAttachmentsByInvoiceId(@Param("invoiceId") int invoiceId);
+    List<AttachmentImpl> getAttachmentsByInvoiceId(@Param("invoiceId") int invoiceId);
 
     @Insert({
             "<script>",

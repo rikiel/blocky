@@ -17,15 +17,17 @@ public abstract class AbstractCstManagerImplTest extends AbstractTestNGSpringCon
     @Autowired
     private CstManager cstManager;
 
+    protected abstract TestObjectsBuilder createBuilder();
+
     @Test
     public void getCategoryList() {
-        assertReflectionEquals(new TestObjectsBuilder().category1().category2().buildCategories(),
+        assertReflectionEquals(createBuilder().category1().category2().buildCategories(),
                 cstManager.getCategoryList());
     }
 
     @Test
     public void getCategoryById() {
-        assertReflectionEquals(new TestObjectsBuilder().category1().buildSingleCategory(),
+        assertReflectionEquals(createBuilder().category1().buildSingleCategory(),
                 cstManager.getCategoryById(1));
     }
 

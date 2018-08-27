@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.common.exception.DatabaseException;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl;
 import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
@@ -77,7 +78,7 @@ public class JdbcCstCategoryRepositoryImpl implements CstCategoryRepository {
     private static class CategoryMapper {
         @Nonnull
         Category mapRow(ResultSet rs) throws SQLException {
-            final Category category = new Category();
+            final Category category = new CategoryImpl();
 
             category.setId(rs.getInt("ID"));
             category.setDescription(rs.getString("DESCR"));

@@ -13,6 +13,12 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.model.impl.hibernate.HibernateAttachmentImpl;
+import eu.ba30.re.blocky.model.impl.hibernate.HibernateInvoiceImpl;
+import eu.ba30.re.blocky.model.impl.hibernate.cst.HibernateCategoryImpl;
+import eu.ba30.re.blocky.model.impl.other.AttachmentImpl;
+import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
+import eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl;
 
 public class TestObjectsBuilder {
     public static final int INVOICE_ID_1 = 1;
@@ -35,8 +41,13 @@ public class TestObjectsBuilder {
         this.buildForHibernate = buildForHibernate;
     }
 
+    public TestObjectsBuilder invoiceEmpty() {
+        invoices.add(invoice());
+        return this;
+    }
+
     public TestObjectsBuilder invoice1() {
-        final Invoice invoice = new Invoice();
+        final Invoice invoice = invoice();
         invoices.add(invoice);
         invoice.setId(INVOICE_ID_1);
         invoice.setName("Nazov#1");
@@ -58,7 +69,7 @@ public class TestObjectsBuilder {
     }
 
     public TestObjectsBuilder invoice2() {
-        final Invoice invoice = new Invoice();
+        final Invoice invoice = invoice();
         invoices.add(invoice);
         invoice.setId(INVOICE_ID_2);
         invoice.setName("Nazov#2");
@@ -85,7 +96,7 @@ public class TestObjectsBuilder {
     }
 
     public TestObjectsBuilder category1() {
-        final Category category = new Category();
+        final Category category = category();
         categories.add(category);
         category.setId(1);
         category.setName("CategoryName#1");
@@ -94,7 +105,7 @@ public class TestObjectsBuilder {
     }
 
     public TestObjectsBuilder category2() {
-        final Category category = new Category();
+        final Category category = category();
         categories.add(category);
         category.setId(2);
         category.setName("CategoryName#2");
@@ -107,8 +118,13 @@ public class TestObjectsBuilder {
         return this;
     }
 
+    public TestObjectsBuilder attachmentEmpty() {
+        attachments.add(attachment());
+        return this;
+    }
+
     public TestObjectsBuilder attachment1() {
-        final Attachment attachment = new Attachment();
+        final Attachment attachment = attachment();
         attachments.add(attachment);
         attachment.setId(ATTACHMENT_ID_1);
         attachment.setName("Name#1");
@@ -120,7 +136,7 @@ public class TestObjectsBuilder {
     }
 
     public TestObjectsBuilder attachment2() {
-        final Attachment attachment = new Attachment();
+        final Attachment attachment = attachment();
         attachments.add(attachment);
         attachment.setId(ATTACHMENT_ID_2);
         attachment.setName("Name#2");
@@ -132,7 +148,7 @@ public class TestObjectsBuilder {
     }
 
     public TestObjectsBuilder attachment3() {
-        final Attachment attachment = new Attachment();
+        final Attachment attachment = attachment();
         attachments.add(attachment);
         attachment.setId(ATTACHMENT_ID_3);
         attachment.setName("Name#3");
@@ -179,5 +195,20 @@ public class TestObjectsBuilder {
     @Nonnull
     public List<Category> buildCategories() {
         return categories;
+    }
+
+    @Nonnull
+    private Invoice invoice() {
+        return buildForHibernate ? new HibernateInvoiceImpl() : new InvoiceImpl();
+    }
+
+    @Nonnull
+    private Attachment attachment() {
+        return buildForHibernate ? new HibernateAttachmentImpl() : new AttachmentImpl();
+    }
+
+    @Nonnull
+    private Category category() {
+        return buildForHibernate ? new HibernateCategoryImpl() : new CategoryImpl();
     }
 }

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="eu.ba30.re.blocky.service.impl.mybatis.repository.xml.mapper.MyBatisXmlInvoiceMapper">
 
-    <resultMap id="InvoiceResultMap" type="eu.ba30.re.blocky.model.Invoice">
+    <resultMap id="InvoiceResultMap" type="eu.ba30.re.blocky.model.impl.other.InvoiceImpl">
         <result column="ID" property="id"/>
         <result column="NAME" property="name"/>
         <result column="DETAILS" property="details"/>

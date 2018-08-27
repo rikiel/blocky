@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
+import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
@@ -100,7 +101,7 @@ public class JdbcTemplateInvoiceRepositoryImpl implements InvoiceRepository {
     private class InvoiceRowMapper implements RowMapper<Invoice> {
         @Override
         public Invoice mapRow(ResultSet resultSet, int i) throws SQLException {
-            final Invoice invoice = new Invoice();
+            final Invoice invoice = new InvoiceImpl();
 
             final int id = resultSet.getInt("ID");
             invoice.setId(id);

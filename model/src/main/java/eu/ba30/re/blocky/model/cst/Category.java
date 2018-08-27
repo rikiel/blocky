@@ -2,59 +2,22 @@ package eu.ba30.re.blocky.model.cst;
 
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.google.common.base.MoreObjects;
 
-@Table(name = "T_CST_CATEGORY")
-@Entity
-public class Category {
-    @Id
-    @Column(name = "ID")
-    private Integer id;
-    @Column(name = "NAME")
-    private String name;
-    @Column(name = "DESCR")
-    private String description;
+public abstract class Category {
+    public abstract Integer getId();
 
-    public Integer getId() {
-        return id;
-    }
+    public abstract void setId(Integer id);
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public abstract String getName();
 
-    public String getName() {
-        return name;
-    }
+    public abstract void setName(String name);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public abstract String getDescription();
 
-    public String getDescription() {
-        return description;
-    }
+    public abstract void setDescription(String description);
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("name", name)
-                .add("description", description)
-                .toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -62,11 +25,19 @@ public class Category {
             return false;
         }
         final Category category = (Category) o;
-        return Objects.equals(id, category.id);
+        return Objects.equals(getId(), category.getId());
+    }
+
+    public final int hashCode() {
+        return Objects.hash(getId());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public final String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", getId())
+                .add("name", getName())
+                .add("description", getDescription())
+                .toString();
     }
 }

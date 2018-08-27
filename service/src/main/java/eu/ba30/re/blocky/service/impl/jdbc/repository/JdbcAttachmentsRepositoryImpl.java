@@ -21,6 +21,7 @@ import eu.ba30.re.blocky.common.exception.DatabaseException;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
+import eu.ba30.re.blocky.model.impl.other.AttachmentImpl;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 
 @Service
@@ -148,7 +149,7 @@ public class JdbcAttachmentsRepositoryImpl implements AttachmentsRepository {
     private static class AttachmentMapper {
         @Nonnull
         Attachment mapRow(ResultSet rs) throws SQLException {
-            final Attachment attachment = new Attachment();
+            final Attachment attachment = new AttachmentImpl();
 
             attachment.setId(rs.getInt("ID"));
             attachment.setName(rs.getString("NAME"));

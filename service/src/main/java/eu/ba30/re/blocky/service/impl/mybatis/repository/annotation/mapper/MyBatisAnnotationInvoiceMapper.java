@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 
 public interface MyBatisAnnotationInvoiceMapper {
     @Nullable
@@ -28,7 +29,7 @@ public interface MyBatisAnnotationInvoiceMapper {
             "SELECT *",
             "FROM T_INVOICES",
     })
-    List<Invoice> getInvoiceList();
+    List<InvoiceImpl> getInvoiceList();
 
     @Delete({
             "<script>",

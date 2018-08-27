@@ -7,10 +7,11 @@ import javax.annotation.Nullable;
 import org.apache.ibatis.annotations.Param;
 
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 
 public interface MyBatisXmlInvoiceMapper {
     @Nullable
-    List<Invoice> getInvoiceList();
+    List<InvoiceImpl> getInvoiceList();
 
     int remove(@Param("invoices") List<Invoice> invoices);
 

@@ -158,7 +158,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
         return new Object[][] {
                 { null },
                 // name is null
-                { new Invoice() },
+                { createBuilder().invoiceEmpty().buildSingleInvoice() },
                 // fail for id=1
                 { createBuilder().attachment1().invoice1().buildSingleInvoice() },
                 // fail for existing attachment
@@ -172,11 +172,11 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
         return new Object[][] {
                 { null },
                 // null id
-                { Lists.newArrayList(new Invoice()) },
+                { createBuilder().invoiceEmpty().buildInvoices() },
                 // nonexisting id
                 { createBuilder().invoice1().invoiceId(999).buildInvoices() },
                 // null id for second invoice
-                { Lists.newArrayList(createBuilder().attachment1().category1().invoice1().buildSingleInvoice(), new Invoice()) },
+                { createBuilder().attachment1().category1().invoice1().invoiceEmpty().buildInvoices() },
                 };
     }
 
@@ -185,7 +185,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
         return new Object[][] {
                 { null },
                 // null id
-                { new Invoice() },
+                { createBuilder().invoiceEmpty().buildSingleInvoice() },
                 // nonexisting id
                 { createBuilder().invoice1().invoiceId(null).buildSingleInvoice() },
                 { createBuilder().invoice1().invoiceId(999).buildSingleInvoice() },

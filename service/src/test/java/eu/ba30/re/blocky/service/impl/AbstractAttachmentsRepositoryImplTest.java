@@ -94,7 +94,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
         return new Object[][] {
                 // null values
                 { null },
-                { new Attachment() },
+                { new TestObjectsBuilder().attachmentEmpty().buildSingleAttachment() },
                 // attachments exists in db
                 { new TestObjectsBuilder().attachment1().buildSingleAttachment() },
                 };
@@ -105,7 +105,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
         return new Object[][] {
                 // null values
                 { null },
-                { new Attachment() },
+                { new TestObjectsBuilder().attachmentEmpty().buildSingleAttachment() },
                 // not exist
                 { new TestObjectsBuilder().attachment2().buildSingleAttachment() },
                 { new TestObjectsBuilder().attachment3().buildSingleAttachment() },

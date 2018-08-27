@@ -18,6 +18,7 @@ import eu.ba30.re.blocky.common.exception.DatabaseException;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
+import eu.ba30.re.blocky.model.impl.other.AttachmentImpl;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
@@ -123,7 +124,7 @@ public class InvoiceCreatePresenter implements InvoiceCreateView.InvoiceCreateHa
             // upload failed
             return;
         }
-        final Attachment attachment = new Attachment();
+        final Attachment attachment = new AttachmentImpl();
         attachment.setName(fileName);
         attachment.setFileName(fileName);
         attachment.setMimeType(mimeType);

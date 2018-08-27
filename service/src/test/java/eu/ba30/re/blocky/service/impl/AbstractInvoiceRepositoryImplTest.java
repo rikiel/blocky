@@ -96,7 +96,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
         return new Object[][] {
                 // null values
                 { null },
-                { new Invoice() },
+                { new TestObjectsBuilder().invoiceEmpty().buildSingleInvoice() },
                 // invoice exists in db
                 { new TestObjectsBuilder().invoice1().buildSingleInvoice() },
                 };
@@ -106,7 +106,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     protected Object[][] removeWithErrorDataProvider() {
         return new Object[][] {
                 { null },
-                { new Invoice() },
+                { new TestObjectsBuilder().invoiceEmpty().buildSingleInvoice() },
                 // not exist
                 { new TestObjectsBuilder().invoice2().buildSingleInvoice() },
                 };

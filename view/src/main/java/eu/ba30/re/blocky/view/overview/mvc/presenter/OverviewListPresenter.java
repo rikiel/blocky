@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 import eu.ba30.re.blocky.service.InvoiceService;
 import eu.ba30.re.blocky.view.ApplicationViewName;
 import eu.ba30.re.blocky.view.common.mvc.view.utils.NavigationUtils;
@@ -55,7 +56,7 @@ public class OverviewListPresenter implements OverviewListView.OverviewListHandl
 
     @Override
     public void onAddNew() {
-        final InvoiceCreateModel targetModel = new InvoiceCreateModel(new Invoice(), InvoiceCreateModel.UseCase.CREATE);
+        final InvoiceCreateModel targetModel = new InvoiceCreateModel(new InvoiceImpl(), InvoiceCreateModel.UseCase.CREATE);
         NavigationUtils.navigateTo(ApplicationViewName.CREATE, targetModel);
     }
 
