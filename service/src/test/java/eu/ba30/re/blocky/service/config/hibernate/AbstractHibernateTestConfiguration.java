@@ -2,6 +2,9 @@ package eu.ba30.re.blocky.service.config.hibernate;
 
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -17,9 +20,10 @@ abstract class AbstractHibernateTestConfiguration extends AbstractTestConfigurat
     }
 
     @Bean
-    public LocalSessionFactoryBean localSessionFactoryBean() {
+    @Autowired
+    public LocalSessionFactoryBean localSessionFactoryBean(DataSource dataSource) {
         final LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan("eu.ba30.re.blocky.model");
         sessionFactory.setHibernateProperties(new Properties() {{
             setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");

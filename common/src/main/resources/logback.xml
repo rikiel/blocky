@@ -9,6 +9,9 @@
     <logger name="org.apache.ibatis.transaction.jdbc.JdbcTransaction">
         <level value="TRACE"/>
     </logger>
+    <logger name="org.hibernate">
+        <level value="TRACE"/>
+    </logger>
 
     <root level="INFO"/>
 </configuration>
