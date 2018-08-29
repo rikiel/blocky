@@ -1,5 +1,5 @@
 # TO BE DONE
-BLOCKY-15 MyBatis pomocou XML konfiguracie
+BLOCKY-16 Spark implementacia
 
 # DONE
 BLOCKY-1 Inicializacia projektu
@@ -16,3 +16,4 @@ BLOCKY-11 MyBatis
 BLOCKY-12 Hibernate
 BLOCKY-13 ORM cez jdbcTemplate, myBatis, hibernate
 BLOCKY-14 JDBC implementacia
+BLOCKY-15 MyBatis pomocou XML konfiguracie

@@ -69,7 +69,8 @@ public class HibernateInvoiceServiceImpl implements InvoiceService {
         Validate.notNull(invoice.getId(), "ID should BE filled for update instances!");
 
         for (Attachment attachment : invoice.getAttachments()) {
-            attachment.setInvoice(invoice);
+            Validate.isTrue(attachment instanceof HibernateAttachmentImpl, "Hibernate service needs to use hibernate objects (HibernateAttachmentImpl)");
+            ((HibernateAttachmentImpl) attachment).setInvoice(invoice);
         }
         return Validate.validateResult(entityManager.merge(invoice));
     }

@@ -10,6 +10,6 @@ import eu.ba30.re.blocky.service.impl.AbstractCstManagerImplTest;
 public class MyBatisAnnotationCstManagerImplTest extends AbstractCstManagerImplTest {
     @Override
     protected TestObjectsBuilder createBuilder() {
-        return new TestObjectsBuilder();
+        return new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.MY_BATIS);
     }
 }

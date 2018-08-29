@@ -39,6 +39,12 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
     }
 
     @Test
+    public void getAttachmentList() {
+        assertReflectionEquals(createBuilder().attachment1().buildAttachments(),
+                invoiceService.getAttachmentList());
+    }
+
+    @Test
     public void create() {
         final Invoice newInvoice = createBuilder().category2()
                 .attachment2()

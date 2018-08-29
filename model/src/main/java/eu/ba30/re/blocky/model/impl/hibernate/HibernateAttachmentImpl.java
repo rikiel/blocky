@@ -101,11 +101,15 @@ public class HibernateAttachmentImpl extends Attachment {
     }
 
     @Override
-    public Invoice getInvoice() {
-        return invoice;
+    public Integer getInvoiceId() {
+        return invoice == null ? null : invoice.getId();
     }
 
     @Override
+    public void setInvoiceId(Integer invoiceId) {
+        throw new UnsupportedOperationException("Not supported for hibernate");
+    }
+
     public void setInvoice(Invoice invoice) {
         this.invoice = invoice;
     }

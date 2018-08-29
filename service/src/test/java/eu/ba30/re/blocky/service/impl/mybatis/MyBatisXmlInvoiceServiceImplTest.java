@@ -10,6 +10,6 @@ import eu.ba30.re.blocky.service.impl.AbstractInvoiceServiceImplTest;
 public class MyBatisXmlInvoiceServiceImplTest extends AbstractInvoiceServiceImplTest {
     @Override
     protected TestObjectsBuilder createBuilder() {
-        return new TestObjectsBuilder();
+        return new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.MY_BATIS);
     }
 }

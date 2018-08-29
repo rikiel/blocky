@@ -17,15 +17,17 @@ public abstract class AbstractCstCategoryRepositoryImplTest extends AbstractTest
     @Autowired
     private CstCategoryRepository cstCategoryRepository;
 
+    protected abstract TestObjectsBuilder createBuilder();
+
     @Test
     public void getCategoryList() {
-        assertReflectionEquals(new TestObjectsBuilder().category1().category2().buildCategories(),
+        assertReflectionEquals(createBuilder().category1().category2().buildCategories(),
                 cstCategoryRepository.getCategoryList());
     }
 
     @Test
     public void getCategoryById() {
-        assertReflectionEquals(new TestObjectsBuilder().category1().buildSingleCategory(),
+        assertReflectionEquals(createBuilder().category1().buildSingleCategory(),
                 cstCategoryRepository.getCategoryById(1));
     }
 

@@ -24,6 +24,8 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     @Autowired
     private InvoiceRepository invoiceRepository;
 
+    protected abstract TestObjectsBuilder createBuilder();
+
     @Test
     public void getNextItemId() {
         final int sequenceBegin = 10;
@@ -36,7 +38,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     public void getInvoiceList() {
         initCstExpectations();
 
-        assertReflectionEquals(new TestObjectsBuilder().category1().invoice1().buildInvoices(),
+        assertReflectionEquals(createBuilder().category1().invoice1().buildInvoices(),
                 invoiceRepository.getInvoiceList());
     }
 
@@ -44,9 +46,9 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     public void create() {
         initCstExpectations();
 
-        invoiceRepository.create(new TestObjectsBuilder().category1().invoice2().buildSingleInvoice());
+        invoiceRepository.create(createBuilder().category1().invoice2().buildSingleInvoice());
 
-        assertReflectionEquals(new TestObjectsBuilder().category1().invoice1()
+        assertReflectionEquals(createBuilder().category1().invoice1()
                         .category1().invoice2()
                         .buildInvoices(),
                 invoiceRepository.getInvoiceList());
@@ -54,7 +56,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
 
     @Test
     public void remove() {
-        invoiceRepository.remove(new TestObjectsBuilder().category1().invoice1().buildInvoices());
+        invoiceRepository.remove(createBuilder().category1().invoice1().buildInvoices());
 
         assertReflectionEquals(Lists.newArrayList(),
                 invoiceRepository.getInvoiceList());
@@ -96,9 +98,9 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
         return new Object[][] {
                 // null values
                 { null },
-                { new TestObjectsBuilder().invoiceEmpty().buildSingleInvoice() },
+                { createBuilder().invoiceEmpty().buildSingleInvoice() },
                 // invoice exists in db
-                { new TestObjectsBuilder().invoice1().buildSingleInvoice() },
+                { createBuilder().invoice1().buildSingleInvoice() },
                 };
     }
 
@@ -106,9 +108,9 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
     protected Object[][] removeWithErrorDataProvider() {
         return new Object[][] {
                 { null },
-                { new TestObjectsBuilder().invoiceEmpty().buildSingleInvoice() },
+                { createBuilder().invoiceEmpty().buildSingleInvoice() },
                 // not exist
-                { new TestObjectsBuilder().invoice2().buildSingleInvoice() },
+                { createBuilder().invoice2().buildSingleInvoice() },
                 };
     }
 }

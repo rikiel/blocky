@@ -9,11 +9,17 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.google.common.collect.Lists;
 
+import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.jdbc.JdbcRepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.AbstractCstCategoryRepositoryImplTest;
 
 @ContextConfiguration(classes = { JdbcCstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
 public class JdbcCstCategoryRepositoryImplTest extends AbstractCstCategoryRepositoryImplTest {
+    @Override
+    protected TestObjectsBuilder createBuilder() {
+        return new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.JDBC);
+    }
+
     @Configuration
     public static class CstCategoryRepositoryConfiguration extends JdbcRepositoryTestConfiguration {
         @Nonnull

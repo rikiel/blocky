@@ -27,18 +27,14 @@ public class TestObjectsBuilder {
     public static final int ATTACHMENT_ID_2 = 10;
     public static final int ATTACHMENT_ID_3 = 11;
 
-    private final boolean buildForHibernate;
+    private final FrameworkType frameworkType;
 
     private List<Invoice> invoices = Lists.newArrayList();
     private List<Attachment> attachments = Lists.newArrayList();
     private List<Category> categories = Lists.newArrayList();
 
-    public TestObjectsBuilder() {
-        this(false);
-    }
-
-    public TestObjectsBuilder(boolean buildForHibernate) {
-        this.buildForHibernate = buildForHibernate;
+    public TestObjectsBuilder(@Nonnull final FrameworkType frameworkType) {
+        this.frameworkType = frameworkType;
     }
 
     public TestObjectsBuilder invoiceEmpty() {
@@ -59,9 +55,13 @@ public class TestObjectsBuilder {
             Validate.equals(categories.size(), 1, "Expected 1 category");
             invoice.setCategory(categories.get(0));
         }
-        if (buildForHibernate) {
-            attachments.stream().filter(Objects::nonNull).forEach(attachment -> attachment.setInvoice(invoice));
-        }
+        attachments.stream().filter(Objects::nonNull).forEach(attachment -> {
+            if (attachment instanceof HibernateAttachmentImpl) {
+                ((HibernateAttachmentImpl) attachment).setInvoice(invoice);
+            } else {
+                attachment.setInvoiceId(invoice.getId());
+            }
+        });
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
@@ -81,9 +81,13 @@ public class TestObjectsBuilder {
             Validate.equals(categories.size(), 1, "Expected 1 category");
             invoice.setCategory(categories.get(0));
         }
-        if (buildForHibernate) {
-            attachments.stream().filter(Objects::nonNull).forEach(attachment -> attachment.setInvoice(invoice));
-        }
+        attachments.stream().filter(Objects::nonNull).forEach(attachment -> {
+            if (attachment instanceof HibernateAttachmentImpl) {
+                ((HibernateAttachmentImpl) attachment).setInvoice(invoice);
+            } else {
+                attachment.setInvoiceId(invoice.getId());
+            }
+        });
         invoice.setAttachments(attachments);
         categories = Lists.newArrayList();
         attachments = Lists.newArrayList();
@@ -132,6 +136,9 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.IMAGE);
         attachment.setFileName("FileName#1");
         attachment.setContent("AHOJ1".getBytes());
+        if (invoices.size() == 1) {
+            attachment.setInvoiceId(invoices.get(0).getId());
+        }
         return this;
     }
 
@@ -144,6 +151,9 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.PDF);
         attachment.setFileName("FileName#2");
         attachment.setContent("AHOJ2".getBytes());
+        if (invoices.size() == 1) {
+            attachment.setInvoiceId(invoices.get(0).getId());
+        }
         return this;
     }
 
@@ -156,6 +166,9 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.TEXT);
         attachment.setFileName("FileName#3");
         attachment.setContent("AHOJ3".getBytes());
+        if (invoices.size() == 1) {
+            attachment.setInvoiceId(invoices.get(0).getId());
+        }
         return this;
     }
 
@@ -199,16 +212,54 @@ public class TestObjectsBuilder {
 
     @Nonnull
     private Invoice invoice() {
-        return buildForHibernate ? new HibernateInvoiceImpl() : new InvoiceImpl();
+        switch (frameworkType) {
+            case JDBC:
+            case JDBC_TEMPLATE:
+            case MY_BATIS:
+            case SPARK:
+                return new InvoiceImpl();
+            case HIBERNATE:
+                return new HibernateInvoiceImpl();
+            default:
+                throw new IllegalStateException("Not known framework " + frameworkType);
+        }
     }
 
     @Nonnull
     private Attachment attachment() {
-        return buildForHibernate ? new HibernateAttachmentImpl() : new AttachmentImpl();
+        switch (frameworkType) {
+            case JDBC:
+            case JDBC_TEMPLATE:
+            case MY_BATIS:
+            case SPARK:
+                return new AttachmentImpl();
+            case HIBERNATE:
+                return new HibernateAttachmentImpl();
+            default:
+                throw new IllegalStateException("Not known framework " + frameworkType);
+        }
     }
 
     @Nonnull
     private Category category() {
-        return buildForHibernate ? new HibernateCategoryImpl() : new CategoryImpl();
+        switch (frameworkType) {
+            case JDBC:
+            case JDBC_TEMPLATE:
+            case MY_BATIS:
+            case SPARK:
+                return new CategoryImpl();
+            case HIBERNATE:
+                return new HibernateCategoryImpl();
+            default:
+                throw new IllegalStateException("Not known framework " + frameworkType);
+        }
+    }
+
+    public enum FrameworkType {
+        JDBC,
+        JDBC_TEMPLATE,
+        MY_BATIS,
+        HIBERNATE,
+        SPARK
     }
 }

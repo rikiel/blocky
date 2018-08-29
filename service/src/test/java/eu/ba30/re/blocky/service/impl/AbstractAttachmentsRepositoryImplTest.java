@@ -23,6 +23,8 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
     @Autowired
     private AttachmentsRepository attachmentsRepository;
 
+    protected abstract TestObjectsBuilder createBuilder();
+
     @Test
     public void getNextItemId() {
         final int sequenceBegin = 10;
@@ -33,7 +35,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
 
     @Test
     public void getAttachmentsByInvoiceId() {
-        assertReflectionEquals(new TestObjectsBuilder().attachment1().buildAttachments(),
+        assertReflectionEquals(createBuilder().attachment1().buildAttachments(),
                 attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
 
         assertReflectionEquals(Lists.newArrayList(),
@@ -42,22 +44,22 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
 
     @Test
     public void getAttachmentList() {
-        assertReflectionEquals(Lists.newArrayList(new TestObjectsBuilder().attachment1().buildSingleAttachment()),
+        assertReflectionEquals(Lists.newArrayList(createBuilder().attachment1().buildSingleAttachment()),
                 attachmentsRepository.getAttachmentList());
     }
 
     @Test
     public void createAttachmentsForInvoice() {
         attachmentsRepository.createAttachmentsForInvoice(TestObjectsBuilder.INVOICE_ID_1,
-                new TestObjectsBuilder().attachment2().attachment3().buildAttachments());
+                createBuilder().attachment2().attachment3().buildAttachments());
 
-        assertReflectionEquals(new TestObjectsBuilder().attachment1().attachment2().attachment3().buildAttachments(),
+        assertReflectionEquals(createBuilder().attachment1().attachment2().attachment3().buildAttachments(),
                 attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
     }
 
     @Test
     public void removeAttachments() {
-        attachmentsRepository.removeAttachments(new TestObjectsBuilder().attachment1().buildAttachments());
+        attachmentsRepository.removeAttachments(createBuilder().attachment1().buildAttachments());
 
         assertReflectionEquals(Lists.newArrayList(),
                 attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
@@ -94,9 +96,9 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
         return new Object[][] {
                 // null values
                 { null },
-                { new TestObjectsBuilder().attachmentEmpty().buildSingleAttachment() },
+                { createBuilder().attachmentEmpty().buildSingleAttachment() },
                 // attachments exists in db
-                { new TestObjectsBuilder().attachment1().buildSingleAttachment() },
+                { createBuilder().attachment1().buildSingleAttachment() },
                 };
     }
 
@@ -105,10 +107,10 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
         return new Object[][] {
                 // null values
                 { null },
-                { new TestObjectsBuilder().attachmentEmpty().buildSingleAttachment() },
+                { createBuilder().attachmentEmpty().buildSingleAttachment() },
                 // not exist
-                { new TestObjectsBuilder().attachment2().buildSingleAttachment() },
-                { new TestObjectsBuilder().attachment3().buildSingleAttachment() },
+                { createBuilder().attachment2().buildSingleAttachment() },
+                { createBuilder().attachment3().buildSingleAttachment() },
                 };
     }
 }

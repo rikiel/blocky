@@ -7,8 +7,6 @@ import com.google.common.base.MoreObjects;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 
 public abstract class Attachment {
-    transient private boolean inToString;
-
     public abstract Integer getId();
 
     public abstract void setId(Integer id);
@@ -33,9 +31,10 @@ public abstract class Attachment {
 
     public abstract void setContent(byte[] content);
 
-    public abstract Invoice getInvoice();
+    // TODO BLOCKY-16 odstranit ID - nepouziva sa
+    public abstract Integer getInvoiceId();
 
-    public abstract void setInvoice(Invoice invoice);
+    public abstract void setInvoiceId(Integer invoiceId);
 
     @Override
     public final boolean equals(Object o) {
@@ -56,27 +55,13 @@ public abstract class Attachment {
 
     @Override
     public final String toString() {
-        if (inToString) {
-            return MoreObjects.toStringHelper(this)
-                    .add("id", getId())
-                    .add("name", getName())
-                    .add("fileName", getFileName())
-                    .add("mimeType", getMimeType())
-                    .add("attachmentType", getAttachmentType())
-                    .add("invoice.id", getInvoice() == null ? null : getInvoice().getId())
-                    .toString();
-        } else {
-            inToString = true;
-            final String result = MoreObjects.toStringHelper(this)
-                    .add("id", getId())
-                    .add("name", getName())
-                    .add("fileName", getFileName())
-                    .add("mimeType", getMimeType())
-                    .add("attachmentType", getAttachmentType())
-                    .add("invoice", getInvoice())
-                    .toString();
-            inToString = false;
-            return result;
-        }
+        return MoreObjects.toStringHelper(this)
+                .add("id", getId())
+                .add("name", getName())
+                .add("fileName", getFileName())
+                .add("mimeType", getMimeType())
+                .add("attachmentType", getAttachmentType())
+                .add("invoice.id", getInvoiceId())
+                .toString();
     }
 }

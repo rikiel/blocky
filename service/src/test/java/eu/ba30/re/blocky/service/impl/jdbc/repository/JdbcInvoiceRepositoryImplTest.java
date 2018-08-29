@@ -22,10 +22,15 @@ public class JdbcInvoiceRepositoryImplTest extends AbstractInvoiceRepositoryImpl
     private CstManager cstManager;
 
     @Override
+    protected TestObjectsBuilder createBuilder() {
+        return new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.JDBC);
+    }
+
+    @Override
     protected void initCstExpectations() {
         new Expectations() {{
             cstManager.getCategoryById(1);
-            result = new TestObjectsBuilder().category1().buildSingleCategory();
+            result = new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.JDBC).category1().buildSingleCategory();
         }};
     }
 

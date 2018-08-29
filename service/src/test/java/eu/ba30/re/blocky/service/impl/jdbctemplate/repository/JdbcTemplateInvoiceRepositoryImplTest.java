@@ -25,8 +25,13 @@ public class JdbcTemplateInvoiceRepositoryImplTest extends AbstractInvoiceReposi
     protected void initCstExpectations() {
         new Expectations() {{
             cstManager.getCategoryById(1);
-            result = new TestObjectsBuilder().category1().buildSingleCategory();
+            result = new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.JDBC_TEMPLATE).category1().buildSingleCategory();
         }};
+    }
+
+    @Override
+    protected TestObjectsBuilder createBuilder() {
+        return new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.JDBC_TEMPLATE);
     }
 
     @Configuration
