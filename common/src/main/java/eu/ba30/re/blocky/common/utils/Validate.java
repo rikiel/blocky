@@ -83,6 +83,12 @@ public class Validate {
         }
     }
 
+    public static void equals(long o1, long o2, String msg) {
+        if (o1 != o2) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
     public static void validateOneRowAffectedInDbCall(@Nonnull final int[] rowsAffected) {
         final boolean notOneAffected = Arrays
                 .stream(rowsAffected)

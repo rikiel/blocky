@@ -1,4 +1,6 @@
-package eu.ba30.re.blocky.service.impl.spark.coder;
+package eu.ba30.re.blocky.service.impl.spark.model;
+
+import eu.ba30.re.blocky.common.utils.Validate;
 
 public class AttachmentDb {
     private Integer id;
@@ -63,5 +65,9 @@ public class AttachmentDb {
 
     public void setInvoiceId(Integer invoiceId) {
         this.invoiceId = invoiceId;
+    }
+
+    public void validate() {
+        Validate.notNull(id, name, fileName, mimeType, attachmentTypeId, content, invoiceId);
     }
 }

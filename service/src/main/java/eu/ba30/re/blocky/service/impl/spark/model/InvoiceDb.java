@@ -1,6 +1,8 @@
-package eu.ba30.re.blocky.service.impl.spark.coder;
+package eu.ba30.re.blocky.service.impl.spark.model;
 
 import java.sql.Date;
+
+import eu.ba30.re.blocky.common.utils.Validate;
 
 public class InvoiceDb {
     private Integer id;
@@ -56,5 +58,9 @@ public class InvoiceDb {
 
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    public void validate() {
+        Validate.notNull(id, name, categoryId, details, creationDate, modificationDate);
     }
 }

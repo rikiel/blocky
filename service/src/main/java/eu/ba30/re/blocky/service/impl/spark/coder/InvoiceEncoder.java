@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
+import eu.ba30.re.blocky.service.impl.spark.model.InvoiceDb;
 
 @Service
 public class InvoiceEncoder {
@@ -28,6 +29,7 @@ public class InvoiceEncoder {
         result.setDetails(invoice.getDetails());
         result.setCreationDate(Date.valueOf(invoice.getCreationDate()));
         result.setModificationDate(Date.valueOf(invoice.getModificationDate()));
+        result.validate();
         return result;
     }
 }

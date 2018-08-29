@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +14,12 @@ import org.springframework.stereotype.Service;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentDb;
 import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentDecoder;
 import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentEncoder;
-import eu.ba30.re.blocky.service.impl.spark.coder.InvoiceDb;
 import eu.ba30.re.blocky.service.impl.spark.coder.InvoiceDecoder;
 import eu.ba30.re.blocky.service.impl.spark.coder.InvoiceEncoder;
+import eu.ba30.re.blocky.service.impl.spark.model.AttachmentDb;
+import eu.ba30.re.blocky.service.impl.spark.model.InvoiceDb;
 
 @Service
 public class SparkInvoiceServiceImpl implements InvoiceService {
@@ -41,8 +40,8 @@ public class SparkInvoiceServiceImpl implements InvoiceService {
 
     @PostConstruct
     private void init() {
-        invoiceDataset = sparkSession.sql("SELECT * FROM global_temp.T_INVOICES").as(Encoders.bean(InvoiceDb.class));
-        attachmentDataset = sparkSession.sql("SELECT * FROM global_temp.T_ATTACHMENTS").as(Encoders.bean(AttachmentDb.class));
+        //        invoiceDataset = sparkSession.sql("SELECT * FROM global_temp.T_INVOICES").as(Encoders.bean(InvoiceDb.class));
+        //        attachmentDataset = sparkSession.sql("SELECT * FROM global_temp.T_ATTACHMENTS").as(Encoders.bean(AttachmentDb.class));
     }
 
     @Nonnull

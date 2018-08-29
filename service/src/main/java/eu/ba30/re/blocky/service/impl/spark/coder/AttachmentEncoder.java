@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
+import eu.ba30.re.blocky.service.impl.spark.model.AttachmentDb;
 
 @Service
 public class AttachmentEncoder {
@@ -28,6 +29,7 @@ public class AttachmentEncoder {
         result.setAttachmentTypeId(attachment.getAttachmentType().getId());
         result.setContent(attachment.getContent());
         result.setInvoiceId(attachment.getInvoiceId());
+        result.validate();
         return result;
     }
 }

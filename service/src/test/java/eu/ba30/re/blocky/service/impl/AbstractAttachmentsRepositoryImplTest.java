@@ -35,7 +35,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
 
     @Test
     public void getAttachmentsByInvoiceId() {
-        assertReflectionEquals(createBuilder().attachment1().buildAttachments(),
+        assertReflectionEquals(createBuilder().invoice1().attachment1().buildAttachments(),
                 attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
 
         assertReflectionEquals(Lists.newArrayList(),
@@ -44,7 +44,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
 
     @Test
     public void getAttachmentList() {
-        assertReflectionEquals(Lists.newArrayList(createBuilder().attachment1().buildSingleAttachment()),
+        assertReflectionEquals(Lists.newArrayList(createBuilder().invoice1().attachment1().buildSingleAttachment()),
                 attachmentsRepository.getAttachmentList());
     }
 
@@ -53,7 +53,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
         attachmentsRepository.createAttachmentsForInvoice(TestObjectsBuilder.INVOICE_ID_1,
                 createBuilder().attachment2().attachment3().buildAttachments());
 
-        assertReflectionEquals(createBuilder().attachment1().attachment2().attachment3().buildAttachments(),
+        assertReflectionEquals(createBuilder().invoice1().attachment1().attachment2().attachment3().buildAttachments(),
                 attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
     }
 

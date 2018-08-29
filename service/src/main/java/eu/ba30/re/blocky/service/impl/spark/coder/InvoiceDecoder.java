@@ -12,6 +12,7 @@ import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 import eu.ba30.re.blocky.service.CstManager;
+import eu.ba30.re.blocky.service.impl.spark.model.InvoiceDb;
 
 @Service
 public class InvoiceDecoder {
@@ -26,6 +27,7 @@ public class InvoiceDecoder {
     @Nonnull
     private Invoice decodeFromDb(@Nonnull final InvoiceDb invoice) {
         Validate.notNull(invoice);
+        invoice.validate();
         final Invoice result = new InvoiceImpl();
         result.setId(invoice.getId());
         result.setName(invoice.getName());
