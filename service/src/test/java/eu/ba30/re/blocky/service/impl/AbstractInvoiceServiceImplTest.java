@@ -23,7 +23,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private InvoiceService invoiceService;
