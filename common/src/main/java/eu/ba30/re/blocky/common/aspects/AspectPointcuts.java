@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.Pointcut;
 /**
  * Defined pointcuts for repository, service, view and presenter calls
  */
-class AspectPointcuts {
+public class AspectPointcuts {
     @Pointcut("execution(* eu.ba30.re.blocky.service..*Repository+.*(..))")
     protected void repositoryCall() {
     }

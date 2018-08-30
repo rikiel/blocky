@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
@@ -47,7 +45,6 @@ public interface InvoiceService {
      * @return Invoice
      */
     @Nonnull
-    @Transactional(readOnly = true)
     default Invoice getInvoiceById(final int id) {
         final List<Invoice> invoices = getInvoiceList().stream()
                 .filter(invoice -> Objects.equals(invoice.getId(), id))

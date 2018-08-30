@@ -30,9 +30,9 @@ public class SparkCstCategoryRepositoryImpl implements CstCategoryRepository {
 
     @PostConstruct
     private void init() {
-        categoryDataset = sparkSession
+        updateDataset(sparkSession
                 .sql("SELECT * FROM global_temp." + TABLE_NAME)
-                .as(Encoders.bean(CategoryImpl.class));
+                .as(Encoders.bean(CategoryImpl.class)));
     }
 
     @Nonnull
@@ -49,5 +49,11 @@ public class SparkCstCategoryRepositoryImpl implements CstCategoryRepository {
 
         Validate.equals(byId.count(), 1, String.format("Should exist 1 element with id %s. Found %s", categoryId, byId.count()));
         return byId.first();
+    }
+
+    private void updateDataset(@Nonnull final Dataset<CategoryImpl> categoryDataset) {
+        Validate.notNull(categoryDataset);
+        categoryDataset.createOrReplaceGlobalTempView(TABLE_NAME);
+        this.categoryDataset = categoryDataset;
     }
 }

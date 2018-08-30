@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
+import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentDecoder;
 import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentEncoder;
 import eu.ba30.re.blocky.service.impl.spark.model.AttachmentDb;
@@ -26,7 +27,8 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
     private static final int ID_STARTS = 10;
     private static final String TABLE_NAME = "T_ATTACHMENTS";
 
-    private int nextId;
+    @Autowired
+    private SparkTransactionManager transactionManager;
 
     @Autowired
     private SparkSession sparkSession;
@@ -36,6 +38,7 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
     private AttachmentDecoder attachmentDecoder;
 
     private Dataset<AttachmentDb> attachmentDataset;
+    private int nextId;
 
     @PostConstruct
     private void init() {
@@ -66,25 +69,54 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
     @Override
     public void createAttachmentsForInvoice(int invoiceId, @Nonnull List<Attachment> attachments) {
         Validate.notEmpty(attachments);
-        // TODO BLOCKY-16 odstranit INVOICE_ID z attachmentu
-        attachments.forEach(attachment -> attachment.setInvoiceId(invoiceId));
 
-        final Dataset<AttachmentDb> actualRows = getActualAttachmentsFromDb(attachments);
-        Validate.equals(actualRows.count(), 0, String.format("Should not exist any attachment that is being created. Found %s", actualRows.count()));
+        transactionManager.newTransaction(
+                new SparkTransaction<AttachmentDb>(attachmentDataset) {
+                    @Nonnull
+                    @Override
+                    protected Dataset<AttachmentDb> getNewDataForCommit() {
+                        // TODO BLOCKY-16 odstranit INVOICE_ID z attachmentu
+                        attachments.forEach(attachment -> attachment.setInvoiceId(invoiceId));
 
-        final Dataset<AttachmentDb> newRows = sparkSession.createDataset(attachmentEncoder.encodeAll(attachments), Encoders.bean(AttachmentDb.class));
+                        final Dataset<AttachmentDb> actualRows = getActualAttachmentsFromDb(attachments);
+                        Validate.equals(actualRows.count(),
+                                0,
+                                String.format("Should not exist any attachment that is being created. Found %s", actualRows.count()));
 
-        updateDataset(attachmentDataset.union(newRows));
+                        final Dataset<AttachmentDb> newRows = sparkSession.createDataset(attachmentEncoder.encodeAll(attachments),
+                                Encoders.bean(AttachmentDb.class));
+
+                        return attachmentDataset.union(newRows);
+                    }
+
+                    @Override
+                    protected void setData(@Nonnull Dataset<AttachmentDb> newData) {
+                        updateDataset(newData);
+                    }
+                });
     }
 
     @Override
     public void removeAttachments(@Nonnull List<Attachment> attachments) {
-        final Dataset<AttachmentDb> toRemove = getActualAttachmentsFromDb(attachments);
-        Validate.equals(toRemove.count(), attachments.size(),
-                String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), attachments.size()));
-        final Dataset<AttachmentDb> rowsAfterRemove = attachmentDataset.except(toRemove);
+        Validate.notEmpty(attachments);
 
-        updateDataset(rowsAfterRemove);
+        transactionManager.newTransaction(
+                new SparkTransaction<AttachmentDb>(attachmentDataset) {
+                    @Nonnull
+                    @Override
+                    protected Dataset<AttachmentDb> getNewDataForCommit() {
+                        final Dataset<AttachmentDb> toRemove = getActualAttachmentsFromDb(attachments);
+                        Validate.equals(toRemove.count(), attachments.size(),
+                                String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), attachments.size()));
+
+                        return attachmentDataset.except(toRemove);
+                    }
+
+                    @Override
+                    protected void setData(@Nonnull Dataset<AttachmentDb> newData) {
+                        updateDataset(newData);
+                    }
+                });
     }
 
     @Override

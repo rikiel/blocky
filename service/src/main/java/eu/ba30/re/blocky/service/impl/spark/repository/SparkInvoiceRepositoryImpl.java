@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
+import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 import eu.ba30.re.blocky.service.impl.spark.coder.InvoiceDecoder;
 import eu.ba30.re.blocky.service.impl.spark.coder.InvoiceEncoder;
 import eu.ba30.re.blocky.service.impl.spark.model.InvoiceDb;
@@ -28,7 +29,8 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository {
     private static final int ID_STARTS = 10;
     private static final String TABLE_NAME = "T_INVOICES";
 
-    private int nextId;
+    @Autowired
+    private SparkTransactionManager transactionManager;
 
     @Autowired
     private SparkSession sparkSession;
@@ -38,6 +40,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository {
     private InvoiceDecoder invoiceDecoder;
 
     private Dataset<InvoiceDb> invoiceDataset;
+    private int nextId;
 
     @PostConstruct
     private void init() {
@@ -57,24 +60,48 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository {
 
     @Override
     public void remove(@Nonnull List<Invoice> invoices) {
-        final Dataset<InvoiceDb> toRemove = getActualInvoicesFromDb(invoices);
-        Validate.equals(toRemove.count(), invoices.size(),
-                String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), invoices.size()));
-        final Dataset<InvoiceDb> rowsAfterRemove = invoiceDataset.except(toRemove);
+        transactionManager.newTransaction(
+                new SparkTransaction<InvoiceDb>(invoiceDataset) {
+                    @Nonnull
+                    @Override
+                    protected Dataset<InvoiceDb> getNewDataForCommit() {
+                        final Dataset<InvoiceDb> toRemove = getActualInvoicesFromDb(invoices);
+                        Validate.equals(toRemove.count(), invoices.size(),
+                                String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), invoices.size()));
+                        return invoiceDataset.except(toRemove);
+                    }
 
-        updateDataset(rowsAfterRemove);
+                    @Override
+                    protected void setData(@Nonnull final Dataset<InvoiceDb> newData) {
+                        updateDataset(newData);
+                    }
+                });
     }
 
     @Override
     public void create(@Nonnull Invoice invoice) {
         Validate.notNull(invoice);
 
-        final Dataset<InvoiceDb> actualRows = getActualInvoicesFromDb(Lists.newArrayList(invoice));
-        Validate.equals(actualRows.count(), 0, String.format("Should not exist any invoice that is being created. Found %s", actualRows.count()));
+        transactionManager.newTransaction(
+                new SparkTransaction<InvoiceDb>(invoiceDataset) {
+                    @Nonnull
+                    @Override
+                    protected Dataset<InvoiceDb> getNewDataForCommit() {
+                        final Dataset<InvoiceDb> actualRows = getActualInvoicesFromDb(Lists.newArrayList(invoice));
+                        Validate.equals(actualRows.count(),
+                                0,
+                                String.format("Should not exist any invoice that is being created. Found %s", actualRows.count()));
+                        final Dataset<InvoiceDb> newRows = sparkSession.createDataset(invoiceEncoder.encodeAll(Lists.newArrayList(invoice)),
+                                Encoders.bean(InvoiceDb.class));
+                        return invoiceDataset.union(newRows);
+                    }
 
-        final Dataset<InvoiceDb> newRows = sparkSession.createDataset(invoiceEncoder.encodeAll(Lists.newArrayList(invoice)), Encoders.bean(InvoiceDb.class));
-
-        updateDataset(invoiceDataset.union(newRows));
+                    @Override
+                    protected void setData(@Nonnull final Dataset<InvoiceDb> newData) {
+                        updateDataset(newData);
+                    }
+                }
+        );
     }
 
     @Override
