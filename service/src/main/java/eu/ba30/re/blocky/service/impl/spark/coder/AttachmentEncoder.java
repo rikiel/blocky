@@ -14,12 +14,12 @@ import eu.ba30.re.blocky.service.impl.spark.model.AttachmentDb;
 @Service
 public class AttachmentEncoder {
     @Nonnull
-    public List<AttachmentDb> encodeAll(@Nonnull final List<Attachment> records) {
-        return records.stream().map(this::encodeToDb).collect(Collectors.toList());
+    public List<AttachmentDb> encodeAll(int invoiceId, @Nonnull final List<Attachment> records) {
+        return records.stream().map(attachment -> encodeToDb(invoiceId, attachment)).collect(Collectors.toList());
     }
 
     @Nonnull
-    private AttachmentDb encodeToDb(@Nonnull final Attachment attachment) {
+    private AttachmentDb encodeToDb(int invoiceId, @Nonnull final Attachment attachment) {
         Validate.notNull(attachment);
         final AttachmentDb result = new AttachmentDb();
         result.setId(attachment.getId());
@@ -28,7 +28,7 @@ public class AttachmentEncoder {
         result.setMimeType(attachment.getMimeType());
         result.setAttachmentTypeId(attachment.getAttachmentType().getId());
         result.setContent(attachment.getContent());
-        result.setInvoiceId(attachment.getInvoiceId());
+        result.setInvoiceId(invoiceId);
         result.validate();
         return result;
     }

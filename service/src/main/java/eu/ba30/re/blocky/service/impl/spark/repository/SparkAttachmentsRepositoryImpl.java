@@ -75,18 +75,13 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
                     @Nonnull
                     @Override
                     protected Dataset<AttachmentDb> getNewDataForCommit() {
-                        // TODO BLOCKY-16 odstranit INVOICE_ID z attachmentu
-                        attachments.forEach(attachment -> attachment.setInvoiceId(invoiceId));
-
                         final Dataset<AttachmentDb> actualRows = getActualAttachmentsFromDb(attachments);
                         Validate.equals(actualRows.count(),
                                 0,
                                 String.format("Should not exist any attachment that is being created. Found %s", actualRows.count()));
-
-                        final Dataset<AttachmentDb> newRows = sparkSession.createDataset(attachmentEncoder.encodeAll(attachments),
+                        final Dataset<AttachmentDb> insertedRows = sparkSession.createDataset(attachmentEncoder.encodeAll(invoiceId, attachments),
                                 Encoders.bean(AttachmentDb.class));
-
-                        return attachmentDataset.union(newRows);
+                        return attachmentDataset.union(insertedRows);
                     }
 
                     @Override

@@ -29,7 +29,9 @@ public class SparkInvoiceServiceImpl implements InvoiceService {
     @Nonnull
     @Override
     public List<Invoice> getInvoiceList() {
-        return invoiceRepository.getInvoiceList();
+        final List<Invoice> invoices = invoiceRepository.getInvoiceList();
+        invoices.forEach(invoice -> invoice.setAttachments(attachmentsRepository.getAttachmentsByInvoiceId(invoice.getId())));
+        return invoices;
     }
 
     @Nonnull

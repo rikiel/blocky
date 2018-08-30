@@ -31,7 +31,6 @@ public class AttachmentDecoder {
         result.setMimeType(attachment.getMimeType());
         result.setAttachmentType(AttachmentType.forId(attachment.getAttachmentTypeId()));
         result.setContent(attachment.getContent());
-        result.setInvoiceId(attachment.getInvoiceId());
         return result;
     }
 }

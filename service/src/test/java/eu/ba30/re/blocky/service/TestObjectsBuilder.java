@@ -58,8 +58,6 @@ public class TestObjectsBuilder {
         attachments.stream().filter(Objects::nonNull).forEach(attachment -> {
             if (attachment instanceof HibernateAttachmentImpl) {
                 ((HibernateAttachmentImpl) attachment).setInvoice(invoice);
-            } else {
-                attachment.setInvoiceId(invoice.getId());
             }
         });
         invoice.setAttachments(attachments);
@@ -84,8 +82,6 @@ public class TestObjectsBuilder {
         attachments.stream().filter(Objects::nonNull).forEach(attachment -> {
             if (attachment instanceof HibernateAttachmentImpl) {
                 ((HibernateAttachmentImpl) attachment).setInvoice(invoice);
-            } else {
-                attachment.setInvoiceId(invoice.getId());
             }
         });
         invoice.setAttachments(attachments);
@@ -136,8 +132,8 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.IMAGE);
         attachment.setFileName("FileName#1");
         attachment.setContent("AHOJ1".getBytes());
-        if (invoices.size() == 1) {
-            attachment.setInvoiceId(invoices.get(0).getId());
+        if (invoices.size() == 1 && attachment instanceof HibernateAttachmentImpl) {
+            ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
         }
         return this;
     }
@@ -151,8 +147,8 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.PDF);
         attachment.setFileName("FileName#2");
         attachment.setContent("AHOJ2".getBytes());
-        if (invoices.size() == 1) {
-            attachment.setInvoiceId(invoices.get(0).getId());
+        if (invoices.size() == 1 && attachment instanceof HibernateAttachmentImpl) {
+            ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
         }
         return this;
     }
@@ -166,8 +162,8 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.TEXT);
         attachment.setFileName("FileName#3");
         attachment.setContent("AHOJ3".getBytes());
-        if (invoices.size() == 1) {
-            attachment.setInvoiceId(invoices.get(0).getId());
+        if (invoices.size() == 1 && attachment instanceof HibernateAttachmentImpl) {
+            ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
         }
         return this;
     }

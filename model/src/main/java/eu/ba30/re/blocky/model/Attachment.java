@@ -31,11 +31,6 @@ public abstract class Attachment {
 
     public abstract void setContent(byte[] content);
 
-    // TODO BLOCKY-16 odstranit ID - nepouziva sa
-    public abstract Integer getInvoiceId();
-
-    public abstract void setInvoiceId(Integer invoiceId);
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) {
@@ -61,7 +56,6 @@ public abstract class Attachment {
                 .add("fileName", getFileName())
                 .add("mimeType", getMimeType())
                 .add("attachmentType", getAttachmentType())
-                .add("invoice.id", getInvoiceId())
                 .toString();
     }
 }

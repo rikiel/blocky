@@ -2,9 +2,10 @@
 
 <suite name="All tests suite" verbose="1">
     <suite-files>
-        <suite-file path="tests-JdbcTemplate.xml"/>
         <suite-file path="tests-Jdbc.xml"/>
+        <suite-file path="tests-JdbcTemplate.xml"/>
         <suite-file path="tests-MyBatis.xml"/>
         <suite-file path="tests-Hibernate.xml"/>
+        <suite-file path="tests-Spark.xml"/>
     </suite-files>
 </suite>

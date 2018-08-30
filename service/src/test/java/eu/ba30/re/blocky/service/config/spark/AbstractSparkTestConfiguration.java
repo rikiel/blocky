@@ -50,7 +50,7 @@ abstract class AbstractSparkTestConfiguration extends AbstractTestConfiguration 
                 .createGlobalTempView("T_CST_CATEGORY");
 
         sparkSession
-                .createDataFrame(attachmentEncoder.encodeAll(DATA_BUILDER.buildAttachments()), AttachmentDb.class)
+                .createDataFrame(attachmentEncoder.encodeAll(TestObjectsBuilder.INVOICE_ID_1, DATA_BUILDER.buildAttachments()), AttachmentDb.class)
                 .createGlobalTempView("T_ATTACHMENTS");
 
         sparkSession

@@ -71,14 +71,4 @@ public class AttachmentImpl extends Attachment {
     public void setContent(byte[] content) {
         this.content = content;
     }
-
-    @Override
-    public Integer getInvoiceId() {
-        return invoiceId;
-    }
-
-    @Override
-    public void setInvoiceId(Integer invoiceId) {
-        this.invoiceId = invoiceId;
-    }
 }
