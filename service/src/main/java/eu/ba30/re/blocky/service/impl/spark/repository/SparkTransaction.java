@@ -7,6 +7,7 @@ import org.apache.spark.sql.Dataset;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 
+// TODO BLOCKY-16 reimplementovat
 abstract class SparkTransaction<DbModel> implements SparkTransactionManager.Transaction {
     private final Dataset<DbModel> snapshotData;
 

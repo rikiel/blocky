@@ -8,7 +8,7 @@ import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 import eu.ba30.re.blocky.service.impl.spark.repository.aspect.SparkRepositoryTransactionManagerAspect;
 
 @Configuration
-public class SparkRepositoryTestConfiguration extends AbstractSparkTestConfiguration {
+public abstract class SparkRepositoryTestConfiguration extends AbstractSparkTestConfiguration {
     @Autowired
     private SparkTransactionManager transactionManager;
 

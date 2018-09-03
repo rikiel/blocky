@@ -19,6 +19,7 @@ import eu.ba30.re.blocky.model.impl.hibernate.cst.HibernateCategoryImpl;
 import eu.ba30.re.blocky.model.impl.other.AttachmentImpl;
 import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 import eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl;
+import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
 
 public class TestObjectsBuilder {
     public static final int INVOICE_ID_1 = 1;
@@ -132,8 +133,12 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.IMAGE);
         attachment.setFileName("FileName#1");
         attachment.setContent("AHOJ1".getBytes());
-        if (invoices.size() == 1 && attachment instanceof HibernateAttachmentImpl) {
-            ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
+        if (invoices.size() == 1) {
+            if (attachment instanceof HibernateAttachmentImpl) {
+                ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
+            } else if (attachment instanceof SparkAttachmentImpl) {
+                ((SparkAttachmentImpl) attachment).setInvoiceId(invoices.get(0).getId());
+            }
         }
         return this;
     }
@@ -147,8 +152,12 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.PDF);
         attachment.setFileName("FileName#2");
         attachment.setContent("AHOJ2".getBytes());
-        if (invoices.size() == 1 && attachment instanceof HibernateAttachmentImpl) {
-            ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
+        if (invoices.size() == 1) {
+            if (attachment instanceof HibernateAttachmentImpl) {
+                ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
+            } else if (attachment instanceof SparkAttachmentImpl) {
+                ((SparkAttachmentImpl) attachment).setInvoiceId(invoices.get(0).getId());
+            }
         }
         return this;
     }
@@ -162,8 +171,12 @@ public class TestObjectsBuilder {
         attachment.setAttachmentType(AttachmentType.TEXT);
         attachment.setFileName("FileName#3");
         attachment.setContent("AHOJ3".getBytes());
-        if (invoices.size() == 1 && attachment instanceof HibernateAttachmentImpl) {
-            ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
+        if (invoices.size() == 1) {
+            if (attachment instanceof HibernateAttachmentImpl) {
+                ((HibernateAttachmentImpl) attachment).setInvoice(invoices.get(0));
+            } else if (attachment instanceof SparkAttachmentImpl) {
+                ((SparkAttachmentImpl) attachment).setInvoiceId(invoices.get(0).getId());
+            }
         }
         return this;
     }
@@ -227,10 +240,11 @@ public class TestObjectsBuilder {
             case JDBC:
             case JDBC_TEMPLATE:
             case MY_BATIS:
-            case SPARK:
                 return new AttachmentImpl();
             case HIBERNATE:
                 return new HibernateAttachmentImpl();
+            case SPARK:
+                return new SparkAttachmentImpl();
             default:
                 throw new IllegalStateException("Not known framework " + frameworkType);
         }
