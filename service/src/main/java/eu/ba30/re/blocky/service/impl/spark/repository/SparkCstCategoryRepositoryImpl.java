@@ -3,7 +3,6 @@ package eu.ba30.re.blocky.service.impl.spark.repository;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
@@ -26,34 +25,24 @@ public class SparkCstCategoryRepositoryImpl implements CstCategoryRepository {
     @Autowired
     private SparkSession sparkSession;
 
-    private Dataset<CategoryImpl> categoryDataset;
-
-    @PostConstruct
-    private void init() {
-        updateDataset(sparkSession
-                .sql("SELECT * FROM global_temp." + TABLE_NAME)
-                .as(Encoders.bean(CategoryImpl.class)));
-    }
-
     @Nonnull
     @Override
     public List<Category> getCategoryList() {
-        return Lists.newArrayList(categoryDataset.collectAsList());
+        return Lists.newArrayList(sparkSession
+                .sql("SELECT * FROM global_temp." + TABLE_NAME)
+                .as(Encoders.bean(CategoryImpl.class))
+                .collectAsList());
     }
 
     @Nonnull
     @Override
     public Category getCategoryById(int categoryId) {
-        final Dataset<CategoryImpl> byId = categoryDataset
-                .where(new Column("ID").equalTo(categoryId));
+        final Dataset<CategoryImpl> byId = sparkSession
+                .sql("SELECT * FROM global_temp." + TABLE_NAME)
+                .where(new Column("ID").equalTo(categoryId))
+                .as(Encoders.bean(CategoryImpl.class));
 
         Validate.equals(byId.count(), 1, String.format("Should exist 1 element with id %s. Found %s", categoryId, byId.count()));
         return byId.first();
-    }
-
-    private void updateDataset(@Nonnull final Dataset<CategoryImpl> categoryDataset) {
-        Validate.notNull(categoryDataset);
-        categoryDataset.createOrReplaceGlobalTempView(TABLE_NAME);
-        this.categoryDataset = categoryDataset;
     }
 }

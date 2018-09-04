@@ -1,5 +1,7 @@
 package eu.ba30.re.blocky.model.impl.spark;
 
+import java.io.Serializable;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,13 +13,13 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.cst.Category;
 
-public class SparkInvoiceImpl extends Invoice {
+public class SparkInvoiceImpl extends Invoice implements Serializable {
     private Integer id;
     private String name;
     private Category category;
     private String details;
-    private LocalDate creationDate;
-    private LocalDate modificationDate;
+    private Date creationDateSql;
+    private Date modificationDateSql;
     private final List<Attachment> attachments = Lists.newArrayList();
 
     public Integer getId() {
@@ -53,19 +55,19 @@ public class SparkInvoiceImpl extends Invoice {
     }
 
     public LocalDate getCreationDate() {
-        return creationDate;
+        return creationDateSql.toLocalDate();
     }
 
     public void setCreationDate(LocalDate creationDate) {
-        this.creationDate = creationDate;
+        this.creationDateSql = Date.valueOf(creationDate);
     }
 
     public LocalDate getModificationDate() {
-        return modificationDate;
+        return modificationDateSql.toLocalDate();
     }
 
     public void setModificationDate(LocalDate modificationDate) {
-        this.modificationDate = modificationDate;
+        this.modificationDateSql = Date.valueOf(modificationDate);
     }
 
     @Nonnull

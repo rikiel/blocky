@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -13,6 +14,8 @@ import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.spark.SparkRepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.AbstractInvoiceRepositoryImplTest;
+import eu.ba30.re.blocky.service.impl.spark.SparkCstManagerImpl;
+import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 import mockit.Capturing;
 import mockit.Expectations;
 
@@ -36,6 +39,27 @@ public class SparkInvoiceRepositoryImplTest extends AbstractInvoiceRepositoryImp
 
     @Configuration
     public static class InvoiceRepositoryConfiguration extends SparkRepositoryTestConfiguration {
+        // TODO BLOCKY-16 beany cez komponent scan
+        @Bean
+        public SparkInvoiceRepositoryImpl sparkInvoiceRepository() {
+            return new SparkInvoiceRepositoryImpl();
+        }
+
+        @Bean
+        public SparkTransactionManager sparkTransactionManager() {
+            return new SparkTransactionManager();
+        }
+
+        @Bean
+        public CstManager cstManager() {
+            return new SparkCstManagerImpl();
+        }
+
+        @Bean
+        public SparkCstCategoryRepositoryImpl cstCategoryRepository() {
+            return new SparkCstCategoryRepositoryImpl();
+        }
+
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {

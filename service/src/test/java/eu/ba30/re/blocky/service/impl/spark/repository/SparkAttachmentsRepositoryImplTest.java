@@ -14,9 +14,6 @@ import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.spark.SparkRepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.AbstractAttachmentsRepositoryImplTest;
 import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
-import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentDecoder;
-import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentEncoder;
-import eu.ba30.re.blocky.service.impl.spark.coder.InvoiceEncoder;
 
 @ContextConfiguration(classes = { SparkAttachmentsRepositoryImplTest.AttachmentRepositoryConfiguration.class })
 public class SparkAttachmentsRepositoryImplTest extends AbstractAttachmentsRepositoryImplTest {
@@ -27,24 +24,10 @@ public class SparkAttachmentsRepositoryImplTest extends AbstractAttachmentsRepos
 
     @Configuration
     public static class AttachmentRepositoryConfiguration extends SparkRepositoryTestConfiguration {
+        // TODO BLOCKY-16 beany cez komponent scan
         @Bean
         public SparkAttachmentsRepositoryImpl attachmentsRepository() {
             return new SparkAttachmentsRepositoryImpl();
-        }
-
-        @Bean
-        public AttachmentEncoder attachmentEncoder() {
-            return new AttachmentEncoder();
-        }
-
-        @Bean
-        public AttachmentDecoder attachmentDecoder() {
-            return new AttachmentDecoder();
-        }
-
-        @Bean
-        public InvoiceEncoder invoiceEncoder() {
-            return new InvoiceEncoder();
         }
 
         @Bean

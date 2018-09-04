@@ -18,7 +18,6 @@ import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
-import org.apache.spark.sql.types.VarcharType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,18 +91,15 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
                                 0,
                                 String.format("Should not exist any attachment that is being created. Found %s", actualRows.count()));
 
-                        final Dataset<Row> dataFrame = createDbRows(attachments, true, invoiceId);
-                        dataFrame.write().mode(SaveMode.Append).jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+                        updateDatabase(createDbRows(map(getActualDataset()).collectAsList(), false, null).union(createDbRows(attachments, true, invoiceId)));
                         wasInserted = true;
                     }
 
                     @Override
                     public void onRollback() {
                         if (wasInserted) {
-                            getActualDataset().except(getActualDataset().where(new Column("ID").isin(attachments.stream().map(Attachment::getId).toArray())))
-                                    .write()
-                                    .mode(SaveMode.Overwrite)
-                                    .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+                            updateDatabase(getActualDataset().except(
+                                    getActualDataset().where(new Column("ID").isin(MAPPER.ids(attachments)))));
                         }
                     }
                 });
@@ -124,20 +120,14 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
                         Validate.equals(toRemove.count(), attachments.size(),
                                 String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), attachments.size()));
 
-                        getActualDataset().except(toRemove)
-                                .write()
-                                .mode(SaveMode.Overwrite)
-                                .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+                        updateDatabase(getActualDataset().except(toRemove));
                         wasRemoved = true;
                     }
 
                     @Override
                     public void onRollback() {
                         if (wasRemoved) {
-                            createDbRows(actualDatabaseSnapshot, false, null).union(createDbRows(attachments, false, null))
-                                    .write()
-                                    .mode(SaveMode.Overwrite)
-                                    .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+                            updateDatabase(createDbRows(actualDatabaseSnapshot, false, null).union(createDbRows(attachments, false, null)));
                         }
                     }
                 });
@@ -150,22 +140,25 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
 
     @Nonnull
     private Dataset<Row> getActualAttachmentsFromDb(@Nonnull final List<Attachment> attachments) {
-        final Object[] ids = attachments.stream().map(Attachment::getId).toArray();
-        return getActualDataset().where(new Column("ID").isin(ids));
+        return getActualDataset().where(new Column("ID").isin(MAPPER.ids(attachments)));
     }
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        return sparkSession.createDataFrame(sparkSession
+        final Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
                         .read()
                         .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
-                AttachmentMapper.STRUCT_TYPE);
+                MAPPER.getDbStructure());
+        dataset.show();
+        return dataset;
     }
 
+    @Nonnull
     private Dataset<SparkAttachmentImpl> map(Dataset<Row> dataset) {
         return dataset.map((MapFunction<Row, SparkAttachmentImpl>) MAPPER::mapRow, Encoders.bean(SparkAttachmentImpl.class));
     }
 
+    @Nonnull
     private Dataset<Row> createDbRows(@Nonnull List<? extends Attachment> attachments, boolean addId, Integer invoiceId) {
         final List<Row> newRows = attachments.stream()
                 .map(attachment -> (SparkAttachmentImpl) attachment)
@@ -177,25 +170,22 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
                 .map(MAPPER::mapRow)
                 .collect(Collectors.toList());
 
-        final Dataset<Row> dataFrame = sparkSession.createDataFrame(newRows, AttachmentMapper.STRUCT_TYPE);
+        final Dataset<Row> dataFrame = sparkSession.createDataFrame(newRows, MAPPER.getDbStructure());
         dataFrame.show();
         return dataFrame;
     }
 
-    private static class AttachmentMapper implements Serializable {
-        private static final StructType STRUCT_TYPE = DataTypes.createStructType(Lists.newArrayList(
-                DataTypes.createStructField("ID", DataTypes.IntegerType, false),
-                DataTypes.createStructField("INVOICE_ID", DataTypes.IntegerType, false),
-                DataTypes.createStructField("NAME", VarcharType.replaceCharType(DataTypes.StringType), false),
-                DataTypes.createStructField("FILE_NAME", VarcharType.replaceCharType(DataTypes.StringType), false),
-                DataTypes.createStructField("MIME_TYPE", VarcharType.replaceCharType(DataTypes.StringType), false),
-                DataTypes.createStructField("TYPE", DataTypes.IntegerType, false),
-                DataTypes.createStructField("FILE_CONTENT", DataTypes.BinaryType, false)
-        ));
+    private void updateDatabase(@Nonnull Dataset<Row> dataset) {
+        dataset.show();
+        dataset
+                .write()
+                .mode(SaveMode.Overwrite)
+                .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+    }
 
-        @SuppressWarnings("unchecked")
+    private static class AttachmentMapper implements Serializable {
         @Nonnull
-        SparkAttachmentImpl mapRow(Row row) {
+        SparkAttachmentImpl mapRow(@Nonnull Row row) {
             final SparkAttachmentImpl attachment = new SparkAttachmentImpl();
 
             attachment.setId(row.getInt(row.fieldIndex("ID")));
@@ -210,7 +200,8 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
             return attachment;
         }
 
-        Row mapRow(SparkAttachmentImpl attachment) {
+        @Nonnull
+        Row mapRow(@Nonnull SparkAttachmentImpl attachment) {
             return RowFactory.create(attachment.getId(),
                     attachment.getInvoiceId(),
                     attachment.getName(),
@@ -218,6 +209,23 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
                     attachment.getMimeType(),
                     attachment.getAttachmentTypeId(),
                     attachment.getContent());
+        }
+
+        @Nonnull
+        StructType getDbStructure() {
+            return DataTypes.createStructType(Lists.newArrayList(
+                    DataTypes.createStructField("ID", DataTypes.IntegerType, false),
+                    DataTypes.createStructField("INVOICE_ID", DataTypes.IntegerType, false),
+                    DataTypes.createStructField("NAME", DataTypes.StringType, false),
+                    DataTypes.createStructField("FILE_NAME", DataTypes.StringType, false),
+                    DataTypes.createStructField("MIME_TYPE", DataTypes.StringType, false),
+                    DataTypes.createStructField("TYPE", DataTypes.IntegerType, false),
+                    DataTypes.createStructField("FILE_CONTENT", DataTypes.BinaryType, false)
+            ));
+        }
+
+        Object[] ids(@Nonnull final List<? extends Attachment> attachments) {
+            return attachments.stream().map(Attachment::getId).distinct().toArray();
         }
     }
 }

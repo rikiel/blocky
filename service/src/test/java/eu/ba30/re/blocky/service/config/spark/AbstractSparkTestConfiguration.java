@@ -10,28 +10,12 @@ import org.apache.spark.sql.jdbc.JdbcDialects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
-import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.AbstractTestConfiguration;
-import eu.ba30.re.blocky.service.impl.spark.coder.AttachmentEncoder;
-import eu.ba30.re.blocky.service.impl.spark.coder.InvoiceEncoder;
 
+// TODO BLOCKY-16 beany cez komponent scan
 //@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark" })
 abstract class AbstractSparkTestConfiguration extends AbstractTestConfiguration {
     private static final String EMBEDDED_DATABASE_URL = "jdbc:hsqldb:mem:testdb";
-    private static final TestObjectsBuilder DATA_BUILDER = new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.SPARK)
-            // build invoices
-            .category1()
-            .attachment1()
-            .invoice1()
-            // build categories
-            .category1()
-            .category2()
-            // build attachments
-            .attachment1();
-    @Autowired
-    private InvoiceEncoder invoiceEncoder;
-    @Autowired
-    private AttachmentEncoder attachmentEncoder;
 
     @Bean
     @Autowired
