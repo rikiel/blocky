@@ -1,5 +1,7 @@
 package eu.ba30.re.blocky.common.aspects;
 
+import java.io.Serializable;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,7 +19,7 @@ import eu.ba30.re.blocky.common.exception.DatabaseException;
 @Aspect
 @Order(2)
 @Component
-public class ServiceExceptionsAspect extends AspectPointcuts {
+public class ServiceExceptionsAspect extends AspectPointcuts implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(ServiceExceptionsAspect.class);
 
     @Around("serviceCall()")

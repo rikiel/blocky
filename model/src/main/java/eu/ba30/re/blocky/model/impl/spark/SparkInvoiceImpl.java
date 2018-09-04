@@ -1,7 +1,6 @@
 package eu.ba30.re.blocky.model.impl.spark;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,63 +17,77 @@ public class SparkInvoiceImpl extends Invoice implements Serializable {
     private String name;
     private Category category;
     private String details;
-    private Date creationDateSql;
-    private Date modificationDateSql;
+    private LocalDate creationDate;
+    private LocalDate modificationDate;
     private final List<Attachment> attachments = Lists.newArrayList();
 
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public Category getCategory() {
         return category;
     }
 
+    @Override
     public void setCategory(Category category) {
         this.category = category;
     }
 
+    @Override
     public String getDetails() {
         return details;
     }
 
+    @Override
     public void setDetails(String details) {
         this.details = details;
     }
 
+    @Override
     public LocalDate getCreationDate() {
-        return creationDateSql.toLocalDate();
+        return creationDate;
     }
 
+    @Override
     public void setCreationDate(LocalDate creationDate) {
-        this.creationDateSql = Date.valueOf(creationDate);
+        this.creationDate = creationDate;
     }
 
+    @Override
     public LocalDate getModificationDate() {
-        return modificationDateSql.toLocalDate();
+        return modificationDate;
     }
 
+    @Override
     public void setModificationDate(LocalDate modificationDate) {
-        this.modificationDateSql = Date.valueOf(modificationDate);
+        this.modificationDate = modificationDate;
     }
 
+    @Override
     @Nonnull
     public List<Attachment> getAttachments() {
         return attachments;
     }
 
+    @Override
     public void setAttachments(@Nonnull List<Attachment> attachments) {
         this.attachments.clear();
         this.attachments.addAll(attachments);

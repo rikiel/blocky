@@ -56,6 +56,8 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
 
     @Test
     public void remove() {
+        initCstExpectations();
+
         invoiceRepository.remove(createBuilder().category1().invoice1().buildInvoices());
 
         assertReflectionEquals(Lists.newArrayList(),
@@ -64,6 +66,8 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
 
     @Test(dataProvider = "createWithErrorDataProvider")
     public void createWithError(Invoice toCreate) {
+        initCstExpectations();
+
         final List<Invoice> allInvoices = invoiceRepository.getInvoiceList();
         try {
             invoiceRepository.create(toCreate);
@@ -77,6 +81,8 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
 
     @Test(dataProvider = "removeWithErrorDataProvider")
     public void removeWithError(Invoice toRemove) {
+        initCstExpectations();
+
         final List<Invoice> allInvoices = invoiceRepository.getInvoiceList();
         Validate.isFalse(allInvoices.contains(toRemove), "Invoice exists in db");
         try {

@@ -10,7 +10,6 @@ public class AttachmentImpl extends Attachment {
     private String mimeType;
     private AttachmentType attachmentType;
     private byte[] content;
-    private Integer invoiceId;
 
     @Override
     public Integer getId() {

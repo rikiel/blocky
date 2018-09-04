@@ -1,5 +1,7 @@
 package eu.ba30.re.blocky.service.impl.spark.aspect;
 
+import java.io.Serializable;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -17,7 +19,7 @@ import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
  */
 @Aspect
 @Component
-public class SparkServiceTransactionManagerAspect extends AspectPointcuts {
+public class SparkServiceTransactionManagerAspect extends AspectPointcuts implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkServiceTransactionManagerAspect.class);
 
     @Autowired

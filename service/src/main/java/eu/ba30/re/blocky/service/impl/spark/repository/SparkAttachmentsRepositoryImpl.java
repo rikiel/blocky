@@ -35,7 +35,7 @@ import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 import static org.apache.spark.sql.functions.max;
 
 @Service
-public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository {
+public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkAttachmentsRepositoryImpl.class);
     private static final AttachmentMapper MAPPER = new AttachmentMapper();
 

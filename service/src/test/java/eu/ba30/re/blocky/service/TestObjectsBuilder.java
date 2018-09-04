@@ -21,6 +21,7 @@ import eu.ba30.re.blocky.model.impl.other.InvoiceImpl;
 import eu.ba30.re.blocky.model.impl.other.cst.CategoryImpl;
 import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
 import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
+import eu.ba30.re.blocky.model.impl.spark.cst.SparkCategoryImpl;
 
 public class TestObjectsBuilder {
     public static final int INVOICE_ID_1 = 1;
@@ -258,10 +259,11 @@ public class TestObjectsBuilder {
             case JDBC:
             case JDBC_TEMPLATE:
             case MY_BATIS:
-            case SPARK:
                 return new CategoryImpl();
             case HIBERNATE:
                 return new HibernateCategoryImpl();
+            case SPARK:
+                return new SparkCategoryImpl();
             default:
                 throw new IllegalStateException("Not known framework " + frameworkType);
         }

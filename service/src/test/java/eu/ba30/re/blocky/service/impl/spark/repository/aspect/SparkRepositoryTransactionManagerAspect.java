@@ -1,5 +1,7 @@
 package eu.ba30.re.blocky.service.impl.spark.repository.aspect;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 
 import org.aspectj.lang.JoinPoint;
@@ -18,7 +20,7 @@ import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
  * instead of handling transactions only after service calls like in {@link eu.ba30.re.blocky.service.impl.spark.aspect.SparkServiceTransactionManagerAspect}
  */
 @Aspect
-public class SparkRepositoryTransactionManagerAspect extends AspectPointcuts {
+public class SparkRepositoryTransactionManagerAspect extends AspectPointcuts implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkRepositoryTransactionManagerAspect.class);
 
     private final SparkTransactionManager transactionManager;

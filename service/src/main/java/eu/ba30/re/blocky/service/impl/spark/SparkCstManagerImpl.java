@@ -1,5 +1,6 @@
 package eu.ba30.re.blocky.service.impl.spark;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -12,7 +13,7 @@ import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
-public class SparkCstManagerImpl implements CstManager {
+public class SparkCstManagerImpl implements CstManager, Serializable {
     @Autowired
     private CstCategoryRepository categoryRepository;
 

@@ -1,5 +1,6 @@
 package eu.ba30.re.blocky.service.impl.spark;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -15,7 +16,7 @@ import eu.ba30.re.blocky.common.utils.Validate;
 
 @Service
 @Scope("singleton")
-public class SparkTransactionManager {
+public class SparkTransactionManager implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkTransactionManager.class);
 
     private final List<Transaction> transactions = Lists.newArrayList();
@@ -55,7 +56,7 @@ public class SparkTransactionManager {
         }
     }
 
-    public interface Transaction {
+    public interface Transaction extends Serializable {
         void onCommit();
 
         void onRollback();

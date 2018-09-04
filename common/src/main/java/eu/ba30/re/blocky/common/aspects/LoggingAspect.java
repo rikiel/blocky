@@ -1,5 +1,6 @@
 package eu.ba30.re.blocky.common.aspects;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Order(1)
 @Component
-public class LoggingAspect extends AspectPointcuts  {
+public class LoggingAspect extends AspectPointcuts implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
     private static int CALL_ID = 100;

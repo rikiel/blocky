@@ -36,7 +36,7 @@ import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 import static org.apache.spark.sql.functions.max;
 
 @Service
-public class SparkInvoiceRepositoryImpl implements InvoiceRepository {
+public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkInvoiceRepositoryImpl.class);
 
     private static final int ID_STARTS = 10;
@@ -133,7 +133,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Nonnull
-    private Dataset<Row> getActualInvoicesFromDb(@Nonnull final List<Invoice> invoices) {
+    private Dataset<Row> getActualInvoicesFromDb(@Nonnull final List<? extends Invoice> invoices) {
         return getActualDataset().where(new Column("ID").isin(MAPPER.ids(invoices)));
     }
 
@@ -147,22 +147,25 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository {
 
     @Nonnull
     private Dataset<SparkInvoiceImpl> map(Dataset<Row> dataset) {
-        return dataset.map((MapFunction<Row, SparkInvoiceImpl>) MAPPER::mapRow, Encoders.bean(SparkInvoiceImpl.class));
+        // TODO BLOCKY-16 pozriet sa na serializaciu, preco nefunguje bean(), mozno vytvorit vlastny encoder
+        // TODO BLOCKY-16 skontrolvoat serializaciu - musel som pridavat Serializable na vsetky classy, aj aspekty a pod
+        return dataset.map((MapFunction<Row, SparkInvoiceImpl>) MAPPER::mapRow, Encoders.javaSerialization(SparkInvoiceImpl.class));
     }
 
     @Nonnull
     private Dataset<Row> createDbRows(@Nonnull List<? extends Invoice> invoices) {
         final List<Row> newRows = invoices.stream()
-                .map(invoice -> (SparkInvoiceImpl) invoice)
                 .map(MAPPER::mapRow)
                 .collect(Collectors.toList());
 
         final Dataset<Row> dataFrame = sparkSession.createDataFrame(newRows, MAPPER.getDbStructure());
+        log.debug("New DB rows created");
         dataFrame.show();
         return dataFrame;
     }
 
     private void updateDatabase(@Nonnull Dataset<Row> dataset) {
+        log.debug("Updating database");
         dataset.show();
         dataset
                 .write()
@@ -187,7 +190,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository {
         }
 
         @Nonnull
-        Row mapRow(@Nonnull SparkInvoiceImpl invoice) {
+        Row mapRow(@Nonnull Invoice invoice) {
             return RowFactory.create(
                     invoice.getId(),
                     invoice.getName(),
