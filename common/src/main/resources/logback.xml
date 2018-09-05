@@ -12,6 +12,12 @@
     <logger name="org.hibernate">
         <level value="TRACE"/>
     </logger>
+    <logger name="org.apache.spark">
+        <level value="WARN"/>
+    </logger>
+    <logger name="org.spark_project">
+        <level value="WARN"/>
+    </logger>
 
     <root level="INFO"/>
 </configuration>
