@@ -6,7 +6,6 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Column;
@@ -32,14 +31,11 @@ import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
 
-import static org.apache.spark.sql.functions.max;
-
 @Service
 public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkAttachmentsRepositoryImpl.class);
     private static final AttachmentMapper MAPPER = new AttachmentMapper();
 
-    private static final int ID_STARTS = 10;
     private static final String TABLE_NAME = "T_ATTACHMENTS";
 
     @Autowired
@@ -53,13 +49,7 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository, Se
     @Autowired
     private Properties jdbcConnectionProperties;
 
-    private int nextId;
-
-    @PostConstruct
-    private void init() {
-        final int maxId = getActualDataset().agg(max("ID")).head().getInt(0);
-        nextId = maxId > ID_STARTS ? maxId + 1 : ID_STARTS;
-    }
+    private int nextId = 10;
 
     @Nonnull
     @Override

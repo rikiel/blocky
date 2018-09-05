@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
-import eu.ba30.re.blocky.service.impl.spark.repository.aspect.SparkRepositoryTransactionManagerAspect;
+import eu.ba30.re.blocky.service.impl.spark.repositorytest.SparkRepositoryTransactionManagerAspect;
 
 @Configuration
 public abstract class SparkRepositoryTestConfiguration extends AbstractSparkTestConfiguration {

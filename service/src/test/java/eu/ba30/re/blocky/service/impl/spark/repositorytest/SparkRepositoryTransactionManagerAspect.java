@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark.repository.aspect;
+package eu.ba30.re.blocky.service.impl.spark.repositorytest;
 
 import java.io.Serializable;
 

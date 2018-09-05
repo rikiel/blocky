@@ -7,7 +7,6 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
 
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Column;
@@ -29,27 +28,21 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
-import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
-
-import static org.apache.spark.sql.functions.max;
 
 @Service
 public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkInvoiceRepositoryImpl.class);
 
-    private static final int ID_STARTS = 10;
     private static final String TABLE_NAME = "T_INVOICES";
+    private static final String CATEGORY_TABLE_NAME = "T_CST_CATEGORY";
 
     private final InvoiceRowMapper MAPPER = new InvoiceRowMapper();
-    private int nextId;
+    private int nextId = 10;
 
     @Autowired
     private SparkTransactionManager transactionManager;
-
-    @Autowired
-    private CstManager cstManager;
 
     @Autowired
     private SparkSession sparkSession;
@@ -58,12 +51,6 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
     private String jdbcConnectionUrl;
     @Autowired
     private Properties jdbcConnectionProperties;
-
-    @PostConstruct
-    private void init() {
-        final int maxId = getActualDataset().agg(max("ID")).head().getInt(0);
-        nextId = maxId > ID_STARTS ? maxId + 1 : ID_STARTS;
-    }
 
     @Nonnull
     @Override
@@ -141,15 +128,26 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
     private Dataset<Row> getActualDataset() {
         return sparkSession.createDataFrame(sparkSession
                         .read()
-                        .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).collectAsList(),
+                        .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
                 MAPPER.getDbStructure());
     }
 
     @Nonnull
+    private Dataset<Row> getCategoryDataset() {
+        return sparkSession
+                .read()
+                .jdbc(jdbcConnectionUrl, CATEGORY_TABLE_NAME, jdbcConnectionProperties);
+    }
+
+    @Nonnull
     private Dataset<SparkInvoiceImpl> map(Dataset<Row> dataset) {
-        // TODO BLOCKY-16 pozriet sa na serializaciu, preco nefunguje bean(), mozno vytvorit vlastny encoder
-        // TODO BLOCKY-16 skontrolvoat serializaciu - musel som pridavat Serializable na vsetky classy, aj aspekty a pod
-        return dataset.map((MapFunction<Row, SparkInvoiceImpl>) MAPPER::mapRow, Encoders.javaSerialization(SparkInvoiceImpl.class));
+        dataset = dataset
+                .withColumnRenamed("ID", "INVOICE_ID")
+                .withColumnRenamed("NAME", "INVOICE_NAME");
+        final Dataset<Row> categoryDataset = getCategoryDataset();
+        final Dataset<Row> joined = dataset.join(categoryDataset, dataset.col("CATEGORY_ID").equalTo(categoryDataset.col("ID")));
+        joined.show();
+        return joined.map((MapFunction<Row, SparkInvoiceImpl>) MAPPER::mapRow, Encoders.javaSerialization(SparkInvoiceImpl.class));
     }
 
     @Nonnull
@@ -178,9 +176,13 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
         SparkInvoiceImpl mapRow(@Nonnull Row row) {
             final SparkInvoiceImpl invoice = new SparkInvoiceImpl();
 
-            invoice.setId(row.getInt(row.fieldIndex("ID")));
-            invoice.setName(row.getString(row.fieldIndex("NAME")));
-            invoice.setCategory(cstManager.getCategoryById(row.getInt(row.fieldIndex("CATEGORY_ID"))));
+            // renamed field
+            invoice.setId(row.getInt(row.fieldIndex("INVOICE_ID")));
+            // renamed field
+            invoice.setName(row.getString(row.fieldIndex("INVOICE_NAME")));
+            // mapping category
+            invoice.setCategory(SparkCstCategoryRepositoryImpl.MAPPER.mapRow(row));
+
             invoice.setDetails(row.getString(row.fieldIndex("DETAILS")));
             invoice.setCreationDate(row.getDate(row.fieldIndex("CREATION")).toLocalDate());
             invoice.setModificationDate(row.getDate(row.fieldIndex("LAST_MODIFICATION")).toLocalDate());

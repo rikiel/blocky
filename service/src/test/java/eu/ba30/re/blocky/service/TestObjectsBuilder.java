@@ -61,6 +61,8 @@ public class TestObjectsBuilder {
         attachments.stream().filter(Objects::nonNull).forEach(attachment -> {
             if (attachment instanceof HibernateAttachmentImpl) {
                 ((HibernateAttachmentImpl) attachment).setInvoice(invoice);
+            } else if (attachment instanceof SparkAttachmentImpl) {
+                ((SparkAttachmentImpl) attachment).setInvoiceId(invoice.getId());
             }
         });
         invoice.setAttachments(attachments);
@@ -85,6 +87,8 @@ public class TestObjectsBuilder {
         attachments.stream().filter(Objects::nonNull).forEach(attachment -> {
             if (attachment instanceof HibernateAttachmentImpl) {
                 ((HibernateAttachmentImpl) attachment).setInvoice(invoice);
+            } else if (attachment instanceof SparkAttachmentImpl) {
+                ((SparkAttachmentImpl) attachment).setInvoiceId(invoice.getId());
             }
         });
         invoice.setAttachments(attachments);
