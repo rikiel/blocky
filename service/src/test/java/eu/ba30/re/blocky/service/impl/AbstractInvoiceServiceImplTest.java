@@ -112,6 +112,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
             fail("Removed invoice was found: " + removedInvoice);
         } catch (Exception e) {
             // continue
+            logger.debug("Exception was expected to be thrown");
         }
         final List<Invoice> invoices = invoiceService.getInvoiceList();
         assertFalse(invoices.isEmpty());
@@ -128,6 +129,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
             invoiceService.create(invoice);
             fail("create should not pass!");
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             assertReflectionEquals(originalInvoices, invoiceService.getInvoiceList());
             assertReflectionEquals(originalAttachments, invoiceService.getAttachmentList());
         }
@@ -141,6 +143,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
             invoiceService.remove(invoices);
             fail("remove should not pass!");
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             assertReflectionEquals(originalInvoices, invoiceService.getInvoiceList());
             assertReflectionEquals(originalAttachments, invoiceService.getAttachmentList());
         }
@@ -154,6 +157,7 @@ public abstract class AbstractInvoiceServiceImplTest extends AbstractTestNGSprin
             invoiceService.update(invoice);
             fail("update should not pass!");
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             assertReflectionEquals(originalInvoices, invoiceService.getInvoiceList());
             assertReflectionEquals(originalAttachments, invoiceService.getAttachmentList());
         }

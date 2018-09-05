@@ -72,7 +72,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
                         Validate.equals(toRemove.count(), invoices.size(),
                                 String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), invoices.size()));
 
-                        updateDatabase(getActualDataset().except(toRemove));
+                        updateDatabase(createDbRows(actualDatabaseSnapshot).except(createDbRows(map(toRemove).collectAsList())));
                         wasRemoved = true;
                     }
 
@@ -169,6 +169,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
                 .write()
                 .mode(SaveMode.Overwrite)
                 .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+        dataset.show();
     }
 
     private class InvoiceRowMapper implements Serializable {

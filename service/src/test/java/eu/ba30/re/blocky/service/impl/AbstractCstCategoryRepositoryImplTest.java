@@ -37,6 +37,7 @@ public abstract class AbstractCstCategoryRepositoryImplTest extends AbstractTest
             final Category category = cstCategoryRepository.getCategoryById(999);
             fail("getCategoryById should not pass! Found " + category);
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             // test OK
         }
     }

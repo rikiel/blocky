@@ -73,6 +73,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
             invoiceRepository.create(toCreate);
             fail("create should not pass!");
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             assertReflectionEquals("Should not create any invoice",
                     allInvoices,
                     invoiceRepository.getInvoiceList());
@@ -89,6 +90,7 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
             invoiceRepository.remove(Lists.newArrayList(toRemove));
             fail("remove should not pass!");
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             assertReflectionEquals("Should not remove any invoice",
                     allInvoices,
                     invoiceRepository.getInvoiceList());

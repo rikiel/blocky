@@ -37,6 +37,7 @@ public abstract class AbstractCstManagerImplTest extends AbstractTestNGSpringCon
             final Category category = cstManager.getCategoryById(999);
             fail("getCategoryById should not pass! Found " + category);
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             // test OK
         }
     }

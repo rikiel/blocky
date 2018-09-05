@@ -72,6 +72,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
             attachmentsRepository.createAttachmentsForInvoice(1, Lists.newArrayList(toCreate));
             fail("createAttachmentsForInvoice should not pass");
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
                     attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
@@ -85,6 +86,7 @@ public abstract class AbstractAttachmentsRepositoryImplTest extends AbstractTest
             attachmentsRepository.removeAttachments(Lists.newArrayList(toRemove));
             fail("removeAttachments should not pass!");
         } catch (Exception e) {
+            logger.debug("Exception was expected to be thrown");
             assertReflectionEquals("Should not create any attachment",
                     allAttachments,
                     attachmentsRepository.getAttachmentsByInvoiceId(TestObjectsBuilder.INVOICE_ID_1));
