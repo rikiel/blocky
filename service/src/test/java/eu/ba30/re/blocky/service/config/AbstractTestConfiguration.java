@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -19,6 +20,7 @@ public abstract class AbstractTestConfiguration {
     protected abstract List<String> getSqlScripts();
 
     @Bean
+    @Lazy
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .addScript("db/test-data-db-schema.sql")

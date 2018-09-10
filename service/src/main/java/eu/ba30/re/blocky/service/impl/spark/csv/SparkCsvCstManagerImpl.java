@@ -1,8 +1,7 @@
-package eu.ba30.re.blocky.service.impl.spark.db.repository;
+package eu.ba30.re.blocky.service.impl.spark.csv;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.Nonnull;
 
@@ -18,20 +17,15 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.model.impl.spark.cst.SparkCategoryImpl;
-import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
+import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.impl.spark.mapper.SparkCategoryMapper;
 
 @Service
-public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, Serializable {
-    private static final String TABLE_NAME = "T_CST_CATEGORY";
-
+public class SparkCsvCstManagerImpl implements CstManager, Serializable {
     @Autowired
     private SparkSession sparkSession;
-
     @Autowired
-    private String jdbcConnectionUrl;
-    @Autowired
-    private Properties jdbcConnectionProperties;
+    private String categoryCsvFileName;
 
     @Autowired
     private SparkCategoryMapper categoryMapper;
@@ -39,7 +33,8 @@ public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, 
     @Nonnull
     @Override
     public List<Category> getCategoryList() {
-        return Lists.newArrayList(categoryMapper.map(getActualDataset()).collectAsList());
+        return Lists.newArrayList(categoryMapper.map(getActualDataset())
+                .collectAsList());
     }
 
     @Nonnull
@@ -54,10 +49,10 @@ public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, 
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
-                        .read()
-                        .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
-                categoryMapper.getDbStructure());
+        final Dataset<Row> dataset = sparkSession.read()
+                .option("mode", "FAILFAST")
+                .schema(categoryMapper.getDbStructure())
+                .csv(categoryCsvFileName);
         dataset.show();
         return dataset;
     }

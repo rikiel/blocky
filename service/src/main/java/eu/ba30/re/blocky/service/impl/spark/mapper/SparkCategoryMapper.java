@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 import javax.annotation.Nonnull;
 
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoder;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
@@ -38,5 +42,14 @@ public class SparkCategoryMapper implements Serializable {
                 DataTypes.createStructField("NAME", DataTypes.StringType, false),
                 DataTypes.createStructField("DESCR", DataTypes.StringType, false)
         ));
+    }
+
+    @Nonnull
+    public Dataset<SparkCategoryImpl> map(@Nonnull Dataset<Row> dataset) {
+        return dataset.map((MapFunction<Row, SparkCategoryImpl>) this::mapRow, Encoders.bean(SparkCategoryImpl.class));
+    }
+
+    public Encoder<SparkCategoryImpl> getEncoder() {
+        return Encoders.bean(SparkCategoryImpl.class);
     }
 }
