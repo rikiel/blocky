@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.config.spark;
+package eu.ba30.re.blocky.service.config.spark.db;
 
 import java.sql.Types;
 

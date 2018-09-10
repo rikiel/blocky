@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark.repository;
+package eu.ba30.re.blocky.service.impl.spark.db.repository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,8 +27,8 @@ import eu.ba30.re.blocky.model.impl.spark.cst.SparkCategoryImpl;
 import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
 
 @Service
-public class SparkCstCategoryRepositoryImpl implements CstCategoryRepository, Serializable {
-    private static final Logger log = LoggerFactory.getLogger(SparkCstCategoryRepositoryImpl.class);
+public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, Serializable {
+    private static final Logger log = LoggerFactory.getLogger(SparkDbCstCategoryRepositoryImpl.class);
     static final CategoryMapper MAPPER = new CategoryMapper();
 
     private static final String TABLE_NAME = "T_CST_CATEGORY";

@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.config.spark;
+package eu.ba30.re.blocky.service.config.spark.db;
 
 import java.util.List;
 
@@ -12,20 +12,20 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.service.CstManager;
 import eu.ba30.re.blocky.service.InvoiceService;
-import eu.ba30.re.blocky.service.impl.spark.SparkCstManagerImpl;
-import eu.ba30.re.blocky.service.impl.spark.SparkInvoiceServiceImpl;
+import eu.ba30.re.blocky.service.impl.spark.db.SparkDbCstManagerImpl;
+import eu.ba30.re.blocky.service.impl.spark.db.SparkDbInvoiceServiceImpl;
 
 @Configuration
-@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.aspect" })
-public class SparkServiceTestConfiguration extends AbstractSparkTestConfiguration {
+@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.db.aspect" })
+public class SparkDbServiceTestConfiguration extends AbstractSparkDbTestConfiguration {
     @Bean
     public CstManager cstManager() {
-        return new SparkCstManagerImpl();
+        return new SparkDbCstManagerImpl();
     }
 
     @Bean
     public InvoiceService invoiceService() {
-        return new SparkInvoiceServiceImpl();
+        return new SparkDbInvoiceServiceImpl();
     }
 
     @Nonnull

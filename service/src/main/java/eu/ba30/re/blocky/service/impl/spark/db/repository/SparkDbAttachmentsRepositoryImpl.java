@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark.repository;
+package eu.ba30.re.blocky.service.impl.spark.db.repository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,17 +29,17 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
-import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
+import eu.ba30.re.blocky.service.impl.spark.db.SparkDbTransactionManager;
 
 @Service
-public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
-    private static final Logger log = LoggerFactory.getLogger(SparkAttachmentsRepositoryImpl.class);
+public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
+    private static final Logger log = LoggerFactory.getLogger(SparkDbAttachmentsRepositoryImpl.class);
     private static final AttachmentMapper MAPPER = new AttachmentMapper();
 
     private static final String TABLE_NAME = "T_ATTACHMENTS";
 
     @Autowired
-    private SparkTransactionManager transactionManager;
+    private SparkDbTransactionManager transactionManager;
 
     @Autowired
     private SparkSession sparkSession;
@@ -71,7 +71,7 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository, Se
         Validate.notEmpty(attachments);
 
         transactionManager.newTransaction(
-                new SparkTransactionManager.Transaction() {
+                new SparkDbTransactionManager.Transaction() {
                     boolean wasInserted = false;
 
                     @Override
@@ -100,7 +100,7 @@ public class SparkAttachmentsRepositoryImpl implements AttachmentsRepository, Se
         Validate.notEmpty(attachments);
 
         transactionManager.newTransaction(
-                new SparkTransactionManager.Transaction() {
+                new SparkDbTransactionManager.Transaction() {
                     final List<SparkAttachmentImpl> actualDatabaseSnapshot = map(getActualDataset()).collectAsList();
                     boolean wasRemoved = false;
 

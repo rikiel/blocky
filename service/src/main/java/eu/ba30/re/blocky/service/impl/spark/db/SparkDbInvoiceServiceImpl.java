@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark;
+package eu.ba30.re.blocky.service.impl.spark.db;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +20,7 @@ import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 
 @Service
-public class SparkInvoiceServiceImpl implements InvoiceService {
+public class SparkDbInvoiceServiceImpl implements InvoiceService {
     @Autowired
     private AttachmentsRepository attachmentsRepository;
     @Autowired

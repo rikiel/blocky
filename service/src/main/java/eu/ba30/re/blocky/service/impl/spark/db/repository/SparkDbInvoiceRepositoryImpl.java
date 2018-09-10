@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark.repository;
+package eu.ba30.re.blocky.service.impl.spark.db.repository;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -29,11 +29,11 @@ import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
-import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
+import eu.ba30.re.blocky.service.impl.spark.db.SparkDbTransactionManager;
 
 @Service
-public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
-    private static final Logger log = LoggerFactory.getLogger(SparkInvoiceRepositoryImpl.class);
+public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
+    private static final Logger log = LoggerFactory.getLogger(SparkDbInvoiceRepositoryImpl.class);
 
     private static final String TABLE_NAME = "T_INVOICES";
     private static final String CATEGORY_TABLE_NAME = "T_CST_CATEGORY";
@@ -42,7 +42,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
     private int nextId = 10;
 
     @Autowired
-    private SparkTransactionManager transactionManager;
+    private SparkDbTransactionManager transactionManager;
 
     @Autowired
     private SparkSession sparkSession;
@@ -62,7 +62,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
     @Override
     public void remove(@Nonnull List<Invoice> invoices) {
         transactionManager.newTransaction(
-                new SparkTransactionManager.Transaction() {
+                new SparkDbTransactionManager.Transaction() {
                     final List<SparkInvoiceImpl> actualDatabaseSnapshot = map(getActualDataset()).collectAsList();
                     boolean wasRemoved = false;
 
@@ -90,7 +90,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
         Validate.notNull(invoice);
 
         transactionManager.newTransaction(
-                new SparkTransactionManager.Transaction() {
+                new SparkDbTransactionManager.Transaction() {
                     final List<Invoice> invoices = Lists.newArrayList(invoice);
                     boolean wasInserted = false;
 
@@ -182,7 +182,7 @@ public class SparkInvoiceRepositoryImpl implements InvoiceRepository, Serializab
             // renamed field
             invoice.setName(row.getString(row.fieldIndex("INVOICE_NAME")));
             // mapping category
-            invoice.setCategory(SparkCstCategoryRepositoryImpl.MAPPER.mapRow(row));
+            invoice.setCategory(SparkDbCstCategoryRepositoryImpl.MAPPER.mapRow(row));
 
             invoice.setDetails(row.getString(row.fieldIndex("DETAILS")));
             invoice.setCreationDate(row.getDate(row.fieldIndex("CREATION")).toLocalDate());

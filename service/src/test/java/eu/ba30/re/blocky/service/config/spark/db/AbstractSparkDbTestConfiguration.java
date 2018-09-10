@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.config.spark;
+package eu.ba30.re.blocky.service.config.spark.db;
 
 import java.util.Properties;
 
@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import eu.ba30.re.blocky.service.config.AbstractTestConfiguration;
-import eu.ba30.re.blocky.service.impl.spark.SparkTransactionManager;
+import eu.ba30.re.blocky.service.impl.spark.db.SparkDbTransactionManager;
 
-@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.repository" })
-abstract class AbstractSparkTestConfiguration extends AbstractTestConfiguration {
+@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.db.repository" })
+abstract class AbstractSparkDbTestConfiguration extends AbstractTestConfiguration {
     private static final String EMBEDDED_DATABASE_URL = "jdbc:hsqldb:mem:testdb";
 
     @Bean
@@ -37,7 +37,7 @@ abstract class AbstractSparkTestConfiguration extends AbstractTestConfiguration 
     }
 
     @Bean
-    public SparkTransactionManager sparkTransactionManager() {
-        return new SparkTransactionManager();
+    public SparkDbTransactionManager sparkTransactionManager() {
+        return new SparkDbTransactionManager();
     }
 }
