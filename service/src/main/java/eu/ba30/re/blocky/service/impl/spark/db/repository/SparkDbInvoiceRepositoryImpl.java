@@ -1,7 +1,6 @@
 package eu.ba30.re.blocky.service.impl.spark.db.repository;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -13,11 +12,8 @@ import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +26,7 @@ import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.spark.db.SparkDbTransactionManager;
+import eu.ba30.re.blocky.service.impl.spark.mapper.SparkInvoiceMapper;
 
 @Service
 public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
@@ -38,7 +35,6 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
     private static final String TABLE_NAME = "T_INVOICES";
     private static final String CATEGORY_TABLE_NAME = "T_CST_CATEGORY";
 
-    private final InvoiceRowMapper MAPPER = new InvoiceRowMapper();
     private int nextId = 10;
 
     @Autowired
@@ -51,6 +47,9 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
     private String jdbcConnectionUrl;
     @Autowired
     private Properties jdbcConnectionProperties;
+
+    @Autowired
+    private SparkInvoiceMapper invoiceMapper;
 
     @Nonnull
     @Override
@@ -121,7 +120,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
 
     @Nonnull
     private Dataset<Row> getActualInvoicesFromDb(@Nonnull final List<? extends Invoice> invoices) {
-        return getActualDataset().where(new Column("ID").isin(MAPPER.ids(invoices)));
+        return getActualDataset().where(new Column("ID").isin(invoiceMapper.ids(invoices)));
     }
 
     @Nonnull
@@ -129,7 +128,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
         return sparkSession.createDataFrame(sparkSession
                         .read()
                         .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
-                MAPPER.getDbStructure());
+                invoiceMapper.getDbStructure());
     }
 
     @Nonnull
@@ -147,16 +146,16 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
         final Dataset<Row> categoryDataset = getCategoryDataset();
         final Dataset<Row> joined = dataset.join(categoryDataset, dataset.col("CATEGORY_ID").equalTo(categoryDataset.col("ID")));
         joined.show();
-        return joined.map((MapFunction<Row, SparkInvoiceImpl>) MAPPER::mapRow, Encoders.javaSerialization(SparkInvoiceImpl.class));
+        return joined.map((MapFunction<Row, SparkInvoiceImpl>) invoiceMapper::mapRow, Encoders.javaSerialization(SparkInvoiceImpl.class));
     }
 
     @Nonnull
     private Dataset<Row> createDbRows(@Nonnull List<? extends Invoice> invoices) {
         final List<Row> newRows = invoices.stream()
-                .map(MAPPER::mapRow)
+                .map(invoiceMapper::mapRow)
                 .collect(Collectors.toList());
 
-        final Dataset<Row> dataFrame = sparkSession.createDataFrame(newRows, MAPPER.getDbStructure());
+        final Dataset<Row> dataFrame = sparkSession.createDataFrame(newRows, invoiceMapper.getDbStructure());
         log.debug("New DB rows created");
         dataFrame.show();
         return dataFrame;
@@ -172,52 +171,4 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
         dataset.show();
     }
 
-    private class InvoiceRowMapper implements Serializable {
-        @Nonnull
-        SparkInvoiceImpl mapRow(@Nonnull Row row) {
-            final SparkInvoiceImpl invoice = new SparkInvoiceImpl();
-
-            // renamed field
-            invoice.setId(row.getInt(row.fieldIndex("INVOICE_ID")));
-            // renamed field
-            invoice.setName(row.getString(row.fieldIndex("INVOICE_NAME")));
-            // mapping category
-            invoice.setCategory(SparkDbCstCategoryRepositoryImpl.MAPPER.mapRow(row));
-
-            invoice.setDetails(row.getString(row.fieldIndex("DETAILS")));
-            invoice.setCreationDate(row.getDate(row.fieldIndex("CREATION")).toLocalDate());
-            invoice.setModificationDate(row.getDate(row.fieldIndex("LAST_MODIFICATION")).toLocalDate());
-
-            log.debug("Loaded invoice: {}", invoice);
-            return invoice;
-        }
-
-        @Nonnull
-        Row mapRow(@Nonnull Invoice invoice) {
-            return RowFactory.create(
-                    invoice.getId(),
-                    invoice.getName(),
-                    invoice.getCategory().getId(),
-                    invoice.getDetails(),
-                    Date.valueOf(invoice.getCreationDate()),
-                    Date.valueOf(invoice.getModificationDate())
-            );
-        }
-
-        @Nonnull
-        StructType getDbStructure() {
-            return DataTypes.createStructType(Lists.newArrayList(
-                    DataTypes.createStructField("ID", DataTypes.IntegerType, false),
-                    DataTypes.createStructField("NAME", DataTypes.StringType, false),
-                    DataTypes.createStructField("CATEGORY_ID", DataTypes.IntegerType, false),
-                    DataTypes.createStructField("DETAILS", DataTypes.StringType, false),
-                    DataTypes.createStructField("CREATION", DataTypes.DateType, false),
-                    DataTypes.createStructField("LAST_MODIFICATION", DataTypes.DateType, false)
-            ));
-        }
-
-        Object[] ids(@Nonnull final List<? extends Invoice> invoices) {
-            return invoices.stream().map(Invoice::getId).distinct().toArray();
-        }
-    }
 }

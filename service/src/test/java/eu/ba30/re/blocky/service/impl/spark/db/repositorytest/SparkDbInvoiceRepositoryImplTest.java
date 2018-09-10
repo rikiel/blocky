@@ -13,14 +13,14 @@ import com.google.common.collect.Lists;
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.spark.db.SparkDbRepositoryTestConfiguration;
 import eu.ba30.re.blocky.service.impl.AbstractInvoiceRepositoryImplTest;
-import eu.ba30.re.blocky.service.impl.spark.db.repository.SparkDbCstCategoryRepositoryImpl;
+import eu.ba30.re.blocky.service.impl.spark.mapper.SparkCategoryMapper;
 import mockit.Capturing;
 import mockit.Expectations;
 
 @ContextConfiguration(classes = { SparkDbInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
 public class SparkDbInvoiceRepositoryImplTest extends AbstractInvoiceRepositoryImplTest {
     @Capturing
-    private SparkDbCstCategoryRepositoryImpl.CategoryMapper categoryMapper;
+    private SparkCategoryMapper categoryMapper;
 
     @Override
     protected TestObjectsBuilder createBuilder() {

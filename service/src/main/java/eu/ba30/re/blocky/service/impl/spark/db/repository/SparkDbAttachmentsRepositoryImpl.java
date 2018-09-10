@@ -12,11 +12,8 @@ import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +23,14 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.Attachment;
-import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.spark.db.SparkDbTransactionManager;
+import eu.ba30.re.blocky.service.impl.spark.mapper.SparkAttachmentMapper;
 
 @Service
 public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkDbAttachmentsRepositoryImpl.class);
-    private static final AttachmentMapper MAPPER = new AttachmentMapper();
 
     private static final String TABLE_NAME = "T_ATTACHMENTS";
 
@@ -48,6 +44,9 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
     private String jdbcConnectionUrl;
     @Autowired
     private Properties jdbcConnectionProperties;
+
+    @Autowired
+    private SparkAttachmentMapper attachmentMapper;
 
     private int nextId = 10;
 
@@ -89,7 +88,7 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
                     public void onRollback() {
                         if (wasInserted) {
                             updateDatabase(getActualDataset().except(
-                                    getActualDataset().where(new Column("ID").isin(MAPPER.ids(attachments)))));
+                                    getActualDataset().where(new Column("ID").isin(attachmentMapper.ids(attachments)))));
                         }
                     }
                 });
@@ -130,7 +129,7 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
 
     @Nonnull
     private Dataset<Row> getActualAttachmentsFromDb(@Nonnull final List<Attachment> attachments) {
-        return getActualDataset().where(new Column("ID").isin(MAPPER.ids(attachments)));
+        return getActualDataset().where(new Column("ID").isin(attachmentMapper.ids(attachments)));
     }
 
     @Nonnull
@@ -138,14 +137,14 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
         final Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
                         .read()
                         .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
-                MAPPER.getDbStructure());
+                attachmentMapper.getDbStructure());
         dataset.show();
         return dataset;
     }
 
     @Nonnull
     private Dataset<SparkAttachmentImpl> map(Dataset<Row> dataset) {
-        return dataset.map((MapFunction<Row, SparkAttachmentImpl>) MAPPER::mapRow, Encoders.bean(SparkAttachmentImpl.class));
+        return dataset.map((MapFunction<Row, SparkAttachmentImpl>) attachmentMapper::mapRow, Encoders.bean(SparkAttachmentImpl.class));
     }
 
     @Nonnull
@@ -157,10 +156,10 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
                         attachment.setInvoiceId(invoiceId);
                     }
                 })
-                .map(MAPPER::mapRow)
+                .map(attachmentMapper::mapRow)
                 .collect(Collectors.toList());
 
-        final Dataset<Row> dataFrame = sparkSession.createDataFrame(newRows, MAPPER.getDbStructure());
+        final Dataset<Row> dataFrame = sparkSession.createDataFrame(newRows, attachmentMapper.getDbStructure());
         dataFrame.show();
         return dataFrame;
     }
@@ -175,49 +174,4 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
         dataset.show();
     }
 
-    private static class AttachmentMapper implements Serializable {
-        @Nonnull
-        SparkAttachmentImpl mapRow(@Nonnull Row row) {
-            final SparkAttachmentImpl attachment = new SparkAttachmentImpl();
-
-            attachment.setId(row.getInt(row.fieldIndex("ID")));
-            attachment.setInvoiceId(row.getInt(row.fieldIndex("INVOICE_ID")));
-            attachment.setName(row.getString(row.fieldIndex("NAME")));
-            attachment.setFileName(row.getString(row.fieldIndex("FILE_NAME")));
-            attachment.setMimeType(row.getString(row.fieldIndex("MIME_TYPE")));
-            attachment.setAttachmentType(AttachmentType.forId(row.getInt(row.fieldIndex("TYPE"))));
-            attachment.setContent((byte[]) row.get(row.fieldIndex("FILE_CONTENT")));
-
-            log.debug("Loaded attachment: {}", attachment);
-            return attachment;
-        }
-
-        @Nonnull
-        Row mapRow(@Nonnull SparkAttachmentImpl attachment) {
-            return RowFactory.create(attachment.getId(),
-                    attachment.getInvoiceId(),
-                    attachment.getName(),
-                    attachment.getFileName(),
-                    attachment.getMimeType(),
-                    attachment.getAttachmentTypeId(),
-                    attachment.getContent());
-        }
-
-        @Nonnull
-        StructType getDbStructure() {
-            return DataTypes.createStructType(Lists.newArrayList(
-                    DataTypes.createStructField("ID", DataTypes.IntegerType, false),
-                    DataTypes.createStructField("INVOICE_ID", DataTypes.IntegerType, false),
-                    DataTypes.createStructField("NAME", DataTypes.StringType, false),
-                    DataTypes.createStructField("FILE_NAME", DataTypes.StringType, false),
-                    DataTypes.createStructField("MIME_TYPE", DataTypes.StringType, false),
-                    DataTypes.createStructField("TYPE", DataTypes.IntegerType, false),
-                    DataTypes.createStructField("FILE_CONTENT", DataTypes.BinaryType, false)
-            ));
-        }
-
-        Object[] ids(@Nonnull final List<? extends Attachment> attachments) {
-            return attachments.stream().map(Attachment::getId).distinct().toArray();
-        }
-    }
 }
