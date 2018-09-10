@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import javax.annotation.Nonnull;
 
-import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -19,6 +18,7 @@ import eu.ba30.re.blocky.common.utils.Validate;
 import eu.ba30.re.blocky.model.cst.Category;
 import eu.ba30.re.blocky.model.impl.spark.cst.SparkCategoryImpl;
 import eu.ba30.re.blocky.service.impl.repository.CstCategoryRepository;
+import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkCategoryMapper;
 
 @Service
@@ -46,7 +46,7 @@ public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, 
     @Override
     public Category getCategoryById(int categoryId) {
         final Dataset<SparkCategoryImpl> byId = categoryMapper.map(getActualDataset()
-                .where(new Column("ID").equalTo(categoryId)));
+                .where(MapperUtils.column(SparkCategoryMapper.Columns.ID).equalTo(categoryId)));
 
         Validate.equals(byId.count(), 1, String.format("Should exist 1 element with id %s. Found %s", categoryId, byId.count()));
         return byId.first();
@@ -54,10 +54,11 @@ public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, 
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
+        Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
                         .read()
                         .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
                 categoryMapper.getDbStructure());
+        dataset = MapperUtils.rename(dataset, SparkCategoryMapper.TABLE_NAME);
         dataset.show();
         return dataset;
     }

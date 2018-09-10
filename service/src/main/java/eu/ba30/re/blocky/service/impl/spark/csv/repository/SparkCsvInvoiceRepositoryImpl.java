@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -114,7 +113,7 @@ public class SparkCsvInvoiceRepositoryImpl implements InvoiceRepository, Seriali
 
     @Nonnull
     private Dataset<Row> getActualInvoicesFromDb(@Nonnull final List<? extends Invoice> invoices) {
-        return getActualDataset().where(new Column("ID").isin(MapperUtils.getIds(invoices)));
+        return getActualDataset().where(MapperUtils.column(SparkInvoiceMapper.Columns.ID).isin(MapperUtils.getIds(invoices)));
     }
 
     @Nonnull

@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
@@ -25,14 +24,12 @@ import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
+import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkCategoryMapper;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkInvoiceMapper;
 
 @Service
 public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkDbInvoiceRepositoryImpl.class);
-
-    private static final String TABLE_NAME = "T_INVOICES";
-    private static final String CATEGORY_TABLE_NAME = "T_CST_CATEGORY";
 
     private int nextId = 10;
 
@@ -49,19 +46,21 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
 
     @Autowired
     private SparkInvoiceMapper invoiceMapper;
+    @Autowired
+    private SparkCategoryMapper categoryMapper;
 
     @Nonnull
     @Override
     public List<Invoice> getInvoiceList() {
         return Lists.newArrayList(
-                map(getActualDataset()).collectAsList());
+                invoiceMapper.map(getActualDataset()).collectAsList());
     }
 
     @Override
     public void remove(@Nonnull List<Invoice> invoices) {
         transactionManager.newTransaction(
                 new SparkTransactionManager.Transaction() {
-                    final List<SparkInvoiceImpl> actualDatabaseSnapshot = map(getActualDataset()).collectAsList();
+                    final List<SparkInvoiceImpl> actualDatabaseSnapshot = invoiceMapper.map(getActualDataset()).collectAsList();
                     boolean wasRemoved = false;
 
                     @Override
@@ -70,7 +69,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
                         Validate.equals(toRemove.count(), invoices.size(),
                                 String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), invoices.size()));
 
-                        updateDatabase(createDbRows(actualDatabaseSnapshot).except(createDbRows(map(toRemove).collectAsList())));
+                        updateDatabase(createDbRows(actualDatabaseSnapshot).except(createDbRows(invoiceMapper.map(toRemove).collectAsList())));
                         wasRemoved = true;
                     }
 
@@ -100,7 +99,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
                                 String.format("Should not exist any invoice that is being created. Found %s", actualRows.count()));
 
                         final Dataset<Row> insertedData = createDbRows(invoices);
-                        updateDatabase(createDbRows(map(getActualDataset()).collectAsList()).union(insertedData));
+                        updateDatabase(createDbRows(invoiceMapper.map(getActualDataset()).collectAsList()).union(insertedData));
                     }
 
                     @Override
@@ -119,33 +118,32 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
 
     @Nonnull
     private Dataset<Row> getActualInvoicesFromDb(@Nonnull final List<? extends Invoice> invoices) {
-        return getActualDataset().where(new Column("ID").isin(MapperUtils.getIds(invoices)));
+        return getActualDataset().where(MapperUtils.column(SparkInvoiceMapper.Columns.ID).isin(MapperUtils.getIds(invoices)));
     }
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        return sparkSession.createDataFrame(sparkSession
-                        .read()
-                        .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
+        Dataset<Row> invoiceDataset = sparkSession.createDataFrame(sparkSession.read()
+                        .jdbc(jdbcConnectionUrl, SparkInvoiceMapper.TABLE_NAME, jdbcConnectionProperties)
+                        .rdd(),
                 invoiceMapper.getDbStructure());
-    }
+        invoiceDataset = MapperUtils.rename(invoiceDataset, SparkInvoiceMapper.TABLE_NAME);
+        invoiceDataset.show();
 
-    @Nonnull
-    private Dataset<Row> getCategoryDataset() {
-        return sparkSession
-                .read()
-                .jdbc(jdbcConnectionUrl, CATEGORY_TABLE_NAME, jdbcConnectionProperties);
-    }
+        Dataset<Row> categoryDataset = sparkSession.createDataFrame(sparkSession.read()
+                        .jdbc(jdbcConnectionUrl, SparkCategoryMapper.TABLE_NAME, jdbcConnectionProperties)
+                        .rdd(),
+                categoryMapper.getDbStructure());
 
-    @Nonnull
-    private Dataset<SparkInvoiceImpl> map(Dataset<Row> dataset) {
-        dataset = dataset
-                .withColumnRenamed("ID", "INVOICE_ID")
-                .withColumnRenamed("NAME", "INVOICE_NAME");
-        final Dataset<Row> categoryDataset = getCategoryDataset();
-        final Dataset<Row> joined = dataset.join(categoryDataset, dataset.col("CATEGORY_ID").equalTo(categoryDataset.col("ID")));
-        joined.show();
-        return invoiceMapper.map(joined);
+        categoryDataset = MapperUtils.rename(categoryDataset, SparkCategoryMapper.TABLE_NAME);
+        categoryDataset.show();
+
+        Dataset<Row> actualDataset = invoiceDataset.join(categoryDataset,
+                MapperUtils.column(SparkInvoiceMapper.Columns.CATEGORY).equalTo(MapperUtils.column(SparkCategoryMapper.Columns.ID)));
+
+        actualDataset.show();
+
+        return actualDataset;
     }
 
     @Nonnull
@@ -166,7 +164,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
         dataset
                 .write()
                 .mode(SaveMode.Overwrite)
-                .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+                .jdbc(jdbcConnectionUrl, SparkInvoiceMapper.TABLE_NAME, jdbcConnectionProperties);
         dataset.show();
     }
 
