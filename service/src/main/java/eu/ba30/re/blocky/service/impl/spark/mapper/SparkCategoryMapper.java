@@ -6,7 +6,6 @@ import javax.annotation.Nonnull;
 
 import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.types.DataTypes;
@@ -23,13 +22,15 @@ import eu.ba30.re.blocky.model.impl.spark.cst.SparkCategoryImpl;
 public class SparkCategoryMapper implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkCategoryMapper.class);
 
+    public static final String TABLE_NAME = "T_CST_CATEGORY";
+
     @Nonnull
     public SparkCategoryImpl mapRow(@Nonnull Row row) {
         final SparkCategoryImpl category = new SparkCategoryImpl();
 
-        category.setId(row.getInt(row.fieldIndex("ID")));
-        category.setName(row.getString(row.fieldIndex("NAME")));
-        category.setDescription(row.getString(row.fieldIndex("DESCR")));
+        category.setId(row.getInt(row.fieldIndex(Columns.ID.getName())));
+        category.setName(row.getString(row.fieldIndex(Columns.NAME.getName())));
+        category.setDescription(row.getString(row.fieldIndex(Columns.DESCRIPTION.getName())));
 
         log.debug("Loaded category: {}", category);
         return category;
@@ -38,9 +39,9 @@ public class SparkCategoryMapper implements Serializable {
     @Nonnull
     public StructType getDbStructure() {
         return DataTypes.createStructType(Lists.newArrayList(
-                DataTypes.createStructField("ID", DataTypes.IntegerType, false),
-                DataTypes.createStructField("NAME", DataTypes.StringType, false),
-                DataTypes.createStructField("DESCR", DataTypes.StringType, false)
+                DataTypes.createStructField(Columns.ID.getColumnName(), DataTypes.IntegerType, false),
+                DataTypes.createStructField(Columns.NAME.getColumnName(), DataTypes.StringType, false),
+                DataTypes.createStructField(Columns.DESCRIPTION.getColumnName(), DataTypes.StringType, false)
         ));
     }
 
@@ -49,7 +50,25 @@ public class SparkCategoryMapper implements Serializable {
         return dataset.map((MapFunction<Row, SparkCategoryImpl>) this::mapRow, Encoders.bean(SparkCategoryImpl.class));
     }
 
-    public Encoder<SparkCategoryImpl> getEncoder() {
-        return Encoders.bean(SparkCategoryImpl.class);
+    public enum Columns {
+        ID("ID"),
+        NAME("NAME"),
+        DESCRIPTION("DESCR");
+
+        private final String name;
+
+        Columns(String name) {
+            this.name = name;
+        }
+
+        @Nonnull
+        public String getColumnName() {
+            return name;
+        }
+
+        @Nonnull
+        public String getName() {
+            return TABLE_NAME + "." + name;
+        }
     }
 }

@@ -7,10 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
@@ -146,7 +144,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
         final Dataset<Row> categoryDataset = getCategoryDataset();
         final Dataset<Row> joined = dataset.join(categoryDataset, dataset.col("CATEGORY_ID").equalTo(categoryDataset.col("ID")));
         joined.show();
-        return joined.map((MapFunction<Row, SparkInvoiceImpl>) invoiceMapper::mapRow, Encoders.javaSerialization(SparkInvoiceImpl.class));
+        return invoiceMapper.map(joined);
     }
 
     @Nonnull

@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.DataTypes;
@@ -56,6 +59,11 @@ public class SparkInvoiceMapper implements Serializable {
                 Date.valueOf(invoice.getCreationDate()),
                 Date.valueOf(invoice.getModificationDate())
         );
+    }
+
+    @Nonnull
+    public Dataset<SparkInvoiceImpl> map(@Nonnull Dataset<Row> dataset) {
+        return dataset.map((MapFunction<Row, SparkInvoiceImpl>) this::mapRow, Encoders.javaSerialization(SparkInvoiceImpl.class));
     }
 
     @Nonnull
