@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository.xml;
+package eu.ba30.re.blocky.service.impl.mybatis.xml.repository;
 
 import java.util.List;
 
@@ -11,23 +11,21 @@ import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
 import eu.ba30.re.blocky.service.config.mybatis.xml.MyBatisRepositoryXmlTestConfiguration;
-import eu.ba30.re.blocky.service.impl.AbstractInvoiceRepositoryImplTest;
+import eu.ba30.re.blocky.service.impl.AbstractCstCategoryRepositoryImplTest;
 
-@ContextConfiguration(classes = { MyBatisXmlInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
-public class MyBatisXmlInvoiceRepositoryImplTest extends AbstractInvoiceRepositoryImplTest {
+@ContextConfiguration(classes = { MyBatisXmlCstCategoryRepositoryImplTest.CstCategoryRepositoryConfiguration.class })
+public class MyBatisXmlCstCategoryRepositoryImplTest extends AbstractCstCategoryRepositoryImplTest {
     @Override
     protected TestObjectsBuilder createBuilder() {
         return new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.MY_BATIS);
     }
 
     @Configuration
-    public static class InvoiceRepositoryConfiguration extends MyBatisRepositoryXmlTestConfiguration {
+    public static class CstCategoryRepositoryConfiguration extends MyBatisRepositoryXmlTestConfiguration {
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
-            return Lists.newArrayList(
-                    "db/repositoryTests/test-data-invoices.sql",
-                    "db/repositoryTests/test-data-cst-category.sql");
+            return Lists.newArrayList("db/repositoryTests/test-data-cst-category.sql");
         }
     }
 }

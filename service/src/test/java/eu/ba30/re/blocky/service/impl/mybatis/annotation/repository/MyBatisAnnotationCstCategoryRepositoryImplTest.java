@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository.annotation;
+package eu.ba30.re.blocky.service.impl.mybatis.annotation.repository;
 
 import java.util.List;
 

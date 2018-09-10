@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.mybatis.repository.annotation;
+package eu.ba30.re.blocky.service.impl.mybatis.xml.repository;
 
 import java.util.List;
 
@@ -10,18 +10,18 @@ import org.springframework.test.context.ContextConfiguration;
 import com.google.common.collect.Lists;
 
 import eu.ba30.re.blocky.service.TestObjectsBuilder;
-import eu.ba30.re.blocky.service.config.mybatis.annotation.MyBatisRepositoryAnnotationTestConfiguration;
+import eu.ba30.re.blocky.service.config.mybatis.xml.MyBatisRepositoryXmlTestConfiguration;
 import eu.ba30.re.blocky.service.impl.AbstractInvoiceRepositoryImplTest;
 
-@ContextConfiguration(classes = { MyBatisAnnotationInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
-public class MyBatisAnnotationInvoiceRepositoryImplTest extends AbstractInvoiceRepositoryImplTest {
+@ContextConfiguration(classes = { MyBatisXmlInvoiceRepositoryImplTest.InvoiceRepositoryConfiguration.class })
+public class MyBatisXmlInvoiceRepositoryImplTest extends AbstractInvoiceRepositoryImplTest {
     @Override
     protected TestObjectsBuilder createBuilder() {
         return new TestObjectsBuilder(TestObjectsBuilder.FrameworkType.MY_BATIS);
     }
 
     @Configuration
-    public static class InvoiceRepositoryConfiguration extends MyBatisRepositoryAnnotationTestConfiguration {
+    public static class InvoiceRepositoryConfiguration extends MyBatisRepositoryXmlTestConfiguration {
         @Nonnull
         @Override
         protected List<String> getSqlScripts() {
