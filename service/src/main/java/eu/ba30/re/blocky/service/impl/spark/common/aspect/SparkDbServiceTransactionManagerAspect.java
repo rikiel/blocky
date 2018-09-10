@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark.db.aspect;
+package eu.ba30.re.blocky.service.impl.spark.common.aspect;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import eu.ba30.re.blocky.common.aspects.AspectPointcuts;
-import eu.ba30.re.blocky.service.impl.spark.db.SparkDbTransactionManager;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
 
 /**
  * Commit transactions after each service call.
@@ -23,7 +23,7 @@ public class SparkDbServiceTransactionManagerAspect extends AspectPointcuts impl
     private static final Logger log = LoggerFactory.getLogger(SparkDbServiceTransactionManagerAspect.class);
 
     @Autowired
-    private SparkDbTransactionManager transactionManager;
+    private SparkTransactionManager transactionManager;
 
     @AfterThrowing(value = "serviceCall()", throwing = "e")
     public void rollbackTransaction(JoinPoint joinPoint, Throwable e) {

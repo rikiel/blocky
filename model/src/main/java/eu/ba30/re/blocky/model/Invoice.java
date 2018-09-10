@@ -10,7 +10,8 @@ import com.google.common.base.MoreObjects;
 
 import eu.ba30.re.blocky.model.cst.Category;
 
-public abstract class Invoice {
+public abstract class Invoice implements HasId {
+    @Override
     public abstract Integer getId();
 
     public abstract void setId(Integer id);

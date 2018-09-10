@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark.db.repositorytest;
+package eu.ba30.re.blocky.service.impl.spark;
 
 import java.io.Serializable;
 
@@ -13,19 +13,19 @@ import org.slf4j.LoggerFactory;
 
 import eu.ba30.re.blocky.common.aspects.AspectPointcuts;
 import eu.ba30.re.blocky.common.utils.Validate;
-import eu.ba30.re.blocky.service.impl.spark.db.SparkDbTransactionManager;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
 
 /**
  * Commit transactions after each repository call,
- * instead of handling transactions only after service calls like in {@link eu.ba30.re.blocky.service.impl.spark.db.aspect.SparkDbServiceTransactionManagerAspect}
+ * instead of handling transactions only after service calls like in {@link eu.ba30.re.blocky.service.impl.spark.common.aspect.SparkDbServiceTransactionManagerAspect}
  */
 @Aspect
 public class SparkRepositoryTransactionManagerAspect extends AspectPointcuts implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkRepositoryTransactionManagerAspect.class);
 
-    private final SparkDbTransactionManager transactionManager;
+    private final SparkTransactionManager transactionManager;
 
-    public SparkRepositoryTransactionManagerAspect(@Nonnull final SparkDbTransactionManager transactionManager) {
+    public SparkRepositoryTransactionManagerAspect(@Nonnull final SparkTransactionManager transactionManager) {
         Validate.notNull(transactionManager);
         this.transactionManager = transactionManager;
     }

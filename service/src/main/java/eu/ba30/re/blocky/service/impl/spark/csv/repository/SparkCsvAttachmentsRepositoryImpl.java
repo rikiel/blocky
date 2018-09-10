@@ -1,8 +1,7 @@
-package eu.ba30.re.blocky.service.impl.spark.db.repository;
+package eu.ba30.re.blocky.service.impl.spark.csv.repository;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -26,25 +25,18 @@ import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkAttachmentMapper;
-import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkInvoiceMapper;
 
 @Service
-public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
-    private static final Logger log = LoggerFactory.getLogger(SparkDbAttachmentsRepositoryImpl.class);
-
-    private static final String TABLE_NAME = "T_ATTACHMENTS";
+public class SparkCsvAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
+    private static final Logger log = LoggerFactory.getLogger(SparkCsvAttachmentsRepositoryImpl.class);
 
     @Autowired
     private SparkTransactionManager transactionManager;
 
     @Autowired
     private SparkSession sparkSession;
-
     @Autowired
-    private String jdbcConnectionUrl;
-    @Autowired
-    private Properties jdbcConnectionProperties;
-
+    private String attachmentCsvFileName;
     @Autowired
     private SparkAttachmentMapper attachmentMapper;
 
@@ -54,15 +46,14 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
     @Override
     public List<Attachment> getAttachmentsByInvoiceId(int invoiceId) {
         return Lists.newArrayList(
-                attachmentMapper.map(getActualDataset().where(MapperUtils.column(SparkInvoiceMapper.Columns.ID).equalTo(invoiceId)))
+                attachmentMapper.map(getActualDataset().where(MapperUtils.column(SparkAttachmentMapper.Columns.INVOICE).equalTo(invoiceId)))
                         .collectAsList());
     }
 
     @Nonnull
     @Override
     public List<Attachment> getAttachmentList() {
-        return Lists.newArrayList(
-                attachmentMapper.map(getActualDataset()).collectAsList());
+        return Lists.newArrayList(attachmentMapper.map(getActualDataset()).collectAsList());
     }
 
     @Override
@@ -133,19 +124,7 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
 
     @Nonnull
     private Dataset<Row> getActualAttachmentsFromDb(@Nonnull final List<Attachment> attachments) {
-        return getActualDataset().where(MapperUtils.column(SparkAttachmentMapper.Columns.ID).isin(MapperUtils.getIds(attachments)));
-    }
-
-    @Nonnull
-    private Dataset<Row> getActualDataset() {
-        Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
-                        .read()
-                        .jdbc(jdbcConnectionUrl, SparkAttachmentMapper.TABLE_NAME, jdbcConnectionProperties)
-                        .rdd(),
-                attachmentMapper.getDbStructure());
-        dataset = MapperUtils.rename(dataset, SparkAttachmentMapper.TABLE_NAME);
-        dataset.show();
-        return dataset;
+        return getActualDataset().where(MapperUtils.column(SparkAttachmentMapper.Columns.INVOICE).isin(MapperUtils.getIds(attachments)));
     }
 
     @Nonnull
@@ -165,14 +144,26 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
         return dataFrame;
     }
 
+    @Nonnull
+    private Dataset<Row> getActualDataset() {
+        Dataset<Row> dataset = sparkSession.read()
+                .option("mode", "FAILFAST")
+                .schema(attachmentMapper.getDbStructure())
+                .csv(attachmentCsvFileName)
+                .orderBy(MapperUtils.column(SparkAttachmentMapper.Columns.ID).asc());
+        dataset = MapperUtils.rename(dataset, SparkAttachmentMapper.TABLE_NAME);
+        dataset.show();
+        return dataset;
+    }
+
     private void updateDatabase(@Nonnull Dataset<Row> dataset) {
         log.debug("Updating database");
         dataset.show();
         dataset
                 .write()
+                .option("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
                 .mode(SaveMode.Overwrite)
-                .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+                .csv(attachmentCsvFileName);
         dataset.show();
     }
-
 }

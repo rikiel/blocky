@@ -1,4 +1,4 @@
-package eu.ba30.re.blocky.service.impl.spark.db;
+package eu.ba30.re.blocky.service.impl.spark.common;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,8 +16,8 @@ import eu.ba30.re.blocky.common.utils.Validate;
 
 @Service
 @Scope("singleton")
-public class SparkDbTransactionManager implements Serializable {
-    private static final Logger log = LoggerFactory.getLogger(SparkDbTransactionManager.class);
+public class SparkTransactionManager implements Serializable {
+    private static final Logger log = LoggerFactory.getLogger(SparkTransactionManager.class);
 
     private final List<Transaction> transactions = Lists.newArrayList();
 

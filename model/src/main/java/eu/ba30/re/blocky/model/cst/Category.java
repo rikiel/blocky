@@ -4,7 +4,10 @@ import java.util.Objects;
 
 import com.google.common.base.MoreObjects;
 
-public abstract class Category {
+import eu.ba30.re.blocky.model.HasId;
+
+public abstract class Category implements HasId {
+    @Override
     public abstract Integer getId();
 
     public abstract void setId(Integer id);

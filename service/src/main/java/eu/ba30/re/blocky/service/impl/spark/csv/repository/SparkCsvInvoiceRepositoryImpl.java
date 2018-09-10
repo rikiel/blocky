@@ -1,8 +1,7 @@
-package eu.ba30.re.blocky.service.impl.spark.db.repository;
+package eu.ba30.re.blocky.service.impl.spark.csv.repository;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -25,43 +24,39 @@ import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
+import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkCategoryMapper;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkInvoiceMapper;
 
 @Service
-public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
-    private static final Logger log = LoggerFactory.getLogger(SparkDbInvoiceRepositoryImpl.class);
-
-    private static final String TABLE_NAME = "T_INVOICES";
-    private static final String CATEGORY_TABLE_NAME = "T_CST_CATEGORY";
+public class SparkCsvInvoiceRepositoryImpl implements InvoiceRepository, Serializable {
+    private static final Logger log = LoggerFactory.getLogger(SparkCsvInvoiceRepositoryImpl.class);
 
     private int nextId = 10;
 
     @Autowired
     private SparkTransactionManager transactionManager;
-
     @Autowired
     private SparkSession sparkSession;
-
     @Autowired
-    private String jdbcConnectionUrl;
+    private String invoiceCsvFileName;
     @Autowired
-    private Properties jdbcConnectionProperties;
-
+    private String categoryCsvFileName;
     @Autowired
     private SparkInvoiceMapper invoiceMapper;
+    @Autowired
+    private SparkCategoryMapper categoryMapper;
 
     @Nonnull
     @Override
     public List<Invoice> getInvoiceList() {
-        return Lists.newArrayList(
-                map(getActualDataset()).collectAsList());
+        return Lists.newArrayList(invoiceMapper.map(getActualDataset()).collectAsList());
     }
 
     @Override
     public void remove(@Nonnull List<Invoice> invoices) {
         transactionManager.newTransaction(
                 new SparkTransactionManager.Transaction() {
-                    final List<SparkInvoiceImpl> actualDatabaseSnapshot = map(getActualDataset()).collectAsList();
+                    final List<SparkInvoiceImpl> actualDatabaseSnapshot = invoiceMapper.map(getActualDataset()).collectAsList();
                     boolean wasRemoved = false;
 
                     @Override
@@ -70,7 +65,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
                         Validate.equals(toRemove.count(), invoices.size(),
                                 String.format("Record count does not match for removing. Actual %s, expected %s", toRemove.count(), invoices.size()));
 
-                        updateDatabase(createDbRows(actualDatabaseSnapshot).except(createDbRows(map(toRemove).collectAsList())));
+                        updateDatabase(createDbRows(actualDatabaseSnapshot).except(createDbRows(invoiceMapper.map(toRemove).collectAsList())));
                         wasRemoved = true;
                     }
 
@@ -100,7 +95,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
                                 String.format("Should not exist any invoice that is being created. Found %s", actualRows.count()));
 
                         final Dataset<Row> insertedData = createDbRows(invoices);
-                        updateDatabase(createDbRows(map(getActualDataset()).collectAsList()).union(insertedData));
+                        updateDatabase(createDbRows(invoiceMapper.map(getActualDataset()).collectAsList()).union(insertedData));
                     }
 
                     @Override
@@ -124,28 +119,26 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        return sparkSession.createDataFrame(sparkSession
-                        .read()
-                        .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
-                invoiceMapper.getDbStructure());
-    }
+        Dataset<Row> invoiceDataset = sparkSession.read()
+                .option("mode", "FAILFAST")
+                .schema(invoiceMapper.getDbStructure())
+                .csv(invoiceCsvFileName);
+        invoiceDataset = MapperUtils.rename(invoiceDataset, SparkInvoiceMapper.TABLE_NAME);
+        invoiceDataset.show();
 
-    @Nonnull
-    private Dataset<Row> getCategoryDataset() {
-        return sparkSession
-                .read()
-                .jdbc(jdbcConnectionUrl, CATEGORY_TABLE_NAME, jdbcConnectionProperties);
-    }
+        Dataset<Row> categoryDataset = sparkSession.read()
+                .option("mode", "FAILFAST")
+                .schema(categoryMapper.getDbStructure())
+                .csv(categoryCsvFileName);
+        categoryDataset = MapperUtils.rename(categoryDataset, SparkCategoryMapper.TABLE_NAME);
+        categoryDataset.show();
 
-    @Nonnull
-    private Dataset<SparkInvoiceImpl> map(Dataset<Row> dataset) {
-        dataset = dataset
-                .withColumnRenamed("ID", "INVOICE_ID")
-                .withColumnRenamed("NAME", "INVOICE_NAME");
-        final Dataset<Row> categoryDataset = getCategoryDataset();
-        final Dataset<Row> joined = dataset.join(categoryDataset, dataset.col("CATEGORY_ID").equalTo(categoryDataset.col("ID")));
-        joined.show();
-        return invoiceMapper.map(joined);
+        Dataset<Row> actualDataset = invoiceDataset.join(categoryDataset,
+                MapperUtils.column(SparkInvoiceMapper.Columns.CATEGORY).equalTo(MapperUtils.column(SparkCategoryMapper.Columns.ID)));
+
+        actualDataset.show();
+
+        return actualDataset;
     }
 
     @Nonnull
@@ -166,7 +159,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
         dataset
                 .write()
                 .mode(SaveMode.Overwrite)
-                .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
+                .csv(invoiceCsvFileName);
         dataset.show();
     }
 

@@ -16,7 +16,7 @@ import eu.ba30.re.blocky.service.impl.spark.db.SparkDbCstManagerImpl;
 import eu.ba30.re.blocky.service.impl.spark.db.SparkDbInvoiceServiceImpl;
 
 @Configuration
-@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.db.aspect" })
+@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.common.aspect" })
 public class SparkDbServiceTestConfiguration extends AbstractSparkDbTestConfiguration {
     @Bean
     public CstManager cstManager() {

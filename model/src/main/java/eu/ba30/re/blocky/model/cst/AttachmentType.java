@@ -5,8 +5,9 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import eu.ba30.re.blocky.common.utils.Validate;
+import eu.ba30.re.blocky.model.HasId;
 
-public enum AttachmentType {
+public enum AttachmentType implements HasId {
     IMAGE(1) {
         @Override
         public boolean accepts(@Nonnull String mimeType) {
@@ -40,7 +41,8 @@ public enum AttachmentType {
 
     public abstract boolean accepts(@Nonnull final String mimeType);
 
-    public int getId() {
+    @Override
+    public Integer getId() {
         return id;
     }
 

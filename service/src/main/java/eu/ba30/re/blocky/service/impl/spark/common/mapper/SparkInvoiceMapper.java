@@ -1,8 +1,7 @@
-package eu.ba30.re.blocky.service.impl.spark.mapper;
+package eu.ba30.re.blocky.service.impl.spark.common.mapper;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +26,8 @@ import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
 public class SparkInvoiceMapper implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(SparkInvoiceMapper.class);
 
+    public static final String TABLE_NAME = "T_INVOICES";
+
     @Autowired
     private SparkCategoryMapper categoryMapper;
 
@@ -34,16 +35,12 @@ public class SparkInvoiceMapper implements Serializable {
     public SparkInvoiceImpl mapRow(@Nonnull Row row) {
         final SparkInvoiceImpl invoice = new SparkInvoiceImpl();
 
-        // renamed field
-        invoice.setId(row.getInt(row.fieldIndex("INVOICE_ID")));
-        // renamed field
-        invoice.setName(row.getString(row.fieldIndex("INVOICE_NAME")));
-        // mapping category
+        invoice.setId(row.getInt(MapperUtils.getColumnIndex(row, Columns.ID)));
+        invoice.setName(row.getString(MapperUtils.getColumnIndex(row, Columns.NAME)));
         invoice.setCategory(categoryMapper.mapRow(row));
-
-        invoice.setDetails(row.getString(row.fieldIndex("DETAILS")));
-        invoice.setCreationDate(row.getDate(row.fieldIndex("CREATION")).toLocalDate());
-        invoice.setModificationDate(row.getDate(row.fieldIndex("LAST_MODIFICATION")).toLocalDate());
+        invoice.setDetails(row.getString(MapperUtils.getColumnIndex(row, Columns.DETAILS)));
+        invoice.setCreationDate(row.getDate(MapperUtils.getColumnIndex(row, Columns.CREATION_DATE)).toLocalDate());
+        invoice.setModificationDate(row.getDate(MapperUtils.getColumnIndex(row, Columns.LAST_MODIFICATION_DATE)).toLocalDate());
 
         log.debug("Loaded invoice: {}", invoice);
         return invoice;
@@ -69,16 +66,39 @@ public class SparkInvoiceMapper implements Serializable {
     @Nonnull
     public StructType getDbStructure() {
         return DataTypes.createStructType(Lists.newArrayList(
-                DataTypes.createStructField("ID", DataTypes.IntegerType, false),
-                DataTypes.createStructField("NAME", DataTypes.StringType, false),
-                DataTypes.createStructField("CATEGORY_ID", DataTypes.IntegerType, false),
-                DataTypes.createStructField("DETAILS", DataTypes.StringType, false),
-                DataTypes.createStructField("CREATION", DataTypes.DateType, false),
-                DataTypes.createStructField("LAST_MODIFICATION", DataTypes.DateType, false)
+                MapperUtils.createRequiredDbStructField(Columns.ID, DataTypes.IntegerType),
+                MapperUtils.createRequiredDbStructField(Columns.NAME, DataTypes.StringType),
+                MapperUtils.createRequiredDbStructField(Columns.CATEGORY, DataTypes.IntegerType),
+                MapperUtils.createRequiredDbStructField(Columns.DETAILS, DataTypes.StringType),
+                MapperUtils.createRequiredDbStructField(Columns.CREATION_DATE, DataTypes.DateType),
+                MapperUtils.createRequiredDbStructField(Columns.LAST_MODIFICATION_DATE, DataTypes.DateType)
         ));
     }
 
-    public Object[] ids(@Nonnull final List<? extends Invoice> invoices) {
-        return invoices.stream().map(Invoice::getId).distinct().toArray();
+    public enum Columns implements MapperUtils.TableColumn {
+        ID("ID"),
+        NAME("NAME"),
+        CATEGORY("CATEGORY_ID"),
+        DETAILS("DETAILS"),
+        CREATION_DATE("CREATION"),
+        LAST_MODIFICATION_DATE("LAST_MODIFICATION");
+
+        private final String name;
+
+        Columns(String name) {
+            this.name = name;
+        }
+
+        @Override
+        @Nonnull
+        public String getColumnName() {
+            return name;
+        }
+
+        @Override
+        @Nonnull
+        public String getName() {
+            return TABLE_NAME + "." + name;
+        }
     }
 }

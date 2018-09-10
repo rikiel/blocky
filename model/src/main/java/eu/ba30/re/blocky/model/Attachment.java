@@ -6,7 +6,8 @@ import com.google.common.base.MoreObjects;
 
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 
-public abstract class Attachment {
+public abstract class Attachment implements HasId {
+    @Override
     public abstract Integer getId();
 
     public abstract void setId(Integer id);
