@@ -47,11 +47,6 @@ public class SparkCsvCstCategoryRepositoryImpl implements CstCategoryRepository,
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> dataset = sparkSession.read()
-                .option("mode", "FAILFAST")
-                .schema(categoryMapper.getDbStructure())
-                .csv(categoryCsvFileName);
-        dataset.show();
-        return dataset;
+        return SparkUtils.loadCsv(sparkSession, categoryMapper.getDbStructure(), categoryCsvFileName, SparkCategoryMapper.Columns.ID);
     }
 }

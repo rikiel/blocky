@@ -56,8 +56,6 @@ public abstract class AbstractInvoiceRepositoryImplTest extends AbstractTestNGSp
 
     @Test
     public void remove() {
-        initCstExpectations();
-
         invoiceRepository.remove(createBuilder().category1().invoice1().buildInvoices());
 
         assertReflectionEquals(Lists.newArrayList(),

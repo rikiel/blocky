@@ -10,7 +10,6 @@ import javax.annotation.Nonnull;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,13 +136,12 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
-                        .read()
-                        .jdbc(jdbcConnectionUrl, SparkAttachmentMapper.TABLE_NAME, jdbcConnectionProperties)
-                        .collectAsList(),
-                attachmentMapper.getDbStructure());
-        dataset.show();
-        return dataset;
+        return SparkUtils.loadJdbc(sparkSession,
+                jdbcConnectionUrl,
+                jdbcConnectionProperties,
+                SparkAttachmentMapper.TABLE_NAME,
+                attachmentMapper.getDbStructure(),
+                SparkAttachmentMapper.Columns.ID);
     }
 
     @Nonnull
@@ -164,12 +162,6 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
     }
 
     private void updateDatabase(@Nonnull Dataset<Row> dataset) {
-        log.debug("Updating database");
-        dataset.show();
-        dataset
-                .write()
-                .mode(SaveMode.Overwrite)
-                .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
-        dataset.show();
+        SparkUtils.saveJdbc(sparkSession, dataset, jdbcConnectionUrl, jdbcConnectionProperties, SparkAttachmentMapper.TABLE_NAME);
     }
 }

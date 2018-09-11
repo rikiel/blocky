@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,17 +122,25 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> invoiceDataset = sparkSession.createDataFrame(sparkSession.read()
-                        .jdbc(jdbcConnectionUrl, SparkInvoiceMapper.TABLE_NAME, jdbcConnectionProperties)
-                        .collectAsList(),
-                invoiceMapper.getDbStructure());
+        final Dataset<Row> invoiceDataset = SparkUtils.loadJdbc(sparkSession,
+                jdbcConnectionUrl,
+                jdbcConnectionProperties,
+                SparkInvoiceMapper.TABLE_NAME,
+                invoiceMapper.getDbStructure(),
+                null);
 
-        final Dataset<Row> categoryDataset = sparkSession.createDataFrame(sparkSession.read()
-                        .jdbc(jdbcConnectionUrl, SparkCategoryMapper.TABLE_NAME, jdbcConnectionProperties)
-                        .collectAsList(),
-                categoryMapper.getDbStructure());
+        final Dataset<Row> categoryDataset = SparkUtils.loadJdbc(sparkSession,
+                jdbcConnectionUrl,
+                jdbcConnectionProperties,
+                SparkCategoryMapper.TABLE_NAME,
+                categoryMapper.getDbStructure(),
+                null);
 
-        return SparkUtils.join(invoiceDataset, categoryDataset, SparkInvoiceMapper.Columns.CATEGORY, SparkCategoryMapper.Columns.ID);
+        return SparkUtils.join(invoiceDataset,
+                categoryDataset,
+                SparkInvoiceMapper.Columns.CATEGORY,
+                SparkCategoryMapper.Columns.ID,
+                SparkInvoiceMapper.Columns.ID);
     }
 
     @Nonnull
@@ -149,13 +156,7 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
     }
 
     private void updateDatabase(@Nonnull Dataset<Row> dataset) {
-        log.debug("Updating database");
-        dataset.show();
-        dataset
-                .write()
-                .mode(SaveMode.Overwrite)
-                .jdbc(jdbcConnectionUrl, SparkInvoiceMapper.TABLE_NAME, jdbcConnectionProperties);
-        dataset.show();
+        SparkUtils.saveJdbc(sparkSession, dataset, jdbcConnectionUrl, jdbcConnectionProperties, SparkInvoiceMapper.TABLE_NAME);
     }
 
 }

@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,18 +117,15 @@ public class SparkCsvInvoiceRepositoryImpl implements InvoiceRepository, Seriali
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> invoiceDataset = sparkSession.read()
-                .option("mode", "FAILFAST")
-                .schema(invoiceMapper.getDbStructure())
-                .csv(invoiceCsvFileName);
+        final Dataset<Row> invoiceDataset = SparkUtils.loadCsv(sparkSession, invoiceMapper.getDbStructure(), invoiceCsvFileName, null);
 
-        final Dataset<Row> categoryDataset = sparkSession.read()
-                .option("mode", "FAILFAST")
-                .schema(categoryMapper.getDbStructure())
-                .csv(categoryCsvFileName);
+        final Dataset<Row> categoryDataset = SparkUtils.loadCsv(sparkSession, categoryMapper.getDbStructure(), categoryCsvFileName, null);
 
-        return SparkUtils.join(invoiceDataset, categoryDataset, SparkInvoiceMapper.Columns.CATEGORY, SparkCategoryMapper.Columns.ID)
-                .orderBy(SparkUtils.column(SparkInvoiceMapper.Columns.ID).asc());
+        return SparkUtils.join(invoiceDataset,
+                categoryDataset,
+                SparkInvoiceMapper.Columns.CATEGORY,
+                SparkCategoryMapper.Columns.ID,
+                SparkInvoiceMapper.Columns.ID);
     }
 
     @Nonnull
@@ -145,12 +141,6 @@ public class SparkCsvInvoiceRepositoryImpl implements InvoiceRepository, Seriali
     }
 
     private void updateDatabase(@Nonnull Dataset<Row> dataset) {
-        log.debug("Updating database");
-        dataset.show();
-        dataset
-                .write()
-                .mode(SaveMode.Overwrite)
-                .csv(invoiceCsvFileName);
-        dataset.show();
+        SparkUtils.saveCsv(sparkSession, dataset, invoiceCsvFileName);
     }
 }

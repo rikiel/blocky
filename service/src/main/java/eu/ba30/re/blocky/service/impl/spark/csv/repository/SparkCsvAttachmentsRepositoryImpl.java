@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,23 +145,10 @@ public class SparkCsvAttachmentsRepositoryImpl implements AttachmentsRepository,
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> dataset = sparkSession.read()
-                .option("mode", "FAILFAST")
-                .schema(attachmentMapper.getDbStructure())
-                .csv(attachmentCsvFileName)
-                .orderBy(SparkUtils.column(SparkAttachmentMapper.Columns.ID).asc());
-        dataset.show();
-        return dataset;
+        return SparkUtils.loadCsv(sparkSession, attachmentMapper.getDbStructure(), attachmentCsvFileName, SparkAttachmentMapper.Columns.ID);
     }
 
     private void updateDatabase(@Nonnull Dataset<Row> dataset) {
-        log.debug("Updating database");
-        dataset.show();
-        dataset
-                .write()
-                .option("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
-                .mode(SaveMode.Overwrite)
-                .csv(attachmentCsvFileName);
-        dataset.show();
+        SparkUtils.saveCsv(sparkSession, dataset, attachmentCsvFileName);
     }
 }

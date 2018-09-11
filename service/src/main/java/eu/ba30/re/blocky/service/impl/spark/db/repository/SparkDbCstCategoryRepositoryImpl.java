@@ -23,8 +23,6 @@ import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkCategoryMapper;
 
 @Service
 public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, Serializable {
-    private static final String TABLE_NAME = "T_CST_CATEGORY";
-
     @Autowired
     private SparkSession sparkSession;
 
@@ -54,11 +52,11 @@ public class SparkDbCstCategoryRepositoryImpl implements CstCategoryRepository, 
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        final Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
-                        .read()
-                        .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties).rdd(),
-                categoryMapper.getDbStructure());
-        dataset.show();
-        return dataset;
+        return SparkUtils.loadJdbc(sparkSession,
+                jdbcConnectionUrl,
+                jdbcConnectionProperties,
+                SparkCategoryMapper.TABLE_NAME,
+                categoryMapper.getDbStructure(),
+                SparkCategoryMapper.Columns.ID);
     }
 }
