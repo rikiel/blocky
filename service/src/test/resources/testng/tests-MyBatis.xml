@@ -1,10 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="MyBatis suite" verbose="1">
-    <test name="MyBatis tests">
-        <packages>
-            <package name="eu.ba30.re.blocky.service.impl.mybatis.xml.*"/>
-            <package name="eu.ba30.re.blocky.service.impl.mybatis.annotation.*"/>
-        </packages>
-    </test>
+    <suite-files>
+        <suite-file path="tests-MyBatis-Annotation.xml"/>
+        <suite-file path="tests-MyBatis-Xml.xml"/>
+    </suite-files>
 </suite>

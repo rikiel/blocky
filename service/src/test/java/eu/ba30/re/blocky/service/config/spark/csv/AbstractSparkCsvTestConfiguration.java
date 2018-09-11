@@ -17,13 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
-import com.google.common.collect.Lists;
-
 import eu.ba30.re.blocky.service.config.AbstractTestConfiguration;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.common" })
+@ComponentScan(value = { "eu.ba30.re.blocky.service.impl.spark.common" }, lazyInit = true)
 abstract class AbstractSparkCsvTestConfiguration extends AbstractTestConfiguration {
     private static final Logger log = LoggerFactory.getLogger(AbstractSparkCsvTestConfiguration.class);
 
@@ -39,7 +37,7 @@ abstract class AbstractSparkCsvTestConfiguration extends AbstractTestConfigurati
     @Nonnull
     @Override
     protected final List<String> getSqlScripts() {
-        return Lists.newArrayList();
+        throw new UnsupportedOperationException("CSV Spark does not use SQL");
     }
 
     @Nonnull

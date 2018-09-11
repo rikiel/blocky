@@ -24,9 +24,8 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
-import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkUtils;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkAttachmentMapper;
-import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkInvoiceMapper;
 
 @Service
 public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, Serializable {
@@ -54,7 +53,7 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
     @Override
     public List<Attachment> getAttachmentsByInvoiceId(int invoiceId) {
         return Lists.newArrayList(
-                attachmentMapper.map(getActualDataset().where(MapperUtils.column(SparkInvoiceMapper.Columns.ID).equalTo(invoiceId)))
+                attachmentMapper.map(getActualDataset().where(SparkUtils.column(SparkAttachmentMapper.Columns.INVOICE).equalTo(invoiceId)))
                         .collectAsList());
     }
 
@@ -90,7 +89,7 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
                     public void onRollback() {
                         if (wasInserted) {
                             updateDatabase(getActualDataset().except(
-                                    getActualDataset().where(new Column("ID").isin(MapperUtils.getIds(attachments)))));
+                                    getActualDataset().where(new Column("ID").isin(SparkUtils.getIds(attachments)))));
                         }
                     }
                 });
@@ -133,17 +132,16 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
 
     @Nonnull
     private Dataset<Row> getActualAttachmentsFromDb(@Nonnull final List<Attachment> attachments) {
-        return getActualDataset().where(MapperUtils.column(SparkAttachmentMapper.Columns.ID).isin(MapperUtils.getIds(attachments)));
+        return getActualDataset().where(SparkUtils.column(SparkAttachmentMapper.Columns.ID).isin(SparkUtils.getIds(attachments)));
     }
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
+        final Dataset<Row> dataset = sparkSession.createDataFrame(sparkSession
                         .read()
                         .jdbc(jdbcConnectionUrl, SparkAttachmentMapper.TABLE_NAME, jdbcConnectionProperties)
-                        .rdd(),
+                        .collectAsList(),
                 attachmentMapper.getDbStructure());
-        dataset = MapperUtils.rename(dataset, SparkAttachmentMapper.TABLE_NAME);
         dataset.show();
         return dataset;
     }
@@ -174,5 +172,4 @@ public class SparkDbAttachmentsRepositoryImpl implements AttachmentsRepository, 
                 .jdbc(jdbcConnectionUrl, TABLE_NAME, jdbcConnectionProperties);
         dataset.show();
     }
-
 }

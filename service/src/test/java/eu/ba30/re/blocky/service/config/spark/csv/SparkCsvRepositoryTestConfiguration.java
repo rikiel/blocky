@@ -9,7 +9,7 @@ import eu.ba30.re.blocky.service.impl.spark.SparkRepositoryTransactionManagerAsp
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
 
 @Configuration
-@ComponentScan({ "eu.ba30.re.blocky.service.impl.spark.csv.repository" })
+@ComponentScan(value = { "eu.ba30.re.blocky.service.impl.spark.csv.repository" }, lazyInit = true)
 public abstract class SparkCsvRepositoryTestConfiguration extends AbstractSparkCsvTestConfiguration {
     @Autowired
     private SparkTransactionManager transactionManager;

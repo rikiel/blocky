@@ -23,7 +23,7 @@ import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
-import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkUtils;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkCategoryMapper;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkInvoiceMapper;
 
@@ -118,32 +118,22 @@ public class SparkDbInvoiceRepositoryImpl implements InvoiceRepository, Serializ
 
     @Nonnull
     private Dataset<Row> getActualInvoicesFromDb(@Nonnull final List<? extends Invoice> invoices) {
-        return getActualDataset().where(MapperUtils.column(SparkInvoiceMapper.Columns.ID).isin(MapperUtils.getIds(invoices)));
+        return getActualDataset().where(SparkUtils.column(SparkInvoiceMapper.Columns.ID).isin(SparkUtils.getIds(invoices)));
     }
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        Dataset<Row> invoiceDataset = sparkSession.createDataFrame(sparkSession.read()
+        final Dataset<Row> invoiceDataset = sparkSession.createDataFrame(sparkSession.read()
                         .jdbc(jdbcConnectionUrl, SparkInvoiceMapper.TABLE_NAME, jdbcConnectionProperties)
-                        .rdd(),
+                        .collectAsList(),
                 invoiceMapper.getDbStructure());
-        invoiceDataset = MapperUtils.rename(invoiceDataset, SparkInvoiceMapper.TABLE_NAME);
-        invoiceDataset.show();
 
-        Dataset<Row> categoryDataset = sparkSession.createDataFrame(sparkSession.read()
+        final Dataset<Row> categoryDataset = sparkSession.createDataFrame(sparkSession.read()
                         .jdbc(jdbcConnectionUrl, SparkCategoryMapper.TABLE_NAME, jdbcConnectionProperties)
-                        .rdd(),
+                        .collectAsList(),
                 categoryMapper.getDbStructure());
 
-        categoryDataset = MapperUtils.rename(categoryDataset, SparkCategoryMapper.TABLE_NAME);
-        categoryDataset.show();
-
-        Dataset<Row> actualDataset = invoiceDataset.join(categoryDataset,
-                MapperUtils.column(SparkInvoiceMapper.Columns.CATEGORY).equalTo(MapperUtils.column(SparkCategoryMapper.Columns.ID)));
-
-        actualDataset.show();
-
-        return actualDataset;
+        return SparkUtils.join(invoiceDataset, categoryDataset, SparkInvoiceMapper.Columns.CATEGORY, SparkCategoryMapper.Columns.ID);
     }
 
     @Nonnull

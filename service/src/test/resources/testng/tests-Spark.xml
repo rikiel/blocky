@@ -1,10 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="Spark suite" verbose="1">
-    <test name="Spark tests">
-        <packages>
-            <package name="eu.ba30.re.blocky.service.impl.spark.db.*"/>
-            <!--<package name="eu.ba30.re.blocky.service.impl.spark.csv.*"/>-->
-        </packages>
-    </test>
+    <suite-files>
+        <suite-file path="tests-Spark-Jdbc.xml"/>
+        <suite-file path="tests-Spark-Csv.xml"/>
+    </suite-files>
 </suite>

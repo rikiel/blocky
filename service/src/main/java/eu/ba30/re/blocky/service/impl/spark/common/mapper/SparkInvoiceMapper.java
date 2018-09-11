@@ -17,10 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
-
 import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkUtils;
 
 @Service
 public class SparkInvoiceMapper implements Serializable {
@@ -35,12 +34,12 @@ public class SparkInvoiceMapper implements Serializable {
     public SparkInvoiceImpl mapRow(@Nonnull Row row) {
         final SparkInvoiceImpl invoice = new SparkInvoiceImpl();
 
-        invoice.setId(row.getInt(MapperUtils.getColumnIndex(row, Columns.ID)));
-        invoice.setName(row.getString(MapperUtils.getColumnIndex(row, Columns.NAME)));
+        invoice.setId(row.getInt(SparkUtils.getColumnIndex(row, Columns.ID)));
+        invoice.setName(row.getString(SparkUtils.getColumnIndex(row, Columns.NAME)));
         invoice.setCategory(categoryMapper.mapRow(row));
-        invoice.setDetails(row.getString(MapperUtils.getColumnIndex(row, Columns.DETAILS)));
-        invoice.setCreationDate(row.getDate(MapperUtils.getColumnIndex(row, Columns.CREATION_DATE)).toLocalDate());
-        invoice.setModificationDate(row.getDate(MapperUtils.getColumnIndex(row, Columns.LAST_MODIFICATION_DATE)).toLocalDate());
+        invoice.setDetails(row.getString(SparkUtils.getColumnIndex(row, Columns.DETAILS)));
+        invoice.setCreationDate(row.getDate(SparkUtils.getColumnIndex(row, Columns.CREATION_DATE)).toLocalDate());
+        invoice.setModificationDate(row.getDate(SparkUtils.getColumnIndex(row, Columns.LAST_MODIFICATION_DATE)).toLocalDate());
 
         log.debug("Loaded invoice: {}", invoice);
         return invoice;
@@ -65,17 +64,17 @@ public class SparkInvoiceMapper implements Serializable {
 
     @Nonnull
     public StructType getDbStructure() {
-        return DataTypes.createStructType(Lists.newArrayList(
-                MapperUtils.createRequiredDbStructField(Columns.ID, DataTypes.IntegerType),
-                MapperUtils.createRequiredDbStructField(Columns.NAME, DataTypes.StringType),
-                MapperUtils.createRequiredDbStructField(Columns.CATEGORY, DataTypes.IntegerType),
-                MapperUtils.createRequiredDbStructField(Columns.DETAILS, DataTypes.StringType),
-                MapperUtils.createRequiredDbStructField(Columns.CREATION_DATE, DataTypes.DateType),
-                MapperUtils.createRequiredDbStructField(Columns.LAST_MODIFICATION_DATE, DataTypes.DateType)
-        ));
+        return new SparkUtils.FieldBuilder()
+                .addRequiredField(Columns.ID, DataTypes.IntegerType)
+                .addRequiredField(Columns.NAME, DataTypes.StringType)
+                .addRequiredField(Columns.CATEGORY, DataTypes.IntegerType)
+                .addRequiredField(Columns.DETAILS, DataTypes.StringType)
+                .addRequiredField(Columns.CREATION_DATE, DataTypes.DateType)
+                .addRequiredField(Columns.LAST_MODIFICATION_DATE, DataTypes.DateType)
+                .build();
     }
 
-    public enum Columns implements MapperUtils.TableColumn {
+    public enum Columns implements SparkUtils.TableColumn {
         ID("ID"),
         NAME("NAME"),
         CATEGORY("CATEGORY_ID"),
@@ -91,14 +90,8 @@ public class SparkInvoiceMapper implements Serializable {
 
         @Override
         @Nonnull
-        public String getColumnName() {
-            return name;
-        }
-
-        @Override
-        @Nonnull
-        public String getName() {
-            return TABLE_NAME + "." + name;
+        public String getFullColumnName() {
+            return TABLE_NAME + DELIMITER + name;
         }
     }
 }

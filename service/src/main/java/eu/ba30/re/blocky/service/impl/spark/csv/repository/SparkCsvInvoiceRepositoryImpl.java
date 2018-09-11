@@ -22,7 +22,7 @@ import eu.ba30.re.blocky.model.Invoice;
 import eu.ba30.re.blocky.model.impl.spark.SparkInvoiceImpl;
 import eu.ba30.re.blocky.service.impl.repository.InvoiceRepository;
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
-import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkUtils;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkCategoryMapper;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkInvoiceMapper;
 
@@ -113,31 +113,23 @@ public class SparkCsvInvoiceRepositoryImpl implements InvoiceRepository, Seriali
 
     @Nonnull
     private Dataset<Row> getActualInvoicesFromDb(@Nonnull final List<? extends Invoice> invoices) {
-        return getActualDataset().where(MapperUtils.column(SparkInvoiceMapper.Columns.ID).isin(MapperUtils.getIds(invoices)));
+        return getActualDataset().where(SparkUtils.column(SparkInvoiceMapper.Columns.ID).isin(SparkUtils.getIds(invoices)));
     }
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        Dataset<Row> invoiceDataset = sparkSession.read()
+        final Dataset<Row> invoiceDataset = sparkSession.read()
                 .option("mode", "FAILFAST")
                 .schema(invoiceMapper.getDbStructure())
                 .csv(invoiceCsvFileName);
-        invoiceDataset = MapperUtils.rename(invoiceDataset, SparkInvoiceMapper.TABLE_NAME);
-        invoiceDataset.show();
 
-        Dataset<Row> categoryDataset = sparkSession.read()
+        final Dataset<Row> categoryDataset = sparkSession.read()
                 .option("mode", "FAILFAST")
                 .schema(categoryMapper.getDbStructure())
                 .csv(categoryCsvFileName);
-        categoryDataset = MapperUtils.rename(categoryDataset, SparkCategoryMapper.TABLE_NAME);
-        categoryDataset.show();
 
-        Dataset<Row> actualDataset = invoiceDataset.join(categoryDataset,
-                MapperUtils.column(SparkInvoiceMapper.Columns.CATEGORY).equalTo(MapperUtils.column(SparkCategoryMapper.Columns.ID)));
-
-        actualDataset.show();
-
-        return actualDataset;
+        return SparkUtils.join(invoiceDataset, categoryDataset, SparkInvoiceMapper.Columns.CATEGORY, SparkCategoryMapper.Columns.ID)
+                .orderBy(SparkUtils.column(SparkInvoiceMapper.Columns.ID).asc());
     }
 
     @Nonnull
@@ -161,5 +153,4 @@ public class SparkCsvInvoiceRepositoryImpl implements InvoiceRepository, Seriali
                 .csv(invoiceCsvFileName);
         dataset.show();
     }
-
 }

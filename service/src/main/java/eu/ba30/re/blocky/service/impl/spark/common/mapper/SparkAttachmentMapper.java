@@ -17,10 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.Lists;
-
 import eu.ba30.re.blocky.model.cst.AttachmentType;
 import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkUtils;
 
 @Service
 public class SparkAttachmentMapper implements Serializable {
@@ -35,13 +34,13 @@ public class SparkAttachmentMapper implements Serializable {
     public SparkAttachmentImpl mapRow(@Nonnull Row row) {
         final SparkAttachmentImpl attachment = new SparkAttachmentImpl();
 
-        attachment.setId(row.getInt(MapperUtils.getColumnIndex(row, Columns.ID)));
-        attachment.setInvoiceId(row.getInt(MapperUtils.getColumnIndex(row, Columns.INVOICE)));
-        attachment.setName(row.getString(MapperUtils.getColumnIndex(row, Columns.NAME)));
-        attachment.setFileName(row.getString(MapperUtils.getColumnIndex(row, Columns.FILE_NAME)));
-        attachment.setMimeType(row.getString(MapperUtils.getColumnIndex(row, Columns.MIME_TYPE)));
-        attachment.setAttachmentType(AttachmentType.forId(row.getInt(MapperUtils.getColumnIndex(row, Columns.ATTACHMENT_TYPE))));
-        attachment.setContent(contentType.getContent(row, MapperUtils.getColumnIndex(row, Columns.CONTENT)));
+        attachment.setId(row.getInt(SparkUtils.getColumnIndex(row, Columns.ID)));
+        attachment.setInvoiceId(row.getInt(SparkUtils.getColumnIndex(row, Columns.INVOICE)));
+        attachment.setName(row.getString(SparkUtils.getColumnIndex(row, Columns.NAME)));
+        attachment.setFileName(row.getString(SparkUtils.getColumnIndex(row, Columns.FILE_NAME)));
+        attachment.setMimeType(row.getString(SparkUtils.getColumnIndex(row, Columns.MIME_TYPE)));
+        attachment.setAttachmentType(AttachmentType.forId(row.getInt(SparkUtils.getColumnIndex(row, Columns.ATTACHMENT_TYPE))));
+        attachment.setContent(contentType.getContent(row, SparkUtils.getColumnIndex(row, Columns.CONTENT)));
 
         log.debug("Loaded attachment: {}", attachment);
         return attachment;
@@ -65,15 +64,15 @@ public class SparkAttachmentMapper implements Serializable {
 
     @Nonnull
     public StructType getDbStructure() {
-        return DataTypes.createStructType(Lists.newArrayList(
-                MapperUtils.createRequiredDbStructField(Columns.ID, DataTypes.IntegerType),
-                MapperUtils.createRequiredDbStructField(Columns.INVOICE, DataTypes.IntegerType),
-                MapperUtils.createRequiredDbStructField(Columns.NAME, DataTypes.StringType),
-                MapperUtils.createRequiredDbStructField(Columns.FILE_NAME, DataTypes.StringType),
-                MapperUtils.createRequiredDbStructField(Columns.MIME_TYPE, DataTypes.StringType),
-                MapperUtils.createRequiredDbStructField(Columns.ATTACHMENT_TYPE, DataTypes.IntegerType),
-                MapperUtils.createRequiredDbStructField(Columns.CONTENT, contentType.getDataType())
-        ));
+        return new SparkUtils.FieldBuilder()
+                .addRequiredField(Columns.ID, DataTypes.IntegerType)
+                .addRequiredField(Columns.INVOICE, DataTypes.IntegerType)
+                .addRequiredField(Columns.NAME, DataTypes.StringType)
+                .addRequiredField(Columns.FILE_NAME, DataTypes.StringType)
+                .addRequiredField(Columns.MIME_TYPE, DataTypes.StringType)
+                .addRequiredField(Columns.ATTACHMENT_TYPE, DataTypes.IntegerType)
+                .addRequiredField(Columns.CONTENT, contentType.getDataType())
+                .build();
     }
 
     public enum ContentType {
@@ -123,7 +122,7 @@ public class SparkAttachmentMapper implements Serializable {
         abstract Object getContentForDb(@Nonnull byte[] bytes);
     }
 
-    public enum Columns implements MapperUtils.TableColumn {
+    public enum Columns implements SparkUtils.TableColumn {
         ID("ID"),
         INVOICE("INVOICE_ID"),
         NAME("NAME"),
@@ -140,14 +139,8 @@ public class SparkAttachmentMapper implements Serializable {
 
         @Override
         @Nonnull
-        public String getColumnName() {
-            return name;
-        }
-
-        @Override
-        @Nonnull
-        public String getName() {
-            return TABLE_NAME + "." + name;
+        public String getFullColumnName() {
+            return TABLE_NAME + DELIMITER + name;
         }
     }
 }

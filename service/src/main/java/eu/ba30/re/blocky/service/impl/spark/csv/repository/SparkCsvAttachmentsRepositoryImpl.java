@@ -23,7 +23,7 @@ import eu.ba30.re.blocky.model.Attachment;
 import eu.ba30.re.blocky.model.impl.spark.SparkAttachmentImpl;
 import eu.ba30.re.blocky.service.impl.repository.AttachmentsRepository;
 import eu.ba30.re.blocky.service.impl.spark.common.SparkTransactionManager;
-import eu.ba30.re.blocky.service.impl.spark.common.mapper.MapperUtils;
+import eu.ba30.re.blocky.service.impl.spark.common.SparkUtils;
 import eu.ba30.re.blocky.service.impl.spark.common.mapper.SparkAttachmentMapper;
 
 @Service
@@ -46,7 +46,7 @@ public class SparkCsvAttachmentsRepositoryImpl implements AttachmentsRepository,
     @Override
     public List<Attachment> getAttachmentsByInvoiceId(int invoiceId) {
         return Lists.newArrayList(
-                attachmentMapper.map(getActualDataset().where(MapperUtils.column(SparkAttachmentMapper.Columns.INVOICE).equalTo(invoiceId)))
+                attachmentMapper.map(getActualDataset().where(SparkUtils.column(SparkAttachmentMapper.Columns.INVOICE).equalTo(invoiceId)))
                         .collectAsList());
     }
 
@@ -81,7 +81,7 @@ public class SparkCsvAttachmentsRepositoryImpl implements AttachmentsRepository,
                     public void onRollback() {
                         if (wasInserted) {
                             updateDatabase(getActualDataset().except(
-                                    getActualDataset().where(new Column("ID").isin(MapperUtils.getIds(attachments)))));
+                                    getActualDataset().where(new Column("ID").isin(SparkUtils.getIds(attachments)))));
                         }
                     }
                 });
@@ -124,7 +124,7 @@ public class SparkCsvAttachmentsRepositoryImpl implements AttachmentsRepository,
 
     @Nonnull
     private Dataset<Row> getActualAttachmentsFromDb(@Nonnull final List<Attachment> attachments) {
-        return getActualDataset().where(MapperUtils.column(SparkAttachmentMapper.Columns.INVOICE).isin(MapperUtils.getIds(attachments)));
+        return getActualDataset().where(SparkUtils.column(SparkAttachmentMapper.Columns.INVOICE).isin(SparkUtils.getIds(attachments)));
     }
 
     @Nonnull
@@ -146,12 +146,11 @@ public class SparkCsvAttachmentsRepositoryImpl implements AttachmentsRepository,
 
     @Nonnull
     private Dataset<Row> getActualDataset() {
-        Dataset<Row> dataset = sparkSession.read()
+        final Dataset<Row> dataset = sparkSession.read()
                 .option("mode", "FAILFAST")
                 .schema(attachmentMapper.getDbStructure())
                 .csv(attachmentCsvFileName)
-                .orderBy(MapperUtils.column(SparkAttachmentMapper.Columns.ID).asc());
-        dataset = MapperUtils.rename(dataset, SparkAttachmentMapper.TABLE_NAME);
+                .orderBy(SparkUtils.column(SparkAttachmentMapper.Columns.ID).asc());
         dataset.show();
         return dataset;
     }
