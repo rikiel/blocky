@@ -1,13 +1,14 @@
+import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 
 import eu.ba30.re.blocky.model.cst.Category;
 
@@ -15,13 +16,30 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 public class OpenCsvTest {
     @Test
-    public void test() throws Exception {
+    public void testReadCsv() throws Exception {
         final List<OpenCsvCategoryImpl> actual = new CsvToBeanBuilder<OpenCsvCategoryImpl>(Resources.getResourceAsReader("csv/test-data-cst-category.csv"))
                 .withType(OpenCsvCategoryImpl.class)
-                .withMappingStrategy(new MappingStrategy())
                 .build()
                 .parse();
 
+        assertReflectionEquals(getExpected(), actual);
+    }
+
+    @Test
+    public void testWriteCsv() throws Exception {
+        final StringWriter output = new StringWriter();
+        new StatefulBeanToCsvBuilder<OpenCsvCategoryImpl>(output)
+                .withApplyQuotesToAll(false)
+                .build()
+                .write(getExpected());
+
+        final List<String> expectedLines = Files.readAllLines(Resources.getResourceAsFile("csv/test-data-cst-category.csv").toPath());
+        final List<String> actualLines = Lists.newArrayList(output.getBuffer().toString().split("\n"));
+
+        assertReflectionEquals(expectedLines, actualLines);
+    }
+
+    private List<OpenCsvCategoryImpl> getExpected() {
         final OpenCsvCategoryImpl expected1 = new OpenCsvCategoryImpl();
         expected1.setId(1);
         expected1.setName("CategoryName#1");
@@ -31,15 +49,15 @@ public class OpenCsvTest {
         expected2.setName("CategoryName#2");
         expected2.setDescription("CategoryDescription#2");
 
-        assertReflectionEquals(Lists.newArrayList(expected1, expected2), actual);
+        return Lists.newArrayList(expected1, expected2);
     }
 
     public static class OpenCsvCategoryImpl extends Category {
-        @CsvBindByName(column = "ID", required = true)
+        @CsvBindByPosition(position = 0, required = true)
         private Integer id;
-        @CsvBindByName(column = "NAME", required = true)
+        @CsvBindByPosition(position = 1, required = true)
         private String name;
-        @CsvBindByName(column = "DESCR", required = true)
+        @CsvBindByPosition(position = 2, required = true)
         private String description;
 
         @Override
@@ -70,17 +88,6 @@ public class OpenCsvTest {
         @Override
         public void setDescription(String description) {
             this.description = description;
-        }
-    }
-
-    private static class MappingStrategy extends HeaderColumnNameMappingStrategy<OpenCsvCategoryImpl> {
-        MappingStrategy() {
-            setType(OpenCsvCategoryImpl.class);
-        }
-
-        @Override
-        public void captureHeader(CSVReader reader) {
-            headerIndex.initializeHeaderIndex(new String[] { "ID", "NAME", "DESCR" });
         }
     }
 }

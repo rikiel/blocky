@@ -1,3 +1,5 @@
+import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.ibatis.io.Resources;
@@ -7,8 +9,11 @@ import com.google.common.collect.Lists;
 import com.univocity.parsers.annotations.Headers;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.common.processor.BeanListProcessor;
+import com.univocity.parsers.common.processor.BeanWriterProcessor;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
+import com.univocity.parsers.csv.CsvWriter;
+import com.univocity.parsers.csv.CsvWriterSettings;
 
 import eu.ba30.re.blocky.model.cst.Category;
 
@@ -16,19 +21,40 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 public class UnivocityTest {
     @Test
-    public void test() throws Exception {
+    public void testReadCsv() throws Exception {
         final BeanListProcessor<UnivocityCategoryImpl> rowProcessor = new BeanListProcessor<>(UnivocityCategoryImpl.class);
 
-        final CsvParserSettings parserSettings = new CsvParserSettings();
-        parserSettings.getFormat().setLineSeparator("\n");
-        parserSettings.setHeaderExtractionEnabled(false);
-        parserSettings.setProcessor(rowProcessor);
+        final CsvParserSettings settings = new CsvParserSettings();
+        settings.getFormat().setLineSeparator("\n");
+        settings.setHeaderExtractionEnabled(false);
+        settings.setProcessor(rowProcessor);
 
-        final CsvParser parser = new CsvParser(parserSettings);
+        final CsvParser parser = new CsvParser(settings);
         parser.parse(Resources.getResourceAsReader("csv/test-data-cst-category.csv"));
 
         final List<UnivocityCategoryImpl> actual = rowProcessor.getBeans();
 
+        assertReflectionEquals(getExpected(), actual);
+    }
+
+    @Test
+    public void testWriteCsv() throws Exception {
+        final CsvWriterSettings settings = new CsvWriterSettings();
+        settings.getFormat().setLineSeparator("\n");
+        settings.setHeaderWritingEnabled(false);
+        settings.setRowWriterProcessor(new BeanWriterProcessor<>(UnivocityCategoryImpl.class));
+
+        final StringWriter output = new StringWriter();
+        final CsvWriter writer = new CsvWriter(output, settings);
+        writer.processRecordsAndClose(getExpected());
+
+        final List<String> expectedLines = Files.readAllLines(Resources.getResourceAsFile("csv/test-data-cst-category.csv").toPath());
+        final List<String> actualLines = Lists.newArrayList(output.getBuffer().toString().split("\n"));
+
+        assertReflectionEquals(expectedLines, actualLines);
+    }
+
+    private List<UnivocityCategoryImpl> getExpected() {
         final UnivocityCategoryImpl expected1 = new UnivocityCategoryImpl();
         expected1.setId(1);
         expected1.setName("CategoryName#1");
@@ -38,7 +64,7 @@ public class UnivocityTest {
         expected2.setName("CategoryName#2");
         expected2.setDescription("CategoryDescription#2");
 
-        assertReflectionEquals(Lists.newArrayList(expected1, expected2), actual);
+        return Lists.newArrayList(expected1, expected2);
     }
 
     /* Nastavit header sa da aj cez parserSettings.setHeader(...) */
